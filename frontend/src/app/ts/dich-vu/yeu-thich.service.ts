@@ -25,7 +25,7 @@ export class YeuThichService {
   co(id: string) { return this.ids().has(id); }
   async batTat(p: SanPham) {
     await this.xt.taiPhien();
-    if (!this.xt.daDangNhap()) { this.cong.hien('yêu thích', this.router.url); return; }
+    if (!this.xt.daDangNhap()) { this.cong.hien('thêm sản phẩm yêu thích', this.router.url); return; }
     const co = this.co(p.id);
     if (co) await this.api.delete(`/wishlist/items/${p.id}`); else await this.api.put(`/wishlist/items/${p.id}`);
     this.ids.update((s) => { const n = new Set(s); co ? n.delete(p.id) : n.add(p.id); return n; });

@@ -44,6 +44,7 @@
         <small>ⓘ {{ conLai() ? 'Mã hết hạn sau ' + dongHo() : 'Mã đã hết hạn.' }} Nhập sai quá 5 lần mã sẽ bị hủy.</small>
         @if (loi()) { <p class="err" role="alert">{{ loi() }}</p> }
         <button (click)="xacThuc()" [disabled]="dang()">XÁC THỰC →</button>
+        @if (maDemo()) { <a href="javascript:void(0)" class="otp-xem-lai" (click)="moDemo.set(true)">✉ Xem lại mã OTP</a> }
         <a href="javascript:void(0)" (click)="guiEmail()">↻ Gửi lại mã</a>
       }
       @case (3) {
@@ -70,7 +71,7 @@
   <div class="otp-demo-overlay is-open" (click)="moDemo.set(false)">
     <div class="otp-demo-dialog" role="dialog" aria-modal="true" aria-labelledby="otpDemoTitle" (click)="$event.stopPropagation()">
       <button type="button" class="otp-demo-close" aria-label="Đóng" (click)="moDemo.set(false)">×</button>
-      <div class="otp-demo-icon" aria-hidden="true">✉</div>
+      <div class="otp-demo-icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></div>
       <p class="otp-demo-eyebrow">MÃ XÁC THỰC CỦA BẠN</p>
       <h2 id="otpDemoTitle">Nhập mã này để đặt lại mật khẩu</h2>
       <p class="otp-demo-desc">Mã OTP dành cho <b>{{ email || 'tài khoản của bạn' }}</b></p>

@@ -66,7 +66,7 @@ export class GioHangService {
     await this.xt.taiPhien();
     if (!this.xt.daDangNhap()) {
       try { sessionStorage.setItem(KHOA_CHO, JSON.stringify({ id: p.id, qty, ten: p.name })); } catch { /* trình duyệt chặn lưu trữ */ }
-      this.cong.hien('giỏ hàng', this.router.url);
+      this.cong.hien('thêm sản phẩm vào giỏ hàng', this.router.url);
       return false;
     }
     const g = await this.api.post<GioHang>('/cart/items', { productId: p.id, quantity: qty });

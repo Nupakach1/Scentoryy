@@ -213,7 +213,7 @@ authRouter.post(
       });
       await sendPasswordResetOtp(d.email, otp);
     }
-    ok(res, { message: FORGOT_MESSAGE, expiresInSeconds: OTP_TTL_MS / 1000, ...(demoOtp ? { demoOtp } : {}) }, null, 202);
+    ok(res, { message: FORGOT_MESSAGE, expiresInSeconds: OTP_TTL_MS / 1000, ...(demoOtp ? { demoOtp } : {}), ...(!isSmtpConfigured() ? { demoMode: true } : {}) }, null, 202);
   })
 );
 

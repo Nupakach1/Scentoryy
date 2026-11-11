@@ -224,7 +224,7 @@ api.post("/auth/register", h((req, res) => {
   u.Password = b.password; login(res, u); env(res, { ...toUserDto(u), hasScentProfile: false }, null, 201);
 }));
 api.post("/auth/logout", h((req, res) => { res.setHeader("Set-Cookie", "gl_sid=; Path=/; Max-Age=0"); env(res, { loggedOut: true }); }));
-api.post("/auth/password-resets", h((_req, res) => env(res, { message: "Nếu email tồn tại, mã OTP đã được gửi.", expiresInSeconds: 180, demoOtp: "123456" }, null, 202)));
+api.post("/auth/password-resets", h((_req, res) => env(res, { message: "Nếu email tồn tại, mã OTP đã được gửi.", expiresInSeconds: 180, demoOtp: "123456", demoMode: true }, null, 202)));
 api.post("/auth/password-resets/verify", h((req, res) => { if (req.body.otp !== "123456") throw new Loi("ERR-AUTH-400-01"); env(res, { resetToken: "gia-lap", expiresInSeconds: 600 }); }));
 api.post("/auth/password-resets/confirm", h((_req, res) => env(res, { message: "Mật khẩu đã được đặt lại thành công." })));
 

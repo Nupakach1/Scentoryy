@@ -22,7 +22,7 @@ export const canDangNhapHopThoai: CanActivateFn = async (_r, state) => {
   const cong = inject(CongDangNhapService);
   await xt.taiPhien();
   if (xt.daDangNhap()) return true;
-  cong.hien(state.url.startsWith('/scent-quiz') ? 'làm Scent Quiz' : 'giỏ hàng', state.url);
+  cong.hien(state.url.startsWith('/scent-quiz') ? 'làm Scent Quiz' : 'xem giỏ hàng', state.url);
   return router.navigated ? false : router.createUrlTree(['/']);
 };
 

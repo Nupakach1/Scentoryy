@@ -26,7 +26,9 @@ export class QuenMatKhau implements OnDestroy {
   guiEmail() {
     if (!/^\S+@\S+\.\S+$/.test(this.email.trim())) { this.loi.set('Email không đúng định dạng.'); return; }
     this.chay(async () => {
-      const r = await this.api.post<{ expiresInSeconds: number; demoOtp?: string }>('/auth/password-resets', { email: this.email.trim() });
+      const r = await this.api.post<{ expiresInSeconds: number; demoOtp?: string; demoMode?: boolean }>('/auth/password-resets', { email: this.email.trim() });
+      // Chế độ demo (chưa có SMTP) mà không nhận được mã → email chưa đăng ký, báo ngay thay vì để người dùng chờ thư
+      if (r.demoMode && !r.demoOtp) { this.loi.set('Email này chưa đăng ký tài khoản Scentory. Vui lòng kiểm tra lại hoặc đăng ký tài khoản mới.'); return; }
       this.buoc.set(2); this.demNguoc(r.expiresInSeconds ?? 180);
       // Chưa kết nối dịch vụ email → hiện hộp thoại OTP giả lập (giao diện gốc: showDemoOtpDialog)
       if (r.demoOtp && /^\d{6}$/.test(r.demoOtp)) { this.maDemo.set(r.demoOtp); this.moDemo.set(true); }

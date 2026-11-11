@@ -49,3 +49,6 @@ body .login-art > h2, body .register-art > h2 {
 }
 body .login-art > h2, body .register-art > h2 { margin-top: 10px; font-weight: 600; color: rgba(220, 211, 176, .78); }
 body .login-art > h1, body .register-art > h1 { margin-top: 26px; }
+
+/* Liên kết mở lại hộp thoại OTP demo ở bước 2 */
+.password-form a.otp-xem-lai { display: inline-block; margin-right: 18px; color: #a9824a; font-weight: 700; }
