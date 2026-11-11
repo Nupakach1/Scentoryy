@@ -1,0 +1,81 @@
+/* SCENTORY – Đổi trả & hoàn tiền (return-refund.html)
+   Sửa bố cục 3 cột (menu · form · quy trình) và làm mới giao diện. Markup: js/features/returns/return-renderer.js */
+body.return-page {
+  --rt-ink: #1d1f17; --rt-muted: #7a7462; --rt-gold: #b08a4e; --rt-gold-2: #dcc28a; --rt-line: #e8dfcc; --rt-paper: #fffdf8;
+  background: #f6f1e7;
+}
+body.return-page main.return-main {
+  padding: 48px 56px 104px; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background: radial-gradient(900px 500px at 0% 0%, rgba(214, 186, 128, .16), transparent 60%), #f6f1e7;
+}
+body.return-page main * { box-sizing: border-box; }
+
+/* Bố cục: 3 cột rõ ràng, khung quy trình không còn đè lên form */
+body.return-page .account-layout { max-width: 1280px; display: grid; grid-template-columns: 220px minmax(0, 1fr) 270px; gap: 36px; align-items: start; }
+body.return-page .account-side { position: sticky; top: 104px; }
+body.return-page .return-content { max-width: none; min-width: 0; }
+body.return-page .return-summary {
+  position: sticky !important; top: 104px; left: auto !important; width: auto !important; margin-top: 0 !important;
+  padding: 26px 24px; border-radius: 24px; border: 1px solid rgba(220, 194, 138, .28); color: rgba(243, 238, 226, .75); font-size: 13px;
+  background: radial-gradient(260px 180px at 100% 0%, rgba(220, 194, 138, .22), transparent 70%), linear-gradient(170deg, #22261b, #15130f);
+  box-shadow: 0 30px 56px -36px rgba(20, 16, 8, .8);
+}
+body.return-page .return-summary h3 { margin: 0 0 16px; font-size: 12px; letter-spacing: .22em; color: var(--rt-gold-2); }
+body.return-page .return-summary p { margin: 0 0 10px; line-height: 1.6; }
+body.return-page .return-summary hr { margin: 18px 0; border: 0; height: 1px; background: rgba(255, 255, 255, .12); }
+body.return-page .return-summary b { display: block; margin: 16px 0 6px; font-size: 11px; letter-spacing: .18em; color: var(--rt-gold-2); }
+
+/* Tiêu đề */
+body.return-page .return-heading > span { display: inline-block; margin-bottom: 14px; font-size: 13px; font-weight: 600; color: var(--rt-gold); cursor: pointer; }
+body.return-page .return-heading p { font-size: 12px; letter-spacing: .2em; color: var(--rt-gold); }
+body.return-page .return-heading h1 { margin: 10px 0 10px; font-size: 40px; font-weight: 800; letter-spacing: -.025em; color: var(--rt-ink); }
+body.return-page .return-heading > p:last-child { font-size: 15px; letter-spacing: 0; color: var(--rt-muted); }
+
+/* Thanh bước: số trong vòng tròn, chữ nằm dưới */
+body.return-page .return-progress {
+  display: flex; align-items: flex-start; justify-content: center; gap: 0; margin: 26px 0 24px; padding: 22px 24px;
+  border-radius: 20px; background: var(--rt-paper); border: 1px solid var(--rt-line);
+}
+body.return-page .return-progress b {
+  width: auto; height: auto; display: flex; flex-direction: column; align-items: center; gap: 8px;
+  border: 0; border-radius: 0; background: none; color: inherit; font-size: 13px;
+}
+body.return-page .return-progress em {
+  width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 13px; font-weight: 800;
+  color: #a39c86; background: #fff; border: 1.5px solid #ddd2b8;
+}
+body.return-page .return-progress b.on em { color: var(--rt-gold-2); border: 0; background: linear-gradient(135deg, #2b2a1f, #4a4330); box-shadow: 0 0 0 4px rgba(220, 194, 138, .25); }
+body.return-page .return-progress b.done em { color: #fff; border: 0; background: linear-gradient(135deg, #dcc28a, #a9823f); }
+body.return-page .return-progress small { position: static; margin: 0; font-size: 12.5px; font-weight: 600; letter-spacing: 0; color: var(--rt-muted); white-space: nowrap; }
+body.return-page .return-progress b.on small { color: var(--rt-ink); }
+body.return-page .return-progress i { width: 120px; height: 1px; margin-top: 18px; background: #ddd2b8; }
+
+/* Thẻ form */
+body.return-page .return-card {
+  display: flow-root; padding: 30px 32px 30px; border-radius: 26px; background: linear-gradient(170deg, #fffefa, #fbf7ee);
+  border: 1px solid var(--rt-line); box-shadow: 0 30px 60px -40px rgba(70, 52, 20, .45);
+}
+body.return-page .return-card h2 { font-size: 12.5px; font-weight: 800; letter-spacing: .16em; color: #8a6a32; }
+body.return-page .return-card h2:not(:first-child) { padding-top: 22px; border-top-color: var(--rt-line); }
+body.return-page .request-type-grid label { padding: 14px 16px; border-radius: 16px; border: 1px solid var(--rt-line); background: #fff; font-size: 13.5px !important; flex: 1; }
+body.return-page .return-product { border-radius: 18px !important; border-color: var(--rt-line) !important; padding: 16px 18px !important; }
+body.return-page .return-product > span { border-radius: 12px !important; border: 0 !important; background: radial-gradient(circle at 50% 40%, #fff, #efe7d6) !important; }
+body.return-page .return-product h3 { font-size: 15px !important; }
+body.return-page .return-product p, body.return-page .return-product label { font-size: 12.5px !important; }
+body.return-page .reason-grid label, body.return-page .refund-method label {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 14px; font-size: 13.5px; color: #4a4d42; background: #fff; border: 1px solid var(--rt-line); cursor: pointer;
+}
+body.return-page .reason-grid input, body.return-page .refund-method input, body.return-page .request-type-grid input { accent-color: #8a6a32; }
+body.return-page .refund-method { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+body.return-page .refund-method label { margin: 0; }
+body.return-page .upload-box { border-radius: 18px; border-color: #d9c59a; background: #fffaf0; font-size: 22px; color: var(--rt-gold); }
+body.return-page .upload-box b { font-size: 13.5px; color: var(--rt-ink); }
+body.return-page .upload-box small { font-size: 12px; }
+body.return-page .return-note { font-size: 12px; letter-spacing: .12em; color: var(--rt-muted); }
+body.return-page .return-note textarea { min-height: 96px; padding: 14px 16px; border-radius: 14px; border-color: var(--rt-line); background: #fff; font-size: 14px; }
+body.return-page .return-submit {
+  float: right; min-height: 0; margin-top: 22px; padding: 15px 30px; border: 0; border-radius: 999px; cursor: pointer;
+  font-size: 13px; font-weight: 800; letter-spacing: .1em; color: #17140f; background: linear-gradient(135deg, #f3dfae, #c79c52);
+  box-shadow: 0 16px 30px -14px rgba(200, 160, 80, .75);
+}
+body.return-page .return-submit:hover { transform: translateY(-2px); }

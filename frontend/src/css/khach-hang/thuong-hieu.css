@@ -1,0 +1,84 @@
+/* SCENTORY – Chi tiết thương hiệu (brand-detail.html?brand=…): câu chuyện · thông số · trích dẫn
+   Markup: js/features/brands/brand-detail.js */
+
+/* ---------- Câu chuyện ---------- */
+.brand-detail-page .bd-story {
+  position: relative; max-width: 1180px; padding: 96px 0 104px; gap: 72px; align-items: center;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+}
+.brand-detail-page .bd-story .bd-eyebrow {
+  display: inline-flex; align-items: center; gap: 12px; margin-bottom: 18px;
+  color: #a5813f; font-size: 11px; letter-spacing: .24em;
+}
+.brand-detail-page .bd-story .bd-eyebrow::before { content: ''; width: 32px; height: 1px; background: currentColor; }
+.brand-detail-page .bd-story h2 { margin-bottom: 28px; font-size: 42px; line-height: 1.1; letter-spacing: -.02em; color: #1f2419; }
+.brand-detail-page .bd-story-text > p { font-size: 15px; line-height: 1.85; color: #4a4d42; margin-bottom: 18px; }
+.brand-detail-page .bd-story-text > h2 + p::first-letter {
+  float: left; margin: 6px 12px 0 0; font-size: 62px; line-height: .82; font-weight: 700; color: #a5813f;
+}
+
+/* Thông số nổi bật: dải tối với 3 cột */
+.brand-detail-page .bd-features {
+  position: relative; overflow: hidden; margin-top: 40px; padding: 0; gap: 0; border-radius: 20px;
+  background:
+    radial-gradient(420px 220px at 0% 0%, rgba(214, 180, 112, .22), transparent 70%),
+    linear-gradient(135deg, #22261b 0%, #2f3324 100%);
+  box-shadow: 0 30px 50px -30px rgba(25, 28, 18, .75);
+}
+.brand-detail-page .bd-feature {
+  position: relative; display: grid; align-content: start; gap: 6px; padding: 28px 24px 26px;
+  transition: background .3s ease;
+}
+.brand-detail-page .bd-feature + .bd-feature::before {
+  content: ''; position: absolute; left: 0; top: 24px; bottom: 24px; width: 1px; background: rgba(220, 194, 138, .25);
+}
+.brand-detail-page .bd-feature:hover { background: rgba(255, 255, 255, .04); }
+.brand-detail-page .bd-feature-ico {
+  width: 42px; height: 42px; margin-bottom: 10px; border-radius: 50%; display: grid; place-items: center;
+  background: rgba(220, 194, 138, .14); border: 1px solid rgba(220, 194, 138, .4);
+}
+.brand-detail-page .bd-feature-ico svg { width: 19px; height: 19px; margin: 0; stroke: #e2c88f; }
+.brand-detail-page .bd-feature small { font-size: 10.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #d6b878; }
+.brand-detail-page .bd-feature b { margin: 0; font-size: 19px; line-height: 1.3; letter-spacing: -.005em; color: #fbf6e9; }
+.brand-detail-page .bd-feature > span:last-child { font-size: 12.5px; line-height: 1.6; color: rgba(243, 238, 226, .66); }
+
+/* Ảnh minh họa: khung lệch + chú thích dạng thẻ */
+.brand-detail-page .bd-figure { position: relative; padding: 0 0 28px 28px; }
+.brand-detail-page .bd-figure::before {
+  content: ''; position: absolute; top: 28px; right: -24px; bottom: 56px; left: 56px;
+  border: 1px solid #cdb27a; border-radius: 8px;
+}
+.brand-detail-page .bd-figure-photo { z-index: 1; border-radius: 6px; box-shadow: 0 40px 60px -36px rgba(30, 26, 14, .6); }
+.brand-detail-page .bd-figure-photo img { transition: transform 1.4s ease; }
+.brand-detail-page .bd-figure:hover .bd-figure-photo img { transform: scale(1.05); }
+.brand-detail-page .bd-figure figcaption {
+  position: absolute; z-index: 2; left: 0; bottom: 0; max-width: 78%; margin: 0; padding: 18px 22px;
+  display: grid; grid-template-columns: 1fr; gap: 6px; border-radius: 6px;
+  background: #fffdf7; border: 1px solid #ebe1c9; box-shadow: 0 20px 34px -22px rgba(30, 26, 14, .55);
+}
+.brand-detail-page .bd-figure figcaption b { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #a5813f; }
+.brand-detail-page .bd-figure figcaption i { font-size: 13px; line-height: 1.55; color: #4a4d42; }
+
+/* ---------- Trích dẫn cuối trang: nền ảnh thương hiệu ---------- */
+.brand-detail-page .bd-quote {
+  position: relative; isolation: isolate; overflow: hidden; padding: 128px 40px 120px;
+  background: #1b1d15 var(--bd-quote-bg) center 60% / cover no-repeat fixed;
+  color: #f3eee2;
+}
+.brand-detail-page .bd-quote::before {
+  content: ''; position: absolute; inset: 0; z-index: -1;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(25, 23, 16, .55) 0%, rgba(20, 18, 12, .88) 75%),
+    linear-gradient(180deg, rgba(20, 18, 12, .35), rgba(20, 18, 12, .65));
+}
+.brand-detail-page .bd-quote::after {
+  content: ''; position: absolute; inset: 22px; z-index: -1; border: 1px solid rgba(220, 194, 138, .22); pointer-events: none;
+}
+.brand-detail-page .bd-quote-mark { font-size: 96px; line-height: .6; height: 44px; color: #d6b878; font-family: Georgia, serif; }
+.brand-detail-page .bd-quote blockquote {
+  max-width: 820px; margin: 24px auto 30px; font-size: 34px; line-height: 1.4; font-weight: 500; color: #fbf6e9;
+  text-shadow: 0 2px 20px rgba(0, 0, 0, .35);
+}
+.brand-detail-page .bd-quote cite {
+  display: inline-flex; align-items: center; gap: 14px; color: #d6b878; font-size: 11px; font-weight: 600; letter-spacing: .24em;
+}

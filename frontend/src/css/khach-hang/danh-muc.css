@@ -1,0 +1,260 @@
+/* SCENTORY – Danh sách sản phẩm: lớp giao diện sang trọng
+   Nạp sau style.css / pages.css. Mọi selector bắt đầu bằng body.catalog-rebuild main để thắng shell.css. */
+
+body.catalog-rebuild main {
+  --lux-ink: #22281a;
+  --lux-muted: #7a7b70;
+  --lux-gold: #a9824a;
+  --lux-gold-soft: #c9a45c;
+  --lux-line: #e9e2d2;
+  --lux-card: #fffdf8;
+  background:
+    radial-gradient(900px 500px at 100% 0%, rgba(201, 164, 92, .08), transparent 70%),
+    #f7f4ec;
+}
+
+/* ---------- Banner đầu trang ---------- */
+body.catalog-rebuild main .catalog-heading {
+  position: relative; overflow: hidden; isolation: isolate;
+  margin-bottom: 40px; padding: 64px 56px 60px;
+  border-radius: 24px; border: 1px solid rgba(201, 164, 92, .25);
+  background:
+    linear-gradient(90deg, #f8f4ea 0%, rgba(248, 244, 234, .96) 32%, rgba(248, 244, 234, .55) 58%, rgba(248, 244, 234, 0) 82%),
+    url('/hinh-anh/san-pham/dp-007-2.webp') right 14% / 62% auto no-repeat,
+    #f1e9df;
+  box-shadow: 0 24px 50px rgba(60, 50, 30, .1);
+}
+body.catalog-rebuild main .catalog-heading::after {
+  content: ''; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; z-index: -1;
+  border-radius: 50%; border: 1px solid rgba(201, 164, 92, .35);
+}
+body.catalog-rebuild main .catalog-heading small {
+  display: inline-block; padding: 7px 14px; border-radius: 999px;
+  color: var(--lux-gold); background: rgba(255, 255, 255, .7); border: 1px solid rgba(169, 130, 74, .3);
+  font-size: 11px; font-weight: 800; letter-spacing: 2px;
+}
+body.catalog-rebuild main .catalog-heading h1 {
+  margin: 20px 0 12px; color: var(--lux-ink);
+  font-size: 50px; font-weight: 800; letter-spacing: -1.2px; line-height: 1.08;
+}
+body.catalog-rebuild main .catalog-heading p {
+  max-width: 460px; margin: 0; color: #5b6152 !important; font-size: 15px; font-style: italic; line-height: 1.7;
+}
+
+/* ---------- Bố cục ---------- */
+body.catalog-rebuild main .catalog-layout { grid-template-columns: 270px minmax(0, 1fr); gap: 32px; align-items: start; }
+
+/* ---------- Bộ lọc ---------- */
+body.catalog-rebuild main .filter-panel {
+  position: sticky; top: 98px;
+  padding: 26px 22px; border-radius: 20px;
+  background: var(--lux-card); border: 1px solid var(--lux-line);
+  box-shadow: 0 18px 40px rgba(60, 50, 30, .07);
+}
+body.catalog-rebuild main .filter-panel > div:first-child {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  margin-bottom: 8px; padding-bottom: 18px; border-bottom: 1px solid var(--lux-line);
+}
+body.catalog-rebuild main .filter-panel h3 { margin: 0; color: var(--lux-ink); font-size: 15px; font-weight: 800; letter-spacing: 1.2px; line-height: 1.3; }
+body.catalog-rebuild main .filter-panel .clear-all-filters-btn {
+  flex: none; padding: 7px 12px; border-radius: 999px; border: 1px solid rgba(169, 130, 74, .4);
+  color: var(--lux-gold); background: transparent; font-size: 10.5px; font-weight: 800; letter-spacing: 1px; text-decoration: none; cursor: pointer;
+  transition: background-color .2s ease, color .2s ease;
+}
+body.catalog-rebuild main .filter-panel .clear-all-filters-btn:hover { color: #fff; background: var(--lux-gold); }
+body.catalog-rebuild main .filter-panel fieldset { margin: 0; padding: 20px 0 14px; border: 0; border-bottom: 1px solid var(--lux-line); }
+body.catalog-rebuild main .filter-panel fieldset:last-of-type { border-bottom: 0; }
+body.catalog-rebuild main .filter-panel legend { padding: 0 0 10px; color: var(--lux-gold); font-size: 11px; font-weight: 800; letter-spacing: 1.8px; }
+body.catalog-rebuild main .filter-panel .scentory-filter-label {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 2px -10px; padding: 8px 10px; border-radius: 10px; cursor: pointer;
+  color: #3a4232; font-size: 14px; transition: background-color .15s ease;
+}
+body.catalog-rebuild main .filter-panel .scentory-filter-label:hover { background: rgba(201, 164, 92, .1); }
+body.catalog-rebuild main .filter-panel .scentory-filter-label > span { display: flex; align-items: center; gap: 12px; }
+body.catalog-rebuild main .filter-panel .scentory-filter-label small { color: #a3a497; font-size: 12px; font-variant-numeric: tabular-nums; }
+body.catalog-rebuild main .filter-panel input[type="checkbox"],
+body.catalog-rebuild main .filter-panel input[type="radio"] {
+  width: 18px; height: 18px; margin: 0; accent-color: #3d432b; cursor: pointer;
+}
+body.catalog-rebuild main .filter-panel .scentory-filter-label:has(input:checked) { color: var(--lux-ink); font-weight: 700; background: rgba(61, 67, 43, .06); }
+
+/* ---------- Thanh công cụ ---------- */
+body.catalog-rebuild main .product-toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap;
+  margin-bottom: 22px; padding: 14px 16px 14px 14px; border-radius: 18px;
+  background: var(--lux-card); border: 1px solid var(--lux-line); box-shadow: 0 12px 30px rgba(60, 50, 30, .05);
+}
+body.catalog-rebuild main .product-toolbar > span:first-child { flex: 1 1 320px; min-width: 0; }
+body.catalog-rebuild main .product-toolbar > span:first-child > div {
+  display: flex; align-items: center; gap: 10px; width: 100%; max-width: 460px;
+  padding: 0 18px; height: 48px; border-radius: 999px; background: #f6f1e6; border: 1px solid transparent;
+  transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+body.catalog-rebuild main .product-toolbar > span:first-child > div:focus-within { background: #fff; border-color: var(--lux-gold-soft); box-shadow: 0 0 0 4px rgba(201, 164, 92, .18); }
+body.catalog-rebuild main .product-toolbar > span:first-child > div > span { color: var(--lux-gold); font-size: 17px; }
+body.catalog-rebuild main .product-toolbar input {
+  flex: 1; min-width: 0; height: 100%; padding: 0 !important; border: 0 !important; outline: 0; box-shadow: none !important;
+  background: transparent !important; color: var(--lux-ink); font: 500 14px 'Plus Jakarta Sans', Arial, sans-serif;
+}
+body.catalog-rebuild main .product-toolbar > span:last-child { display: flex; align-items: center; gap: 18px; color: var(--lux-muted); font-size: 13px; }
+body.catalog-rebuild main .product-toolbar .count-val b { color: var(--lux-ink); font-size: 15px; }
+body.catalog-rebuild main .scentory-sort-wrap { display: flex; align-items: center; gap: 10px; }
+body.catalog-rebuild main .scentory-sort-wrap label { color: var(--lux-muted); font-size: 13px; }
+body.catalog-rebuild main .scentory-sort-select {
+  height: 44px; padding: 0 40px 0 18px; border-radius: 999px; border: 1px solid var(--lux-line);
+  color: var(--lux-ink); background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a9824a' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") right 16px center / 12px no-repeat;
+  font: 700 13px 'Plus Jakarta Sans', Arial, sans-serif; appearance: none; cursor: pointer;
+}
+body.catalog-rebuild main .scentory-sort-select:focus { outline: 0; border-color: var(--lux-gold-soft); box-shadow: 0 0 0 4px rgba(201, 164, 92, .18); }
+
+/* ---------- Lưới & thẻ sản phẩm ---------- */
+body.catalog-rebuild main .product-grid { gap: 26px; }
+body.catalog-rebuild main .catalog-card.scentory-product-card {
+  display: flex; flex-direction: column;
+  min-height: 0; padding: 14px 14px 20px; border-radius: 22px;
+  background: var(--lux-card) !important; border: 1px solid var(--lux-line);
+  box-shadow: 0 10px 26px rgba(60, 50, 30, .05);
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease, border-color .35s ease;
+}
+body.catalog-rebuild main .catalog-card.scentory-product-card:hover {
+  transform: translateY(-6px); border-color: rgba(201, 164, 92, .55);
+  box-shadow: 0 28px 50px rgba(60, 50, 30, .14);
+}
+body.catalog-rebuild main .scentory-card-photo {
+  height: 300px; margin-bottom: 18px; border-radius: 16px;
+  background: radial-gradient(circle at 50% 40%, #ffffff 0%, #f4efe4 75%);
+}
+body.catalog-rebuild main .scentory-card-photo .card-img-primary { mix-blend-mode: multiply; transform: scale(.94); }
+body.catalog-rebuild main .scentory-product-card:hover .scentory-card-photo img { transform: scale(1); }
+body.catalog-rebuild main .scentory-card-photo .card-img-gallery { object-fit: cover; }
+body.catalog-rebuild main .card-wishlist {
+  position: absolute; top: 14px; right: 14px; z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%; border: 0;
+  background: rgba(255, 255, 255, .85); box-shadow: 0 6px 16px rgba(0, 0, 0, .1); backdrop-filter: blur(6px);
+  transition: transform .2s ease;
+}
+body.catalog-rebuild main .card-wishlist:hover { transform: scale(1.08); }
+body.catalog-rebuild main .catalog-card .card-brand,
+body.catalog-rebuild main .catalog-card > small { padding: 0 6px; color: var(--lux-gold); font-size: 11px; font-weight: 800; letter-spacing: 2.2px; }
+body.catalog-rebuild main .catalog-card .card-title { margin: 6px 0 8px; padding: 0 6px; font-size: 20px; font-weight: 800; letter-spacing: -.2px; line-height: 1.25; }
+body.catalog-rebuild main .catalog-card .card-title a { color: var(--lux-ink); text-decoration: none; }
+body.catalog-rebuild main .catalog-card .card-title a:hover { color: var(--lux-gold); }
+body.catalog-rebuild main .catalog-card .card-price { display: block; padding: 0 6px; color: #3d432b; font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; }
+body.catalog-rebuild main .catalog-card .card-notes { margin: 10px 0 0; padding: 0 6px; color: var(--lux-muted) !important; font-size: 13px; line-height: 1.6; }
+body.catalog-rebuild main .catalog-card .product-weather-fit {
+  margin: 14px 6px 0; padding: 10px 12px; border-radius: 12px;
+  background: rgba(201, 164, 92, .08); border: 1px solid rgba(201, 164, 92, .18);
+}
+body.catalog-rebuild main .catalog-card .add-to-cart-btn {
+  margin: auto 6px 0; margin-top: 18px; min-height: 48px; border-radius: 999px;
+  color: #3d432b; background: transparent; border: 1px solid rgba(61, 67, 43, .4);
+  font: 800 12px 'Plus Jakarta Sans', Arial, sans-serif; letter-spacing: 1.4px; cursor: pointer;
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+body.catalog-rebuild main .catalog-card .add-to-cart-btn:hover,
+body.catalog-rebuild main .scentory-product-card:hover .add-to-cart-btn {
+  color: #fff; background: #3d432b; border-color: #3d432b; box-shadow: 0 10px 22px rgba(61, 67, 43, .25);
+}
+body.catalog-rebuild main .catalog-card .add-to-cart-btn:disabled { opacity: .5; cursor: not-allowed; }
+body.catalog-rebuild main .match { border-radius: 999px; }
+
+/* --- Tinh chỉnh sau kiểm tra --- */
+body.catalog-rebuild main .catalog-heading {
+  background:
+    linear-gradient(90deg, #f8f4ea 0%, rgba(248, 244, 234, .96) 34%, rgba(248, 244, 234, .55) 60%, rgba(248, 244, 234, .08) 100%),
+    url('/hinh-anh/san-pham/dp-007-2.webp') center 4% / cover no-repeat,
+    #f1e9df;
+}
+body.catalog-rebuild main .product-toolbar > span:first-child { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
+body.catalog-rebuild main .product-toolbar select.scentory-sort-select { height: 44px !important; padding: 0 42px 0 18px !important; border-radius: 999px !important; border: 1px solid var(--lux-line) !important; }
+body.catalog-rebuild main .catalog-card .product-weather-fit { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: start; }
+body.catalog-rebuild main .catalog-card .product-weather-fit > span { grid-row: span 2; color: var(--lux-gold); font-size: 14px; line-height: 1.4; }
+body.catalog-rebuild main .catalog-card .product-weather-fit b { color: var(--lux-ink); font-size: 12.5px; font-weight: 700; letter-spacing: 0; }
+body.catalog-rebuild main .catalog-card .product-weather-fit small { margin-top: 2px; color: var(--lux-muted); font-size: 12px; line-height: 1.5; letter-spacing: 0 !important; }
+body.catalog-rebuild main .scentory-card-photo .card-img-primary { width: 100%; height: 100%; max-width: none; max-height: none; object-fit: cover; mix-blend-mode: normal; transform: scale(1.02); }
+body.catalog-rebuild main .scentory-product-card:hover .scentory-card-photo img { transform: scale(1.06); }
+body.catalog-rebuild main .scentory-card-photo .card-img-primary { padding: 0; transform: scale(1.12); object-position: center 55%; }
+body.catalog-rebuild main .scentory-product-card:hover .scentory-card-photo .card-img-primary { transform: scale(1.16); }
+body.catalog-rebuild main .scentory-card-photo { height: 300px !important; }
+
+/* ---------- Banner: dải ảnh sản phẩm chạy ngang ---------- */
+body.catalog-rebuild main .catalog-heading.has-marquee {
+  padding: 56px 0 30px;
+  background:
+    radial-gradient(600px 300px at 0% 0%, rgba(201, 164, 92, .16), transparent 70%),
+    radial-gradient(500px 300px at 100% 0%, rgba(201, 120, 130, .1), transparent 70%),
+    linear-gradient(180deg, #faf6ed, #f2ebdd);
+}
+body.catalog-rebuild main .catalog-heading.has-marquee > small,
+body.catalog-rebuild main .catalog-heading.has-marquee > h1,
+body.catalog-rebuild main .catalog-heading.has-marquee > p { margin-left: 56px; margin-right: 56px; }
+body.catalog-rebuild main .catalog-heading.has-marquee > p { max-width: 640px; }
+.catalog-heading .cl-marquee {
+  position: relative; margin-top: 36px; overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+.catalog-heading .cl-track {
+  display: flex; gap: 18px; width: max-content; padding: 6px 0 14px;
+  animation: cl-scroll calc(var(--count) * 3.2s) linear infinite;
+}
+.catalog-heading .cl-marquee:hover .cl-track,
+.catalog-heading .cl-marquee:focus-within .cl-track { animation-play-state: paused; }
+@keyframes cl-scroll { to { transform: translateX(calc(-50% - 9px)); } }
+.catalog-heading .cl-item {
+  position: relative; flex: none; display: block; width: 170px; height: 220px; overflow: hidden;
+  border-radius: 18px; background: #e9e1d2; text-decoration: none;
+  box-shadow: 0 14px 30px rgba(60, 50, 30, .14);
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease;
+}
+.catalog-heading .cl-item:nth-child(even) { margin-top: 18px; }
+.catalog-heading .cl-item img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.catalog-heading .cl-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 50%, rgba(18, 16, 10, .78)); }
+.catalog-heading .cl-item span { position: absolute; left: 14px; right: 12px; bottom: 12px; z-index: 1; display: grid; gap: 2px; color: #fff; font-size: 13.5px; font-weight: 700; line-height: 1.3; }
+.catalog-heading .cl-item span small { color: #f1dcae; font-size: 10px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; }
+.catalog-heading .cl-item:hover { transform: translateY(-6px); box-shadow: 0 22px 40px rgba(60, 50, 30, .25); }
+.catalog-heading .cl-item:hover img { transform: scale(1.07); }
+.catalog-heading .cl-item:focus-visible { outline: 2px solid #c9a45c; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) { .catalog-heading .cl-track { animation: none; } .catalog-heading .cl-marquee { overflow-x: auto; } }
+body.catalog-rebuild main .catalog-heading .cl-item span small { display: block; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; backdrop-filter: none; color: #f1dcae; font-size: 10px; letter-spacing: 1.6px; }
+
+/* ---------- Banner: nền rêu nhung sang trọng (thay nền kem đục) ---------- */
+body.catalog-rebuild main .catalog-heading.has-marquee {
+  border: 0;
+  background:
+    radial-gradient(700px 320px at 12% 0%, rgba(212, 175, 55, .16), transparent 70%),
+    radial-gradient(600px 360px at 92% 110%, rgba(150, 170, 120, .14), transparent 70%),
+    linear-gradient(160deg, #262d1d 0%, #1b2015 55%, #161a11 100%);
+  box-shadow: 0 30px 60px rgba(22, 26, 17, .28);
+}
+body.catalog-rebuild main .catalog-heading.has-marquee::after {
+  inset: 10px; right: 10px; top: 10px; width: auto; height: auto; z-index: 0; pointer-events: none;
+  border-radius: 16px; border: 1px solid rgba(212, 175, 55, .22);
+}
+body.catalog-rebuild main .catalog-heading.has-marquee > * { position: relative; z-index: 1; }
+body.catalog-rebuild main .catalog-heading.has-marquee > small { color: #e5c98a; background: rgba(255, 255, 255, .04); border-color: rgba(229, 201, 138, .4); }
+body.catalog-rebuild main .catalog-heading.has-marquee > h1 { color: #f7f3e8; }
+body.catalog-rebuild main .catalog-heading.has-marquee > p { color: #c9c7b4 !important; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-item { background: #2a3020; box-shadow: 0 18px 36px rgba(0, 0, 0, .4), 0 0 0 1px rgba(255, 255, 255, .06); }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-item:hover { box-shadow: 0 26px 48px rgba(0, 0, 0, .5), 0 0 0 1px rgba(212, 175, 55, .5); }
+
+/* ---------- Banner gọn: chữ trái · dải ảnh phải ---------- */
+body.catalog-rebuild main .catalog-heading.has-marquee {
+  display: grid; grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+  grid-template-rows: auto auto 1fr; column-gap: 32px; align-items: start;
+  margin-bottom: 32px; padding: 34px 0 34px 44px;
+}
+body.catalog-rebuild main .catalog-heading.has-marquee > small,
+body.catalog-rebuild main .catalog-heading.has-marquee > h1,
+body.catalog-rebuild main .catalog-heading.has-marquee > p { grid-column: 1; margin-left: 0; margin-right: 0; }
+body.catalog-rebuild main .catalog-heading.has-marquee > small { justify-self: start; margin-top: 18px; padding: 6px 13px; font-size: 10px; }
+body.catalog-rebuild main .catalog-heading.has-marquee > h1 { margin: 16px 0 10px; font-size: 36px; letter-spacing: -.8px; line-height: 1.1; }
+body.catalog-rebuild main .catalog-heading.has-marquee > p { font-size: 13.5px; line-height: 1.65; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-marquee { grid-column: 2; grid-row: 1 / span 3; align-self: center; margin-top: 0; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-item { width: 132px; height: 172px; border-radius: 14px; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-item:nth-child(even) { margin-top: 12px; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-track { gap: 14px; padding: 4px 0 14px; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-item span { left: 11px; bottom: 10px; font-size: 12px; }
+body.catalog-rebuild main .catalog-heading.has-marquee .cl-item span small { font-size: 9px; letter-spacing: 1.3px; }
+@keyframes cl-scroll { to { transform: translateX(calc(-50% - 7px)); } }

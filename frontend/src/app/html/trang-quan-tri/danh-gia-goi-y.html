@@ -1,0 +1,28 @@
+<div class="qt-dau"><div><span class="nhan-muc">Gợi ý cá nhân hóa</span><h1>Đánh giá gợi ý</h1></div></div>
+@if (m(); as m) {
+  <div class="qt-kpi">
+    <div class="the"><small>Precision&#64;{{ m.offline.k }}</small><b>{{ m.offline.precisionAtK | number: '1.0-3' }}</b><span>{{ m.offline.profiles }} hồ sơ chuẩn</span></div>
+    <div class="the"><small>HitRate&#64;{{ m.offline.k }}</small><b>{{ m.offline.hitRateAtK | number: '1.0-3' }}</b><span>Có ≥ 1 gợi ý đúng nhóm</span></div>
+    <div class="the"><small>NDCG&#64;{{ m.offline.k }}</small><b>{{ m.offline.ndcgAtK | number: '1.0-3' }}</b><span>Chất lượng thứ hạng</span></div>
+    <div class="the"><small>Độ phủ / Ổn định</small><b>{{ m.offline.coverage | percent: '1.0-1' }} · {{ m.offline.stability | percent: '1.0-0' }}</b><span>{{ m.offline.products }} sản phẩm · trọng số ±10%</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px">
+    <section class="the" style="overflow:auto">
+      <h3>Chi tiết theo hồ sơ chuẩn</h3>
+      <table class="bang"><thead><tr><th>Hồ sơ</th><th>Top {{ m.offline.k }} (điểm · mức liên quan)</th><th>P&#64;K</th><th>NDCG</th></tr></thead><tbody>
+        @for (r of m.offline.detail; track r.profile) {
+          <tr><td class="chu-nho"><b>{{ r.profile }}</b></td><td class="chu-nho">@for (t of r.topK; track t.name) { <div>{{ t.name }} · {{ t.score }}% · <span class="nhan-tt" [class]="'nhan-tt ' + (t.relevance === 2 ? 'nhan-luc' : t.relevance === 1 ? 'nhan-vang' : 'nhan-xam')">{{ t.relevance }}</span></div> }</td>
+            <td>{{ r.precision | number: '1.0-2' }}</td><td>{{ r.ndcg == null ? '—' : (r.ndcg | number: '1.0-2') }}</td></tr>
+        }
+      </tbody></table>
+    </section>
+    <section class="the">
+      <h3>Đánh giá trực tuyến</h3>
+      <p class="chu-nho">Số đánh giá: <b>{{ m.online.sampleSize }}</b> · Hồ sơ hoàn tất: <b>{{ m.online.completedProfiles }}</b></p>
+      @if (m.online.enoughSamples) {
+        <p class="chu-nho">Điểm “Scent Match có đúng?” trung bình: <b>{{ m.online.avgMatchScoreRating ?? '—' }}</b> / 5</p>
+        <p class="chu-nho">Spearman (điểm match ↔ số sao): <b>{{ m.online.spearmanScoreVsRating == null ? '—' : (m.online.spearmanScoreVsRating | number: '1.0-3') }}</b></p>
+      } @else { <div class="trong-rong chu-nho">Cần ≥ 5 đánh giá để tính chỉ số trực tuyến.</div> }
+    </section>
+  </div>
+} @else { <div class="trong-rong">Đang tải số liệu…</div> }

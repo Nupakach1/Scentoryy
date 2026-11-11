@@ -1,0 +1,28 @@
+<div class="qt-thanh-tren"><span></span><span>{{ ds().length }} hội thoại</span></div>
+<div class="qt-dau"><div><span class="nhan-muc">Chăm sóc khách hàng</span><h1>Hộp thư</h1></div></div>
+<div class="qt-hop-thu">
+  <div class="the qt-hop-thu__ds">
+    @for (c of ds(); track c.userId) {
+      <button [class.dang-chon]="chon()?.userId === c.userId" (click)="mo(c)">
+        @if (c.unread) { <span class="nhan-tt nhan-do">{{ c.unread }}</span> }
+        <b>{{ c.fullName }}</b><small class="chu-nhat">{{ c.lastMessage }}</small><small class="chu-nhat">{{ c.lastAt | ngay: true }}</small>
+      </button>
+    } @empty { <p class="chu-nhat chu-nho" style="padding:12px">Chưa có hội thoại.</p> }
+  </div>
+  <div class="the" style="display:flex;flex-direction:column;height:620px;padding:0">
+    @if (chon(); as c) {
+      <div style="padding:14px 18px;border-bottom:1px solid var(--vien)"><b>{{ c.fullName }}</b> <span class="chu-nho chu-nhat">{{ c.email }}</span></div>
+      <div #khung style="flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px">
+        @for (m of tin(); track m.id) {
+          <div [style.align-self]="cuaKhach(m) ? 'flex-start' : 'flex-end'" style="max-width:70%">
+            <div style="padding:10px 14px;border-radius:8px;white-space:pre-wrap;font-size:14px" [style.background]="cuaKhach(m) ? 'var(--nen-2)' : 'var(--olive)'" [style.color]="cuaKhach(m) ? 'inherit' : '#fff'">{{ m.content }}</div>
+            <small class="chu-nhat" style="font-size:11px">{{ cuaKhach(m) ? c.fullName : 'Scentory' }} · {{ m.createdAt | ngay: true }}{{ m.orderId ? ' · có đính kèm đơn' : '' }}</small>
+          </div>
+        }
+      </div>
+      <form (ngSubmit)="gui()" style="display:flex;gap:10px;padding:12px;border-top:1px solid var(--vien)">
+        <input class="o-nhap" name="nd" [(ngModel)]="noiDung" maxlength="1000" placeholder="Nhập phản hồi cho khách..."><button class="nut nut-chinh" [disabled]="!noiDung.trim()">Gửi</button>
+      </form>
+    } @else { <div class="trong-rong" style="margin:auto">Chọn một hội thoại để xem tin nhắn.</div> }
+  </div>
+</div>

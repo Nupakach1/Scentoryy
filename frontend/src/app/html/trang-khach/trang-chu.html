@@ -1,0 +1,130 @@
+<main>
+  <section class="hero-carousel" aria-roledescription="carousel" aria-label="Banner giới thiệu Scentory">
+    @for (s of slides; track s.cls; let i = $index) {
+      <div class="hero-slide" [class]="'hero-slide ' + s.cls" [class.is-active]="slide() === i" [attr.aria-hidden]="slide() !== i" [attr.inert]="slide() !== i ? '' : null">
+        <div class="hero-slide-content">
+          <span class="hero-tag">{{ s.tag }}</span>
+          <h1>{{ s.h[0] }}<br>{{ s.h[1] }}</h1>
+          <p class="hero-desc">{{ s.p }}</p>
+          <div class="hero-actions"><a class="hero-btn-dark" [routerLink]="s.link">{{ s.nut }}</a></div>
+          @if (s.trust) { <div class="hero-trust"><span>✓ 100% Nước hoa Niche chính hãng</span><span>✓ Đổi trả trong 7 ngày nếu còn nguyên seal</span></div> }
+        </div>
+      </div>
+    }
+    <button type="button" class="hero-edge hero-edge-prev" aria-label="Banner trước" (click)="bamChuyen(-1)">‹</button>
+    <button type="button" class="hero-edge hero-edge-next" aria-label="Banner tiếp theo" (click)="bamChuyen(1)">›</button>
+    <div class="hero-indicators" aria-hidden="true">
+      @for (s of slides; track s.cls; let i = $index) { <span class="hero-bar" [class.is-active]="slide() === i"></span> }
+    </div>
+  </section>
+
+  <section class="home-families-section">
+    <div class="families-header-row">
+      <div>
+        <small class="section-eyebrow">KHẢO LUẬN KHỨU GIÁC</small>
+        <h2 class="section-title">NHÓM HƯƠNG CHỦ ĐẠO</h2>
+        <p class="section-sub">Bốn lãnh địa mùi hương được tinh tuyển, mở lối tâm trí qua những miền ký ức đa tầng.</p>
+      </div>
+      <a routerLink="/nhom-huong" class="view-all-link">KHÁM PHÁ TOÀN BỘ {{ tongNhom() }} NHÓM HƯƠNG →</a>
+    </div>
+    <div class="family-cards-grid">
+      @for (f of nhom(); track f.id; let i = $index) {
+        <article class="family-card" [class]="'family-card ' + lopNhom[i]" [routerLink]="'/nuoc-hoa'" [queryParams]="{ family: f.name }" style="cursor:pointer">
+          <div class="family-card-img"><img class="family-card-photo" [src]="f.imageUrl" alt=""><span class="fam-num">0{{ i + 1 }}</span></div>
+          <div class="family-card-body">
+            <small class="fam-sub">{{ f.name.toUpperCase() }}</small>
+            <h3>{{ f.nameVi.toUpperCase() }}</h3>
+            <p>{{ f.keyNotes }}</p>
+            <div class="fam-card-footer"><span>{{ f.productCount }} MÙI HƯƠNG</span><span class="arrow">↗</span></div>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="home-featured-products">
+    <div class="featured-header-row">
+      <div><small class="section-eyebrow">BỘ SƯU TẬP NỔI BẬT</small><h2 class="section-title">NHỮNG MÙI HƯƠNG ĐÁNG KHÁM PHÁ</h2></div>
+      <div class="product-filter-tabs">
+        <button class="tab-btn" [class.active]="tab() === 'name'" (click)="doiTab('name')">TẤT CẢ NỐT HƯƠNG</button>
+        <button class="tab-btn" [class.active]="tab() === 'bestseller'" (click)="doiTab('bestseller')">BÁN CHẠY NHẤT</button>
+        <button class="tab-btn" [class.active]="tab() === 'newest'" (click)="doiTab('newest')">MỚI RA MẮT</button>
+        <button class="tab-btn" [class.active]="tab() === 'price_asc'" (click)="doiTab('price_asc')">GIÁ TỪ THẤP ĐẾN CAO</button>
+      </div>
+    </div>
+    <div class="featured-product-grid three">
+      @for (p of sanPham(); track p.id) {
+        <article class="feat-product-card">
+          <div class="card-top-badges">
+            <div class="badge-group">
+              @if (p.soldCount > 0 && tab() === 'bestseller') { <span class="badge-tag dark">★ ĐÃ BÁN {{ p.soldCount }}</span> } @else { <span class="badge-tag dark">✒ {{ p.concentration }}</span> }
+              <span class="badge-tag light">{{ p.projection.toUpperCase() }}</span>
+            </div>
+            <button class="wishlist-btn" (click)="yt.batTat(p)" [attr.aria-pressed]="yt.co(p.id)">{{ yt.co(p.id) ? '♥' : '♡' }}</button>
+          </div>
+          <div class="card-img-wrap" [style.background-image]="'url(' + anh(p) + ')'" style="background-size: contain; background-repeat: no-repeat; background-position: center;">
+            <span class="spec-tag">{{ p.concentration }} • {{ p.volume }}ML</span>
+          </div>
+          <div class="card-info">
+            <small class="brand-line">{{ p.brand.toUpperCase() }}</small>
+            <h3>{{ p.name.toUpperCase() }}</h3>
+            <strong class="price-line">Giá niêm yết: {{ p.price | tien: 'vnd' }}</strong>
+            <div class="notes-chips">@for (n of notes(p); track n) { <span>{{ n }}</span> }</div>
+            <p class="desc">{{ p.description }}</p>
+            <div class="season-line"><span class="icon">{{ mua(p)[0] }}</span> {{ mua(p)[1] }}</div>
+            <button class="add-to-cart-btn" (click)="them(p)" [disabled]="p.stock === 0">👜 {{ p.stock === 0 ? 'TẠM HẾT HÀNG' : 'THÊM VÀO GIỎ HÀNG' }}</button>
+            <a [routerLink]="['/nuoc-hoa', p.sku]" class="detail-link">XEM CHI TIẾT &amp; NỐT HƯƠNG →</a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="home-quiz-callout">
+    <div class="quiz-callout-grid">
+      <div class="quiz-info-col">
+        <span class="quiz-badge">✦ SCENT MATCH AI™ DIAGNOSIS</span>
+        <h2>BẠN HỢP VỚI MÙI HƯƠNG NÀO?</h2>
+        <p>Khám phá sở thích hương thơm và tạo hồ sơ mùi hương độc bản dành riêng cho bạn. Scent Match AI™ đối soát phong cách, cảm xúc, thói quen và thời tiết nơi bạn sống để đề xuất dòng nước hoa signature chuẩn xác nhất.</p>
+        <div class="quiz-benefits">
+          <div class="benefit-item">✓ Gợi ý 3 mùi hương phù hợp với phong cách cá nhân</div>
+          <div class="benefit-item">✓ Tối ưu cho khí hậu và nhiệt độ tại Việt Nam</div>
+        </div>
+        <a class="quiz-cta-btn" routerLink="/scent-quiz/buoc/1">THỰC HIỆN SCENT QUIZ NGAY →</a>
+      </div>
+      <div class="quiz-card-col">
+        <div class="quiz-sim-card">
+          <div class="sim-card-header"><span class="step-label">XEM TRƯỚC • BƯỚC 05 / 08</span><h3>KHÔNG GIAN CẢM XÚC BẠN MUỐN HƯỚNG TỚI?</h3></div>
+          <div class="sim-options-grid">
+            @for (o of luaChon; track o[0]; let i = $index) {
+              <div class="sim-option" [class.selected]="luaChonMo() === i" (click)="luaChonMo.set(i)">
+                <span class="opt-key">{{ 'ABCD'[i] }}</span>
+                <div class="opt-text"><strong>{{ o[0] }}</strong><p>{{ o[1] }}</p></div>
+              </div>
+            }
+          </div>
+          <div class="sim-card-footer"><span class="chosen-status">Đã chọn: <b>{{ luaChon[luaChonMo()][0] }}</b></span><a routerLink="/scent-quiz/buoc/1" class="sim-next-btn">BẮT ĐẦU QUIZ →</a></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="home-editorial-split">
+    <div class="editorial-container">
+      <div class="editorial-art-col" style="background-image: url('/hinh-anh/trang-tri/atelier.webp'); background-position: center 30%;">
+        <div class="art-overlay-quote"><blockquote>“MỖI MÙI HƯƠNG LÀ MỘT TÁC PHẨM VÔ HÌNH CHẠM SÂU VÀO TIỀM THỨC VÀ CẢM XÚC CÁ NHÂN.”</blockquote><small>SCENTORY STUDIO</small></div>
+      </div>
+      <div class="editorial-text-col">
+        <small class="story-eyebrow">TRIẾT LÝ SÁNG TẠO</small>
+        <h2>HƯƠNG THƠM, KÝ ỨC VÀ CÁ TÍNH</h2>
+        <p>Scentory tôn vinh tính nguyên bản và chiều sâu của những nốt hương thủ công. Thay vì theo đuổi những mùi hương sản xuất hàng loạt, chúng tôi tuyển chọn các tác phẩm niche cùng sự thấu hiểu làn da nhiệt đới, mang đến cảm giác vương vấn tinh tế và bền bỉ suốt ngày dài.</p>
+        <p>Mỗi chai nước hoa tại Scentory là một câu chuyện độc lập, phản ánh cá tính độc đáo của người diện mùi hương đó mà không cần đến lời nói.</p>
+        <div class="story-stats-grid">
+          <div class="stat-box"><strong>100%</strong><small>CHÍNH HÃNG, NGUỒN GỐC RÕ RÀNG</small></div>
+          <div class="stat-box"><strong>Độc Bản</strong><small>HỒ SƠ HƯƠNG SIGNATURE</small></div>
+        </div>
+        <a routerLink="/ve-scentory" class="story-link">KHÁM PHÁ CÂU CHUYỆN SCENTORY →</a>
+      </div>
+    </div>
+  </section>
+</main>

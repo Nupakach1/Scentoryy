@@ -1,0 +1,117 @@
+<main class="checkout-main">
+  <div class="checkout-steps"><span class="is-done"><i>✓</i>Giỏ hàng</span><span class="ck-line"></span><span class="is-current"><i>2</i>Thanh toán</span><span class="ck-line"></span><span><i>3</i>Hoàn tất</span></div>
+  <div class="checkout-columns">
+    <section>
+      <div class="section-title"><h1>THÔNG TIN GIAO HÀNG</h1><b>BƯỚC 1/2</b></div>
+      @if (xt.nguoiDung(); as u) { <div class="login-note">✦ Đang thanh toán với tài khoản <b>{{ u.fullName }}</b> ({{ u.email }}). <a href="javascript:void(0)" (click)="dangXuat()">Đăng xuất</a></div> }
+      @if (soDiaChi().length) {
+        <div class="ck-address-book" style="display:grid;gap:8px;margin:0 0 18px">
+          @for (d of soDiaChi(); track d.id) {
+            <label class="choice-line ck-choice" [class.selected]="chonDiaChi() === d.id" style="cursor:pointer"><input type="radio" name="dc" [checked]="chonDiaChi() === d.id" (change)="dungDiaChi(d.id)" hidden>
+              <i class="ck-radio" [class.is-on]="chonDiaChi() === d.id" aria-hidden="true"></i><span class="ck-ico" aria-hidden="true">⌂</span>
+              <span class="ck-text"><b>{{ d.label }} · {{ d.fullName }} · {{ d.phone }}</b><small>{{ d.address }}, {{ d.ward }}, {{ d.district }}, {{ d.city }}</small></span>@if (d.isDefault) { <strong>Mặc định</strong> }</label>
+          }
+          <label class="choice-line ck-choice" [class.selected]="chonDiaChi() === 'moi'" style="cursor:pointer"><input type="radio" name="dc" [checked]="chonDiaChi() === 'moi'" (change)="dungDiaChi('moi')" hidden>
+            <i class="ck-radio" [class.is-on]="chonDiaChi() === 'moi'" aria-hidden="true"></i><span class="ck-ico" aria-hidden="true">＋</span><span class="ck-text"><b>+ Giao tới địa chỉ khác</b></span></label>
+        </div>
+      }
+      <div class="form-grid">
+        <label>HỌ VÀ TÊN *<input [(ngModel)]="f.fullName" name="fullName" placeholder="Nhập họ và tên">@if (loiTruong()['fullName']) { <small class="err">{{ loiTruong()['fullName'] }}</small> }</label>
+        <label>SỐ ĐIỆN THOẠI *<input [(ngModel)]="f.phone" name="phone" inputmode="tel" placeholder="Nhập số điện thoại">@if (loiTruong()['phone']) { <small class="err">{{ loiTruong()['phone'] }}</small> }</label>
+        <label class="wide">ĐỊA CHỈ CHI TIẾT *<input [(ngModel)]="f.addressLine" name="addressLine" placeholder="Số nhà, tên đường, căn hộ / tòa nhà">@if (loiTruong()['addressLine']) { <small class="err">{{ loiTruong()['addressLine'] }}</small> }</label>
+        <label>TỈNH / THÀNH PHỐ *<select [(ngModel)]="f.city" name="city">@for (c of thanhPho; track c) { <option [value]="c">{{ c }}</option> }</select></label>
+        <label>QUẬN / HUYỆN *<input [(ngModel)]="f.district" name="district" placeholder="VD: Quận 3">@if (loiTruong()['district']) { <small class="err">{{ loiTruong()['district'] }}</small> }</label>
+        <label class="wide">PHƯỜNG / XÃ *<input [(ngModel)]="f.ward" name="ward" placeholder="VD: Phường Võ Thị Sáu">@if (loiTruong()['ward']) { <small class="err">{{ loiTruong()['ward'] }}</small> }</label>
+      </div>
+      @if (chonDiaChi() === 'moi') { <label class="ck-luu"><input type="checkbox" [(ngModel)]="luuDiaChi" name="luu"><span>Lưu địa chỉ này vào sổ địa chỉ cho lần mua sắm tiếp theo</span></label> }
+      <label>GHI CHÚ ĐƠN HÀNG (TÙY CHỌN)<textarea [(ngModel)]="f.note" name="note" maxlength="255" placeholder="Ghi chú về đơn hàng hoặc yêu cầu đóng gói đặc biệt (tùy chọn)"></textarea></label>
+      <div class="ck-contact"><span>Cần tư vấn gói quà riêng hoặc giao theo giờ hẹn?</span><button type="button" routerLink="/hop-thu">Liên hệ với Scentory</button></div>
+
+      <div class="section-title"><h2>PHƯƠNG THỨC GIAO HÀNG</h2><b>BẢO HIỂM 100%</b></div>
+      <div class="choice-line ck-choice" [class.selected]="giao() === 'STANDARD'" (click)="doiGiao('STANDARD')" style="cursor:pointer"><i class="ck-radio" [class.is-on]="giao() === 'STANDARD'" aria-hidden="true"></i>
+        <span class="ck-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"></path><circle cx="7" cy="17.5" r="1.6"></circle><circle cx="17" cy="17.5" r="1.6"></circle></svg></span>
+        <span class="ck-text"><b>Giao hàng tiêu chuẩn</b><small>2 – 4 ngày làm việc · Hộp niêm phong cao cấp</small></span><strong>Miễn phí</strong></div>
+      <div class="choice-line ck-choice" [class.selected]="giao() === 'EXPRESS'" (click)="doiGiao('EXPRESS')" style="cursor:pointer"><i class="ck-radio" [class.is-on]="giao() === 'EXPRESS'" aria-hidden="true"></i>
+        <span class="ck-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2 5 14h6l-1 8 8-12h-6z"></path></svg></span>
+        <span class="ck-text"><b>Giao hỏa tốc</b><small>Nhận trong ngày tại TP.HCM &amp; Hà Nội</small></span><strong>50.000đ</strong></div>
+
+      <div class="section-title"><h2>PHƯƠNG THỨC THANH TOÁN</h2><b>MÔ PHỎNG · KHÔNG TRỪ TIỀN THẬT</b></div>
+      <div class="choice-line ck-choice" [class.selected]="tt() === 'COD'" (click)="tt.set('COD')" style="cursor:pointer"><i class="ck-radio" [class.is-on]="tt() === 'COD'" aria-hidden="true"></i>
+        <span class="ck-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"></rect><circle cx="12" cy="12" r="2.6"></circle><path d="M6 9v.01M18 15v.01"></path></svg></span>
+        <span class="ck-text"><b>Thanh toán khi nhận hàng (COD) <em class="ck-tag is-real">Khuyên dùng</em></b><small>Kiểm tra tem niêm phong và thanh toán khi nhận hàng.</small></span><strong>Tiền mặt</strong></div>
+      <div class="choice-line ck-choice" [class.selected]="tt() === 'QR'" (click)="tt.set('QR')" style="cursor:pointer"><i class="ck-radio" [class.is-on]="tt() === 'QR'" aria-hidden="true"></i>
+        <span class="ck-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 14h2v2h-2zM14 18h2v2h-2zM18 18h2v2h-2z"></path></svg></span>
+        <span class="ck-text"><b>Chuyển khoản qua mã QR <em class="ck-tag">Mô phỏng</em></b><small>Mã QR có hiệu lực 15 phút; quá hạn đơn tự hủy và hoàn tồn kho.</small></span><strong>VietQR · Napas 247</strong></div>
+      <div class="choice-line ck-choice" [class.selected]="tt() === 'CARD'" (click)="tt.set('CARD')" style="cursor:pointer"><i class="ck-radio" [class.is-on]="tt() === 'CARD'" aria-hidden="true"></i>
+        <span class="ck-ico" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 10h18M7 15h4"></path></svg></span>
+        <span class="ck-text"><b>Thẻ tín dụng / Ghi nợ quốc tế <em class="ck-tag">Mô phỏng</em></b><small>Kiểm tra số thẻ theo thuật toán Luhn – không trừ tiền thật. Thẻ thử: 4111 1111 1111 1111.</small></span><strong>Visa · Master · JCB</strong></div>
+      @if (tt() === 'CARD') {
+        <div class="form-grid ck-card-form">
+          <label class="wide">SỐ THẺ *<input [ngModel]="the.number" (ngModelChange)="dinhDangThe($event)" name="cardNo" inputmode="numeric" placeholder="0000 0000 0000 0000">@if (loiTruong()['card.number']) { <small class="err">{{ loiTruong()['card.number'] }}</small> }</label>
+          <label class="wide">TÊN CHỦ THẺ *<input [(ngModel)]="the.holder" name="holder" placeholder="NGUYEN VAN A">@if (loiTruong()['card.holder']) { <small class="err">{{ loiTruong()['card.holder'] }}</small> }</label>
+          <label>HẾT HẠN (MM/YY) *<input [(ngModel)]="the.expiry" name="exp" maxlength="5" placeholder="12/28">@if (loiTruong()['card.expiry']) { <small class="err">{{ loiTruong()['card.expiry'] }}</small> }</label>
+          <label>CVV *<input [(ngModel)]="the.cvv" name="cvv" maxlength="3" type="password" inputmode="numeric" placeholder="•••">@if (loiTruong()['card.cvv']) { <small class="err">{{ loiTruong()['card.cvv'] }}</small> }</label>
+        </div>
+      }
+    </section>
+
+    <aside class="order-summary">
+      <h2>ĐƠN HÀNG ({{ dong().length }})</h2>
+      <div class="scentory-voucher-wrap">
+        <span class="ck-label">Mã ưu đãi / Voucher</span>
+        <div class="ck-v-row"><input type="text" [(ngModel)]="maNhap" name="ma" placeholder="Nhập mã ưu đãi…" (keyup.enter)="apDung()"><button type="button" (click)="apDung()">Áp dụng</button></div>
+        @if (voucher(); as v) { <p style="font-size:12px;color:#2f6b3a;margin:6px 0">✓ {{ v.code }} — giảm {{ v.discount | tien }} <a href="javascript:void(0)" (click)="voucher.set(null); maNhap = ''">Bỏ mã</a></p> }
+        <details class="ck-v-list">
+          <summary>Xem mã ưu đãi có sẵn ({{ dsVoucher().length }})</summary>
+          <div>
+            @for (v of dsVoucher(); track v.code) {
+              <div class="ck-v-item" [class.is-off]="!hopLeVoucher(v)">
+                <div><b>{{ v.code }}</b><span>{{ v.title }}</span><small>{{ v.minOrderAmount ? 'Đơn tối thiểu ' + (v.minOrderAmount | tien) : 'Áp dụng cho mọi đơn hàng' }}{{ v.type === 'SHIPPING' && phiShip() === 0 ? ' (chọn Giao hỏa tốc để dùng)' : '' }}</small></div>
+                <button type="button" (click)="apDung(v.code)" [disabled]="!hopLeVoucher(v)">Dùng</button>
+              </div>
+            }
+          </div>
+        </details>
+      </div>
+      @for (d of dong(); track d.product.id) {
+        <div class="summary-product">
+          <span class="ck-thumb"><img [src]="anh(d.product)" [alt]="d.product.name"><i>{{ d.quantity }}</i></span>
+          <div class="ck-item"><small>{{ d.product.brand }}</small><b>{{ d.product.name }}</b><em>{{ d.product.concentration }} · {{ d.product.volume }}ml</em></div>
+          <strong>{{ d.lineTotal | tien: 'vnd' }}</strong>
+        </div>
+      }
+      <hr>
+      <p>Tạm tính <b>{{ tamTinh() | tien: 'vnd' }}</b></p>
+      <p>Phí vận chuyển <b>{{ phiShip() ? (phiShip() | tien: 'vnd') : 'MIỄN PHÍ' }}</b></p>
+      @if (giam()) { <p>Giảm giá ({{ voucher()?.code }}) <b>−{{ giam() | tien: 'vnd' }}</b></p> }
+      <h3>TỔNG CỘNG (ĐÃ BAO GỒM VAT) <strong>{{ tong() | tien: 'vnd' }}</strong></h3>
+      <button type="button" (click)="datHang()" [disabled]="dangGui()" style="cursor: pointer;">{{ dangGui() ? 'ĐANG XỬ LÝ…' : '♡　HOÀN TẤT ĐẶT HÀNG' }}</button>
+    </aside>
+  </div>
+
+  @if (donQR(); as d) {
+    <div class="scentory-drawer-backdrop is-open" style="display:block;position:fixed;inset:0;background:rgba(20,20,10,.45);z-index:900"></div>
+    <div id="scentory-qr-panel" class="ck-qr-panel" role="dialog" aria-modal="true" style="display:block;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:901;background:#1d1f17;color:#f3efe6;padding:24px;border-radius:12px;max-width:560px;width:calc(100% - 32px)">
+      <div class="ck-qr">
+        <div class="ck-qr-code">
+          <svg viewBox="0 0 100 100" width="118" height="118" aria-hidden="true"><rect width="100" height="100" fill="#fff"></rect>
+            <rect x="10" y="10" width="24" height="24" fill="#1d1a13"></rect><rect x="14" y="14" width="16" height="16" fill="#fff"></rect><rect x="18" y="18" width="8" height="8" fill="#1d1a13"></rect>
+            <rect x="66" y="10" width="24" height="24" fill="#1d1a13"></rect><rect x="70" y="14" width="16" height="16" fill="#fff"></rect><rect x="74" y="18" width="8" height="8" fill="#1d1a13"></rect>
+            <rect x="10" y="66" width="24" height="24" fill="#1d1a13"></rect><rect x="14" y="70" width="16" height="16" fill="#fff"></rect><rect x="18" y="74" width="8" height="8" fill="#1d1a13"></rect>
+            <rect x="42" y="12" width="6" height="6" fill="#1d1a13"></rect><rect x="52" y="20" width="6" height="6" fill="#1d1a13"></rect><rect x="42" y="42" width="16" height="16" fill="#1d1a13"></rect><rect x="66" y="46" width="6" height="6" fill="#1d1a13"></rect><rect x="78" y="58" width="8" height="8" fill="#1d1a13"></rect><rect x="46" y="70" width="8" height="8" fill="#1d1a13"></rect><rect x="62" y="78" width="10" height="6" fill="#1d1a13"></rect><rect x="80" y="76" width="6" height="12" fill="#1d1a13"></rect>
+          </svg>
+          <span>Mã QR mô phỏng</span>
+        </div>
+        <div class="ck-qr-info">
+          <div class="ck-qr-top"><b>Chuyển khoản VietQR · {{ d.orderCode }}</b><div class="ck-timer">Còn lại <span>{{ dongHo() }}</span></div></div>
+          <dl><dt>Số tiền</dt><dd>{{ d.totalAmount | tien: 'vnd' }}</dd><dt>Nội dung</dt><dd>{{ d.orderCode }}</dd><dt>Trạng thái</dt><dd>{{ conLai() ? 'Chờ thanh toán' : 'Đã hết hạn — đơn sẽ tự hủy' }}</dd></dl>
+          <p class="ck-qr-note">Đây là thanh toán <b>mô phỏng</b>, không chuyển tiền thật. Bấm “Tôi đã chuyển khoản” để hệ thống ghi nhận <b>Đã thanh toán</b>.</p>
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button type="button" (click)="xacNhanQR()" [disabled]="!conLai()" style="flex:1;padding:12px;background:#444d32;color:#fff;border:0;font-weight:700;border-radius:6px;cursor:pointer">TÔI ĐÃ CHUYỂN KHOẢN</button>
+            <a [routerLink]="['/tai-khoan/don-hang', d.id]" style="padding:12px;border:1px solid #dcc28a;border-radius:6px;color:#dcc28a;font-weight:700;font-size:12px">Thanh toán sau</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</main>

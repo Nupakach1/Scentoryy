@@ -1,0 +1,122 @@
+<main>
+  <div class="catalog-heading has-marquee">
+    <small>TRANG CHỦ / {{ uuDai ? 'ƯU ĐÃI' : 'NƯỚC HOA' }}</small>
+    <h1>{{ uuDai ? 'ƯU ĐÃI & BÁN CHẠY' : 'TẤT CẢ SẢN PHẨM' }}</h1>
+    <p>{{ uuDai ? 'Áp mã SCENTORY10 · WELCOME50 · FREESHIP ngay ở bước thanh toán' : 'Bộ sưu tập mùa hương 2026 • Tuyển tập Niche & Haute Parfumerie' }}</p>
+    @if (marquee().length > 3) {
+      <div class="cl-marquee" aria-label="Bộ sưu tập nổi bật"><div class="cl-track" [style.--count]="marquee().length">
+        @for (p of marquee(); track p.id) { <a class="cl-item" [routerLink]="['/nuoc-hoa', p.sku]"><img [src]="anh2(p)" [alt]="p.brand + ' ' + p.name" loading="lazy"><span><small>{{ p.brand }}</small>{{ p.name }}</span></a> }
+        @for (p of marquee(); track p.id) { <a class="cl-item" [routerLink]="['/nuoc-hoa', p.sku]" tabindex="-1" aria-hidden="true"><img [src]="anh2(p)" alt="" loading="lazy"><span><small>{{ p.brand }}</small>{{ p.name }}</span></a> }
+      </div></div>
+    }
+  </div>
+  <div class="catalog-layout">
+    <aside class="filter-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0; font-size: 14px; font-weight: 700; letter-spacing: 1px;">BỘ LỌC TUYỂN CHỌN</h3>
+        <button type="button" class="clear-all-filters-btn" (click)="lamMoi()" style="background: none; border: none; text-decoration: underline; font-size: 11px; font-weight: 700; color: #444d32; cursor: pointer;">LÀM MỚI</button>
+      </div>
+      <fieldset style="border: 0; padding: 0; margin: 0 0 24px 0;">
+        <legend style="font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; margin-bottom: 12px;">THƯƠNG HIỆU</legend>
+        @for (f of facets().brands; track f.value) {
+          <label class="scentory-filter-label" style="display: flex; align-items: center; justify-content: space-between; margin: 8px 0; cursor: pointer; font-size: 13px;">
+            <span style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" [checked]="brands.has(f.value)" (change)="bat(brands, f.value, $any($event.target).checked)" style="accent-color: #444d32; width: 16px; height: 16px;"><span>{{ f.value }}</span></span>
+            <small style="color: #888;">({{ f.count }})</small>
+          </label>
+        }
+      </fieldset>
+      <fieldset style="border: 0; padding: 0; margin: 0 0 24px 0;">
+        <legend style="font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; margin-bottom: 12px;">NHÓM HƯƠNG</legend>
+        @for (f of facets().families; track f.value) {
+          <label class="scentory-filter-label" style="display: flex; align-items: center; justify-content: space-between; margin: 8px 0; cursor: pointer; font-size: 13px;">
+            <span style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" [checked]="families.has(f.value)" (change)="bat(families, f.value, $any($event.target).checked)" style="accent-color: #444d32; width: 16px; height: 16px;"><span>{{ f.value }}</span></span>
+            <small style="color: #888;">({{ f.count }})</small>
+          </label>
+        }
+      </fieldset>
+      <fieldset style="border: 0; padding: 0; margin: 0 0 24px 0;">
+        <legend style="font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; margin-bottom: 12px;">KHOẢNG GIÁ</legend>
+        @for (g of [['duoi-4','Dưới 4.000.000đ'],['4-7','4.000.000đ – 7.000.000đ'],['tren-7','Trên 7.000.000đ']]; track g[0]) {
+          <label class="scentory-filter-label" style="display: flex; align-items: center; gap: 8px; margin: 8px 0; cursor: pointer; font-size: 13px;">
+            <input type="radio" name="filter-price" [checked]="gia === g[0]" (change)="chonGia(g[0])" style="accent-color: #444d32;"><span>{{ g[1] }}</span>
+          </label>
+        }
+        <div class="custom-price-wrap" style="margin-top: 10px; padding-top: 10px; border-top: 1px dashed #e0dacb;">
+          <div style="font-size: 11px; font-weight: 600; color: #555; margin-bottom: 6px;">Khoảng giá tùy chỉnh (VNĐ)</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+            <input #tu type="number" placeholder="Từ" min="0" step="100000" style="width: 100%; padding: 6px; font-size: 11px; border: 1px solid #d5cfbf; border-radius: 3px; background: #fffdfa;">
+            <span style="color: #888;">–</span>
+            <input #den type="number" placeholder="Đến" min="0" step="100000" style="width: 100%; padding: 6px; font-size: 11px; border: 1px solid #d5cfbf; border-radius: 3px; background: #fffdfa;">
+          </div>
+          @if (loiGia) { <p style="font-size: 10px; color: #c53030; margin: 4px 0 6px; font-weight: 600;">{{ loiGia }}</p> }
+          <button type="button" (click)="apDungGia(tu.value, den.value)" style="width: 100%; padding: 6px 10px; background: #444d32; color: #fff; border: 0; border-radius: 3px; font-size: 10px; font-weight: 700; cursor: pointer; letter-spacing: 0.5px;">ÁP DỤNG GIÁ</button>
+        </div>
+      </fieldset>
+      <fieldset style="border: 0; padding: 0; margin: 0 0 24px 0;">
+        <legend style="font-size: 11px; font-weight: 700; color: #888; letter-spacing: 1px; margin-bottom: 12px;">NỒNG ĐỘ</legend>
+        @for (f of facets().concentrations; track f.value) {
+          <label class="scentory-filter-label" style="display: flex; align-items: center; justify-content: space-between; margin: 8px 0; cursor: pointer; font-size: 13px;">
+            <span style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" [checked]="concentrations.has(f.value)" (change)="bat(concentrations, f.value, $any($event.target).checked)" style="accent-color: #444d32; width: 16px; height: 16px;"><span>{{ f.value }}</span></span>
+            <small style="color: #888;">({{ f.count }})</small>
+          </label>
+        }
+      </fieldset>
+    </aside>
+    <section class="product-list">
+      <div class="product-toolbar">
+        <span><div style="display: flex; align-items: center; gap: 8px;"><span style="cursor: pointer;" (click)="tai(1)">⌕</span>
+          <input type="text" maxlength="100" [(ngModel)]="q" (keyup.enter)="tai(1)" placeholder="Tìm kiếm nốt hương, thương hiệu..." style="border: 1px solid #d3ccbd; border-radius: 4px; padding: 4px 10px; font-size: 12px; width: 220px; max-width: 100%; background: #fff;"></div></span>
+        <span><span class="count-val">Hiển thị <b>{{ tong() }}</b> tác phẩm{{ chips().length ? ' phù hợp bộ lọc' : '' }}</span>
+          <span class="scentory-sort-wrap" style="margin-left: 12px; display: inline-flex; align-items: center; gap: 6px;">
+            <label style="font-size: 12px; color: #777;">Sắp xếp:</label>
+            <select class="scentory-sort-select" [(ngModel)]="sort" (change)="doiSort()" style="padding: 4px 8px; border: 1px solid #d3ccbd; border-radius: 4px; background: #fff; font-size: 12px; font-weight: 600; color: #1c2a1e; cursor: pointer;">
+              @if (coHoSo()) { <option value="match">Phù hợp nhất (Scent Match)</option> }
+              <option value="name">Tên: A – Z</option>
+              <option value="newest">Mới nhất</option>
+              <option value="price_asc">Giá: Thấp đến Cao</option>
+              <option value="price_desc">Giá: Cao đến Thấp</option>
+              <option value="rating">Đánh giá cao nhất</option>
+              <option value="bestseller">Bán chạy nhất</option>
+            </select>
+          </span></span>
+      </div>
+      @if (chips().length) {
+        <div class="scentory-filter-chips-wrap" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px;">
+          @for (c of chips(); track c.loai + c.gt) {
+            <span class="scentory-chip" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: #eeece2; border-radius: 16px; font-size: 11px; font-weight: 600; color: #444d32;">{{ c.nhan }}
+              <button type="button" (click)="boChip(c)" style="background: none; border: none; cursor: pointer; color: #888; font-size: 12px; padding: 0 2px;">✕</button></span>
+          }
+          <button type="button" (click)="lamMoi()" style="background: none; border: none; cursor: pointer; font-size: 11px; text-decoration: underline; color: #888; margin-left: 8px;">Xóa tất cả</button>
+        </div>
+      }
+      @if (!coHoSo() && xt.daTai()) {
+        <div class="scentory-quiz-invite" style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 18px;margin-bottom:20px;background:#f3efe6;border:1px solid #e2dccc;border-radius:6px;font-size:13px;">
+          <span>✦ Làm <b>Scent Quiz 8 bước</b> để xem mức độ phù hợp (%) của từng chai với bạn.</span>
+          <a routerLink="/scent-quiz/buoc/1" style="font-weight:700;color:#444d32;letter-spacing:.5px;white-space:nowrap;">BẮT ĐẦU →</a>
+        </div>
+      }
+      @if (loi()) { <p style="color:#c53030">{{ loi() }}</p> }
+      <div class="product-grid" [class.three]="sanPham().length <= 3">
+        @for (p of sanPham(); track p.id) {
+          <app-the-san-pham [sp]="p" [diem]="diemCua(p.id)" [tieuChi]="tcCua(p.id)" />
+        } @empty {
+          @if (!dangTai()) {
+            <div class="scentory-empty-result-box" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+              <div style="font-size: 42px; margin-bottom: 16px; opacity: 0.6;">⚲</div>
+              <h3 style="font-size: 22px; margin-bottom: 10px; color: #1c2a1e;">Không tìm thấy tác phẩm phù hợp</h3>
+              <p style="color: #6b6b5b; font-size: 14px; max-width: 480px; margin: 0 auto 24px;">Rất tiếc, không có nốt hương hoặc thương hiệu nào khớp với tiêu chí tìm kiếm và bộ lọc đã chọn.</p>
+              <button type="button" (click)="lamMoi()" style="padding: 12px 28px; background: #444d32; color: #fff; border: 0; font-weight: 700; font-size: 11px; letter-spacing: 1px; cursor: pointer;">LÀM MỚI BỘ LỌC</button>
+            </div>
+          }
+        }
+      </div>
+      @if (soTrang() > 1) {
+        <nav class="scentory-pagination" style="display:flex;justify-content:center;gap:8px;margin-top:32px;">
+          @for (n of trangSo(); track n) {
+            <button type="button" (click)="tai(n)" [style.background]="n === trang() ? '#444d32' : '#fff'" [style.color]="n === trang() ? '#fff' : '#444d32'" style="width:36px;height:36px;border:1px solid #444d32;border-radius:50%;font-weight:700;cursor:pointer;">{{ n }}</button>
+          }
+        </nav>
+      }
+    </section>
+  </div>
+</main>

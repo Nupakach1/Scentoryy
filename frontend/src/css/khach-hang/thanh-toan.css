@@ -1,0 +1,346 @@
+/* SCENTORY – Thanh toán (checkout.html): giao diện sang trọng
+   Markup: pages/checkout.html + js/features/checkout/checkout-renderer.js */
+body.checkout-page {
+  --ck-ink: #1d1f17;
+  --ck-muted: #7a7462;
+  --ck-gold: #b08a4e;
+  --ck-gold-2: #dcc28a;
+  --ck-line: #e8dfcc;
+  --ck-paper: #fffdf8;
+  --ck-night: #17140f;
+  background: #f6f1e7 !important;
+}
+body.checkout-page main.checkout-main {
+  min-width: 0; padding: 40px 64px 96px !important; font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  background:
+    radial-gradient(900px 500px at 0% 0%, rgba(214, 186, 128, .16), transparent 60%),
+    radial-gradient(700px 500px at 100% 30%, rgba(160, 172, 130, .1), transparent 60%),
+    #f6f1e7 !important;
+}
+body.checkout-page main * { font-family: inherit; box-sizing: border-box; }
+
+/* ---------- Thanh bước ---------- */
+body.checkout-page main .checkout-steps {
+  max-width: 1180px; margin: 0 auto 34px !important; display: flex; align-items: center; justify-content: center; gap: 14px;
+  font-size: 12.5px !important; color: #a39c86 !important; letter-spacing: .04em !important;
+}
+body.checkout-page main .checkout-steps > span:not(.ck-line) { display: inline-flex; align-items: center; gap: 10px; font-weight: 600; }
+body.checkout-page main .checkout-steps i {
+  width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 12px; font-weight: 800;
+  border: 1px solid #ddd2b8; background: var(--ck-paper); color: #a39c86;
+}
+body.checkout-page main .checkout-steps .is-done { color: var(--ck-gold); }
+body.checkout-page main .checkout-steps .is-done i { background: #f3e7cb; border-color: #e2cfa4; color: var(--ck-gold); }
+body.checkout-page main .checkout-steps .is-current { color: var(--ck-ink); }
+body.checkout-page main .checkout-steps .is-current i { background: linear-gradient(135deg, #2b2a1f, #4a4330); border: 0; color: var(--ck-gold-2); box-shadow: 0 0 0 4px rgba(220, 194, 138, .25); }
+body.checkout-page main .checkout-steps .ck-line { width: 80px; height: 1px; background: linear-gradient(90deg, #e2cfa4, #ddd2b8); }
+
+/* ---------- Bố cục 2 cột ---------- */
+body.checkout-page main .checkout-columns { max-width: 1180px !important; grid-template-columns: minmax(0, 1fr) 400px !important; gap: 36px !important; }
+body.checkout-page main .checkout-columns > section {
+  position: relative; padding: 44px 48px 40px !important; border-radius: 28px !important;
+  background: linear-gradient(170deg, #fffefa 0%, #fbf7ee 100%) !important; border: 1px solid var(--ck-line) !important;
+  box-shadow: 0 30px 60px -40px rgba(70, 52, 20, .45) !important; counter-reset: ck-sec;
+}
+body.checkout-page main .checkout-columns > section::before {
+  content: ''; position: absolute; top: 0; left: 48px; right: 48px; height: 1px; background: linear-gradient(90deg, transparent, var(--ck-gold-2), transparent);
+}
+
+/* Tiêu đề mục: số thứ tự vàng */
+body.checkout-page main .section-title {
+  counter-increment: ck-sec; display: flex; align-items: center; gap: 14px; margin: 42px 0 20px !important; padding: 0 0 16px !important;
+  border-bottom: 1px solid var(--ck-line) !important;
+}
+body.checkout-page main .checkout-columns > section > .section-title:first-child { margin-top: 0 !important; }
+body.checkout-page main .section-title::before {
+  content: '0' counter(ck-sec); flex: none; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 12.5px; font-weight: 800; color: var(--ck-gold); background: radial-gradient(circle at 30% 25%, #fffaf0, #f3e7cb); border: 1px solid #e2cfa4;
+}
+body.checkout-page main .section-title h1, body.checkout-page main .section-title h2 {
+  flex: 1; margin: 0 !important; font-size: 17px !important; font-weight: 800 !important; letter-spacing: .06em !important; color: var(--ck-ink) !important;
+}
+body.checkout-page main .section-title b {
+  padding: 6px 12px; border-radius: 999px; font-size: 10px !important; letter-spacing: .14em !important; font-weight: 700;
+  color: var(--ck-gold) !important; border: 1px solid #e2cfa4; background: #fffaf0;
+}
+
+body.checkout-page main .login-note {
+  margin: 0 0 26px !important; padding: 14px 20px !important; border-radius: 14px; font-size: 13px !important; line-height: 1.6;
+  color: #5e5948 !important; background: linear-gradient(100deg, #f8eedb, #fbf6ea) !important; border: 1px solid #ecdcb9;
+}
+body.checkout-page main .login-note b { color: var(--ck-ink) !important; }
+body.checkout-page main .login-note a { color: var(--ck-gold) !important; font-weight: 700; text-decoration: none !important; border-bottom: 1px solid #dcc79c; margin-left: 8px; }
+
+/* ---------- Form ---------- */
+body.checkout-page main .form-grid { gap: 20px 18px !important; margin-top: 0 !important; }
+body.checkout-page main .form-grid label,
+body.checkout-page main .checkout-columns > section > label {
+  display: block; font-size: 10.5px !important; font-weight: 700 !important; letter-spacing: .16em !important; color: #8b8571 !important;
+}
+body.checkout-page main .checkout-columns > section > label { margin-top: 22px; }
+body.checkout-page main .form-grid input,
+body.checkout-page main .form-grid select,
+body.checkout-page main .checkout-columns textarea {
+  margin-top: 9px !important; height: 52px; padding: 0 18px !important; border-radius: 14px !important;
+  border: 1px solid #e3d9c4 !important; background: #fffdf8 !important; color: var(--ck-ink) !important;
+  font-size: 14px !important; letter-spacing: 0; font-weight: 500; transition: border-color .2s, box-shadow .2s, background .2s;
+}
+body.checkout-page main .checkout-columns textarea { height: auto; min-height: 96px; padding: 14px 18px !important; line-height: 1.6; }
+body.checkout-page main .form-grid select {
+  appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 44px !important;
+  background: #fffdf8 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5' fill='none' stroke='%23b08a4e' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 18px center !important;
+}
+body.checkout-page main input::placeholder, body.checkout-page main textarea::placeholder { color: #b3ab95; font-weight: 400; }
+body.checkout-page main .form-grid input:hover, body.checkout-page main .form-grid select:hover, body.checkout-page main textarea:hover { border-color: #d6c59c !important; }
+body.checkout-page main .form-grid input:focus, body.checkout-page main .form-grid select:focus, body.checkout-page main textarea:focus {
+  outline: none; border-color: var(--ck-gold) !important; background-color: #fff !important; box-shadow: 0 0 0 4px rgba(220, 194, 138, .22);
+}
+body.checkout-page main .form-grid small { margin-top: 8px !important; font-size: 12px !important; letter-spacing: 0 !important; font-weight: 500; color: #9a937e !important; font-style: italic; }
+body.checkout-page main .checkout-columns > section > p { margin: 16px 0 0 !important; font-size: 12.5px !important; color: #7a7462 !important; }
+body.checkout-page main .scentory-field-error { font-size: 11.5px !important; }
+
+body.checkout-page main .ck-contact {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 14px 0 0; padding: 14px 18px;
+  border-radius: 14px; border: 1px dashed #e2d3b1; font-size: 13px; color: #6a6553;
+}
+body.checkout-page main .ck-contact button {
+  flex: none; padding: 9px 18px; border-radius: 999px; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing: .04em;
+  color: var(--ck-ink); background: #fffdf8; border: 1px solid #d9c59a; transition: background .2s, color .2s;
+}
+body.checkout-page main .ck-contact button:hover { background: var(--ck-night); color: var(--ck-gold-2); border-color: var(--ck-night); }
+
+/* ---------- Thẻ lựa chọn giao hàng / thanh toán ---------- */
+body.checkout-page main .choice-line.ck-choice {
+  display: grid !important; grid-template-columns: 22px 46px minmax(0, 1fr) auto; align-items: center; gap: 16px !important;
+  margin: 12px 0 !important; padding: 18px 22px !important; border-radius: 18px !important; cursor: pointer;
+  background: #fffdf8 !important; border: 1px solid #e6dcc7 !important; color: var(--ck-ink) !important; font-size: 14px !important;
+  transition: border-color .25s, box-shadow .25s, transform .25s, background .25s;
+}
+body.checkout-page main .choice-line.ck-choice:hover { border-color: #d6c59c !important; transform: translateY(-1px); }
+body.checkout-page main .choice-line.ck-choice.selected {
+  border-color: #c9a96a !important; background: linear-gradient(110deg, #fffaf0, #f8eedb) !important;
+  box-shadow: 0 0 0 3px rgba(220, 194, 138, .2), 0 16px 30px -22px rgba(110, 80, 30, .6);
+}
+.ck-radio { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid #cdbf9f; background: #fff; position: relative; transition: border-color .25s; }
+.ck-radio.is-on { border-color: var(--ck-gold); }
+.ck-radio.is-on::after { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: linear-gradient(135deg, #e6cd97, #a9823f); }
+.ck-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: #f6efe0; border: 1px solid #ecdfc3; color: var(--ck-gold); transition: background .25s, color .25s; }
+.ck-ico svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; }
+body.checkout-page main .choice-line.selected .ck-ico { background: linear-gradient(135deg, #2b2a1f, #4a4330); border-color: transparent; color: var(--ck-gold-2); }
+.ck-text { display: grid; gap: 4px; min-width: 0; }
+body.checkout-page main .ck-text b { font-size: 14.5px; font-weight: 700; color: var(--ck-ink); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+body.checkout-page main .ck-text small { grid-column: auto !important; margin: 0 !important; font-size: 12.5px !important; color: #8b8571 !important; line-height: 1.5; }
+.ck-tag { font-style: normal; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; color: #9a7b45; background: #f3e7cb; }
+.ck-tag.is-real { color: #4f6a3c; background: #e5ecd8; }
+body.checkout-page main .choice-line.ck-choice > strong { float: none !important; font-size: 13.5px !important; font-weight: 700; color: var(--ck-ink) !important; white-space: nowrap; }
+body.checkout-page main .choice-line.selected > strong { color: #8a6a32 !important; }
+
+/* Khung QR minh họa */
+body.checkout-page main .ck-qr-panel { margin: 4px 0 18px; padding: 22px; border-radius: 20px; background: linear-gradient(160deg, #1d1a13, #2c2719); border: 1px solid rgba(220, 194, 138, .3); color: #f3eee2; }
+.ck-qr { display: grid; grid-template-columns: 150px 1fr; gap: 24px; align-items: center; }
+.ck-qr-code { padding: 14px 14px 10px; border-radius: 16px; background: #fff; text-align: center; }
+.ck-qr-code svg { display: block; margin: 0 auto; }
+.ck-qr-code span { display: block; margin-top: 6px; font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ck-gold); }
+.ck-qr-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.ck-qr-top b { font-size: 16px; color: #fff; }
+.ck-timer { padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; color: var(--ck-gold-2); background: rgba(220, 194, 138, .12); border: 1px solid rgba(220, 194, 138, .35); }
+.ck-timer span { font-weight: 800; color: #fff; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.ck-timer.is-expired { color: #ffb4a8; border-color: rgba(255, 140, 120, .4); background: rgba(255, 120, 100, .1); }
+.ck-qr dl { display: grid; grid-template-columns: auto 1fr; gap: 8px 18px; margin: 16px 0; padding: 14px 0; border-top: 1px solid rgba(255, 255, 255, .1); border-bottom: 1px solid rgba(255, 255, 255, .1); font-size: 13px; }
+.ck-qr dt { color: rgba(243, 238, 226, .55); }
+.ck-qr dd { margin: 0; text-align: right; font-weight: 700; color: #fff; }
+.ck-qr dd#qr-panel-total { color: var(--ck-gold-2); font-size: 16px; }
+.ck-qr-note { margin: 0; font-size: 12px; line-height: 1.65; color: rgba(243, 238, 226, .65); }
+.ck-qr-note b { color: #f3eee2; }
+.ck-qr-expired { margin-top: 10px; font-size: 12px; color: #ffb4a8; }
+.ck-qr-expired button { background: none; border: 0; color: var(--ck-gold-2); text-decoration: underline; cursor: pointer; font-weight: 700; }
+
+/* ---------- Tóm tắt đơn hàng (cột phải) ---------- */
+body.checkout-page main .order-summary {
+  position: sticky !important; top: 104px !important; margin-top: 0 !important; padding: 36px 34px 34px !important; overflow: hidden;
+  border-radius: 28px !important; border: 1px solid rgba(220, 194, 138, .28) !important; color: #f3eee2 !important;
+  background:
+    radial-gradient(420px 260px at 100% 0%, rgba(220, 194, 138, .2), transparent 70%),
+    linear-gradient(170deg, #1f1b14 0%, #15130f 100%) !important;
+  box-shadow: 0 40px 70px -40px rgba(20, 16, 8, .85) !important;
+}
+body.checkout-page main .order-summary::after { content: ''; position: absolute; inset: 12px; border: 1px solid rgba(220, 194, 138, .16); border-radius: 20px; pointer-events: none; }
+body.checkout-page main .order-summary > * { position: relative; z-index: 1; }
+body.checkout-page main .order-summary h2 { margin: 0 0 8px !important; font-size: 13px !important; font-weight: 700 !important; letter-spacing: .24em !important; color: var(--ck-gold-2) !important; }
+
+body.checkout-page main .summary-product {
+  display: grid !important; grid-template-columns: 62px minmax(0, 1fr) auto !important; gap: 16px !important; align-items: center !important;
+  margin: 0 !important; padding: 16px 0 !important; min-height: 0 !important; border-bottom: 1px solid rgba(255, 255, 255, .08) !important;
+}
+body.checkout-page main .summary-product .ck-thumb {
+  position: relative; width: 62px !important; height: 74px !important; border-radius: 14px !important; display: grid !important; place-items: center;
+  background: radial-gradient(circle at 50% 40%, #fff, #efe7d6) !important; overflow: visible !important;
+}
+body.checkout-page main .ck-thumb img { max-width: 46px; max-height: 62px; object-fit: contain; mix-blend-mode: multiply; }
+body.checkout-page main .ck-thumb i {
+  position: absolute; top: -7px; right: -7px; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center;
+  font-style: normal; font-size: 11px; font-weight: 800; color: var(--ck-night); background: linear-gradient(135deg, #f1dcaa, #c79c52);
+}
+body.checkout-page main .ck-item { display: grid; gap: 3px; min-width: 0; }
+body.checkout-page main .ck-item small { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--ck-gold-2); }
+body.checkout-page main .ck-item b { margin: 0 !important; font-size: 15px !important; color: #fff !important; line-height: 1.3; }
+body.checkout-page main .ck-item em { font-size: 12px; color: rgba(243, 238, 226, .55); }
+body.checkout-page main .summary-product > strong { font-size: 14px !important; font-weight: 700; color: #f3eee2 !important; white-space: nowrap; }
+
+/* Voucher */
+body.checkout-page main .scentory-voucher-wrap { margin: 22px 0 18px; }
+body.checkout-page main .ck-label { display: block; margin-bottom: 10px; font-size: 10.5px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: rgba(243, 238, 226, .6); }
+body.checkout-page main .ck-v-row { display: flex; gap: 8px; padding: 5px; border-radius: 999px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); }
+body.checkout-page main .ck-v-row input {
+  flex: 1; min-width: 0; height: 40px !important; margin: 0 !important; padding: 0 14px !important; border: 0 !important; border-radius: 999px !important;
+  background: transparent !important; color: #fff !important; font-size: 13px !important; letter-spacing: .08em; text-transform: uppercase;
+}
+body.checkout-page main .ck-v-row input::placeholder { color: rgba(243, 238, 226, .4); text-transform: none; letter-spacing: 0; }
+body.checkout-page main .ck-v-row input:focus { outline: none; }
+body.checkout-page main .order-summary .ck-v-row button {
+  width: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 20px !important; height: 40px; border-radius: 999px !important; cursor: pointer;
+  font-size: 12px !important; font-weight: 800 !important; letter-spacing: .06em; color: var(--ck-night) !important; background: linear-gradient(135deg, #f1dcaa, #c79c52) !important;
+}
+body.checkout-page main .ck-v-list { margin-top: 12px; font-size: 12.5px; }
+body.checkout-page main .ck-v-list summary { cursor: pointer; color: var(--ck-gold-2); font-weight: 600; list-style: none; }
+body.checkout-page main .ck-v-list summary::before { content: '✦ '; font-size: 10px; }
+body.checkout-page main .ck-v-list > div { margin-top: 10px; padding: 6px 14px; border-radius: 14px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .1); }
+body.checkout-page main .ck-v-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed rgba(255, 255, 255, .12); }
+body.checkout-page main .ck-v-item:last-child { border-bottom: 0; }
+body.checkout-page main .ck-v-item.is-off { opacity: .5; }
+body.checkout-page main .ck-v-item b { color: var(--ck-gold-2); margin-right: 8px; letter-spacing: .06em; }
+body.checkout-page main .ck-v-item span { color: #f3eee2; }
+body.checkout-page main .ck-v-item small { display: block; margin-top: 3px; font-size: 11px; color: rgba(243, 238, 226, .5); }
+body.checkout-page main .order-summary .ck-v-item button {
+  width: auto !important; min-height: 0 !important; margin: 0 !important; padding: 6px 14px !important; border-radius: 999px !important; cursor: pointer; flex: none;
+  font-size: 11px !important; font-weight: 700 !important; color: var(--ck-gold-2) !important; background: transparent !important; border: 1px solid rgba(220, 194, 138, .5) !important;
+}
+body.checkout-page main .order-summary .ck-v-item button:disabled { opacity: .45; cursor: not-allowed; }
+body.checkout-page main .ck-v-applied { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 10px 16px; border-radius: 999px; background: rgba(160, 190, 120, .14); border: 1px solid rgba(160, 190, 120, .35); font-size: 13px; color: #d9e6c4; }
+body.checkout-page main .ck-v-applied b { color: #fff; margin-right: 6px; letter-spacing: .06em; }
+body.checkout-page main .order-summary .ck-v-applied button { width: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; background: none !important; color: #ffb4a8 !important; font-size: 12px !important; cursor: pointer; text-decoration: underline; }
+
+/* Dòng tiền */
+body.checkout-page main .order-summary hr { margin: 8px 0 10px; border: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(220, 194, 138, .4), transparent); }
+body.checkout-page main .order-summary > p { display: flex !important; justify-content: space-between; margin: 10px 0 !important; font-size: 13.5px !important; color: rgba(243, 238, 226, .65) !important; }
+body.checkout-page main .order-summary > p b { float: none !important; color: #f3eee2 !important; font-weight: 700; }
+body.checkout-page main .order-summary > p.summary-discount-line, body.checkout-page main .order-summary > p.summary-discount-line b { color: #c9dcae !important; }
+body.checkout-page main .order-summary h3 {
+  display: flex !important; justify-content: space-between; align-items: center; gap: 12px; margin: 18px 0 0 !important; padding: 20px 0 0 !important;
+  border-top: 1px solid rgba(255, 255, 255, .12) !important; font-size: 11px !important; font-weight: 700 !important; letter-spacing: .14em !important; color: rgba(243, 238, 226, .7) !important;
+}
+body.checkout-page main .order-summary h3 strong {
+  display: inline !important; margin: 0 !important; font-size: 30px !important; font-weight: 800 !important; letter-spacing: -.02em !important; white-space: nowrap;
+  background: linear-gradient(180deg, #f5e3b8, #c79c52); -webkit-background-clip: text; background-clip: text; color: transparent !important;
+}
+body.checkout-page main .order-summary > button {
+  width: 100% !important; min-height: 0 !important; margin: 26px 0 0 !important; padding: 18px 20px !important; border: 0 !important; border-radius: 999px !important; cursor: pointer;
+  font-size: 13px !important; font-weight: 800 !important; letter-spacing: .16em !important; color: var(--ck-night) !important;
+  background: linear-gradient(135deg, #f3dfae, #c79c52) !important; box-shadow: 0 18px 34px -16px rgba(220, 180, 100, .7); transition: transform .25s, box-shadow .25s;
+}
+body.checkout-page main .order-summary > button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 22px 40px -16px rgba(220, 180, 100, .85); }
+body.checkout-page main .order-summary > button:disabled { opacity: .6; cursor: progress; }
+
+/* Báo lỗi ô bắt buộc */
+body.checkout-page main .form-grid input.is-invalid, body.checkout-page main .form-grid select.is-invalid {
+  border-color: #c4473a !important; background-color: #fff7f5 !important; box-shadow: 0 0 0 3px rgba(196, 71, 58, .12); }
+body.checkout-page main .form-grid .is-invalid:focus { box-shadow: 0 0 0 4px rgba(196, 71, 58, .18); }
+body.checkout-page main .scentory-field-error {
+  display: flex !important; align-items: center; gap: 6px; margin-top: 8px; font-size: 12.5px !important; font-weight: 600 !important;
+  letter-spacing: 0 !important; text-transform: none; font-style: normal; color: #b23a2e !important; }
+body.checkout-page main .scentory-field-error::before {
+  content: "!"; flex: none; width: 16px; height: 16px; border-radius: 50%; display: grid; place-items: center;
+  font-size: 11px; font-weight: 800; color: #fff; background: #c4473a; }
+
+/* ---------- Màn hình hoàn tất đơn hàng ---------- */
+body.checkout-page main .checkout-steps .is-done + .ck-line { background: #d9c38f; }
+body.checkout-page main .ck-done {
+  max-width: 980px; margin: 0 auto; border-radius: 30px; overflow: hidden;
+  background: #fffdf8; border: 1px solid var(--ck-line);
+  box-shadow: 0 40px 80px -50px rgba(60, 44, 18, .55);
+  animation: ck-rise .6s ease both;
+}
+@keyframes ck-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+.ck-done-hero {
+  position: relative; isolation: isolate; padding: 64px 48px 56px; text-align: center; color: #f3eee2;
+  background:
+    radial-gradient(520px 280px at 50% 0%, rgba(220, 194, 138, .28), transparent 70%),
+    linear-gradient(180deg, rgba(23, 20, 15, .86), rgba(23, 20, 15, .94)),
+    url('/hinh-anh/san-pham/mm-004-2.webp') center 40% / cover no-repeat;
+}
+.ck-done-hero::after { content: ''; position: absolute; inset: 14px; z-index: -1; border: 1px solid rgba(220, 194, 138, .22); border-radius: 20px; }
+.ck-done-check { width: 84px; height: 84px; margin: 0 auto 26px; }
+.ck-done-check svg { width: 100%; height: 100%; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.ck-done-check circle { stroke: #dcc28a; stroke-width: 1.6; stroke-dasharray: 151; stroke-dashoffset: 151; animation: ck-draw .9s ease forwards .15s; }
+.ck-done-check path { stroke: #f3dfae; stroke-width: 2.6; stroke-dasharray: 36; stroke-dashoffset: 36; animation: ck-draw .5s ease forwards .9s; }
+@keyframes ck-draw { to { stroke-dashoffset: 0; } }
+body.checkout-page main .ck-done-kicker { margin: 0 0 12px; font-size: 11.5px; font-weight: 700; letter-spacing: .26em; text-transform: uppercase; color: #dcc28a; }
+body.checkout-page main .ck-done-hero h1 { margin: 0 auto 16px; max-width: 640px; font-size: 40px; line-height: 1.12; font-weight: 800; letter-spacing: -.02em; color: #fff; }
+body.checkout-page main .ck-done-lede { margin: 0 auto; max-width: 560px; font-size: 15px; line-height: 1.75; color: rgba(243, 238, 226, .75); }
+.ck-done-code {
+  display: inline-flex; align-items: center; gap: 14px; margin-top: 28px; padding: 10px 12px 10px 22px; border-radius: 999px;
+  background: rgba(255, 255, 255, .07); border: 1px solid rgba(220, 194, 138, .35);
+}
+.ck-done-code span { font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: rgba(243, 238, 226, .65); }
+.ck-done-code b { padding: 7px 16px; border-radius: 999px; font-size: 15px; letter-spacing: .06em; color: #17140f; background: linear-gradient(135deg, #f3dfae, #c79c52); }
+
+/* Tiến trình đơn */
+.ck-done-track { list-style: none; margin: 0; padding: 30px 56px; display: grid; grid-template-columns: repeat(4, 1fr); border-bottom: 1px solid var(--ck-line); background: #fbf6ea; }
+.ck-done-track li { position: relative; display: grid; justify-items: center; gap: 4px; text-align: center; }
+.ck-done-track li:not(:last-child)::after { content: ''; position: absolute; top: 17px; left: calc(50% + 24px); right: calc(-50% + 24px); height: 1px; background: #ddd2b8; }
+.ck-done-track li.is-done::after { background: #c9a96a; }
+.ck-done-track i { width: 34px; height: 34px; margin-bottom: 8px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 13px; font-weight: 800; color: #a39c86; background: #fffdf8; border: 1px solid #ddd2b8; }
+.ck-done-track .is-done i { color: #fff; border: 0; background: linear-gradient(135deg, #e6cd97, #a9823f); }
+.ck-done-track .is-current i { color: #dcc28a; border: 0; background: #22201a; box-shadow: 0 0 0 4px rgba(220, 194, 138, .3); }
+.ck-done-track b { font-size: 13.5px; color: var(--ck-ink); }
+.ck-done-track small { font-size: 12px; color: #9a937e; }
+
+/* Nội dung */
+.ck-done-body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
+.ck-done-items, .ck-done-info { padding: 36px 44px 40px; }
+.ck-done-info { background: #faf5ea; border-left: 1px solid var(--ck-line); }
+body.checkout-page main .ck-done h2 { margin: 0 0 18px; font-size: 13px; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; color: #8a6a32; }
+body.checkout-page main .ck-done h2 span { color: #b3ab95; }
+.ck-done-item { display: grid; grid-template-columns: 58px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--ck-line); }
+body.checkout-page main .ck-done-item .ck-thumb { position: relative; width: 58px; height: 70px; border-radius: 12px; display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #fff, #efe7d6); }
+body.checkout-page main .ck-done-item .ck-thumb img { max-width: 42px; max-height: 58px; object-fit: contain; mix-blend-mode: multiply; }
+body.checkout-page main .ck-done-item .ck-thumb i { position: absolute; top: -6px; right: -6px; min-width: 21px; height: 21px; padding: 0 5px; border-radius: 999px; display: grid; place-items: center; font-style: normal; font-size: 11px; font-weight: 800; color: #17140f; background: linear-gradient(135deg, #f1dcaa, #c79c52); }
+.ck-done-item div { display: grid; gap: 2px; min-width: 0; }
+.ck-done-item small { font-size: 10px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: #a5813f; }
+.ck-done-item b { font-size: 15px; color: var(--ck-ink); }
+.ck-done-item em { font-size: 12px; color: #9a937e; }
+.ck-done-item strong { font-size: 14px; color: var(--ck-ink); white-space: nowrap; }
+.ck-done-sum { display: grid; grid-template-columns: 1fr auto; gap: 10px 0; margin: 20px 0 0; font-size: 14px; }
+.ck-done-sum dt { color: #7a7462; }
+.ck-done-sum dd { margin: 0; padding-left: 16px; text-align: right; font-weight: 600; color: var(--ck-ink); }
+.ck-done-sum .is-discount { color: #4f6a3c; }
+.ck-done-sum .is-total { padding-top: 14px; border-top: 1px solid var(--ck-line); }
+.ck-done-sum dt.is-total { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ck-ink); align-self: center; }
+.ck-done-sum dd.is-total { font-size: 26px; font-weight: 800; letter-spacing: -.02em; color: #8a6a32; }
+
+.ck-done-info dl { margin: 0; display: grid; gap: 18px; }
+.ck-done-info dt { font-size: 10.5px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: #9a937e; margin-bottom: -12px; }
+.ck-done-info dd { margin: 0; font-size: 14.5px; font-weight: 600; line-height: 1.5; color: var(--ck-ink); }
+.ck-done-info dd small { display: block; font-size: 12.5px; font-weight: 500; color: #8b8571; }
+.ck-done-status { display: inline-flex; align-items: center; gap: 10px; margin: 26px 0 0; padding: 9px 16px; border-radius: 999px; font-size: 12.5px; font-weight: 700; color: #6d5326; background: #f3e7cb; }
+.ck-done-status span { width: 8px; height: 8px; border-radius: 50%; background: #b08a4e; box-shadow: 0 0 0 0 rgba(176, 138, 78, .6); animation: ck-pulse 1.8s ease-out infinite; }
+@keyframes ck-pulse { to { box-shadow: 0 0 0 10px rgba(176, 138, 78, 0); } }
+
+/* Nút */
+.ck-done-actions { display: flex; justify-content: center; gap: 14px; padding: 30px 44px 40px; border-top: 1px solid var(--ck-line); }
+.ck-done-actions a { padding: 16px 30px; border-radius: 999px; font-size: 13px; font-weight: 800; letter-spacing: .08em; text-decoration: none !important; transition: transform .25s, box-shadow .25s, background .25s; }
+.ck-done-primary { color: #17140f !important; background: linear-gradient(135deg, #f3dfae, #c79c52); box-shadow: 0 16px 30px -14px rgba(200, 160, 80, .75); }
+.ck-done-primary:hover { transform: translateY(-2px); }
+.ck-done-secondary { color: var(--ck-ink) !important; border: 1px solid #d9c59a; background: #fffdf8; }
+.ck-done-secondary:hover { background: #22201a; color: #f3dfae !important; border-color: #22201a; }
+
+/* Ô tick "Lưu địa chỉ" — nhỏ gọn, thẳng hàng với chữ */
+body.checkout-page main .checkout-columns > section > label.ck-luu {
+  display: flex !important; align-items: center; gap: 10px; margin: 14px 0 4px !important; cursor: pointer;
+  font-size: 13px !important; font-weight: 500 !important; letter-spacing: 0 !important; text-transform: none; color: #55574e !important;
+}
+body.checkout-page main label.ck-luu input[type=checkbox] {
+  flex: none; width: 18px !important; height: 18px !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important;
+  border-radius: 4px !important; accent-color: var(--olive, #3d432b); cursor: pointer; box-shadow: none !important;
+}

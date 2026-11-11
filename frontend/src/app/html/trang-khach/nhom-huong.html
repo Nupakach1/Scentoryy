@@ -1,0 +1,80 @@
+<main class="families-main sf-main">
+  <section class="sf-hero">
+    <div class="sf-hero-text">
+      <p class="sf-eyebrow">✦ BẢN ĐỒ KHỨU GIÁC SCENTORY</p>
+      <h1>Khám Phá <em>{{ nhom().length }} Nhóm Hương</em><br>Đặc Trưng</h1>
+      <p class="sf-lede">Mỗi nhóm hương là một cách kể chuyện khác nhau của mùi hương. Hiểu nhóm hương mình yêu thích sẽ giúp việc chọn một chai nước hoa signature trở nên dễ dàng hơn.</p>
+      <ul class="sf-stats">
+        <li><b>{{ hai(nhom().length) }}</b><span>NHÓM HƯƠNG</span></li>
+        <li><b>{{ hai(tongSP()) }}</b><span>TÁC PHẨM</span></li>
+        <li><b>{{ hai(soThuongHieu()) }}</b><span>NHÀ CHẾ TÁC</span></li>
+      </ul>
+    </div>
+    @if (xepHang().length) {
+      <a class="sf-feature" [routerLink]="'/nuoc-hoa'" [queryParams]="{ family: xepHang()[dang()].name }">
+        <div class="sf-feature-stack">@for (f of xepHang(); track f.id; let i = $index) { <img [src]="f.imageUrl" [alt]="'Nhóm hương ' + f.name" [class.is-active]="i === dang()"> }</div>
+        <div class="sf-feature-body">
+          <small>{{ dang() === 0 ? 'NHÓM BÁN CHẠY NHẤT' : 'NHÓM HƯƠNG #' + (dang() + 1) }}</small>
+          <strong>{{ xepHang()[dang()].name }}</strong>
+          <span>{{ xepHang()[dang()].productCount }} tác phẩm · Nổi bật: {{ noiBat()[xepHang()[dang()].name] || '—' }}</span>
+          <em>Xem nhóm hương →</em>
+        </div>
+        <div class="sf-feature-dots">@for (f of xepHang(); track f.id; let i = $index) { <button type="button" [attr.aria-label]="'Xem nhóm ' + f.name" [class.is-active]="i === dang()" (click)="$event.preventDefault(); $event.stopPropagation(); dang.set(i)"></button> }</div>
+      </a>
+    }
+  </section>
+
+  <section class="sf-map" #khungVong [class.is-revealed]="hienVong()">
+    <p class="sf-eyebrow dark">CẤU TRÚC ĐƯỜNG HƯƠNG</p>
+    <h2>Vòng Tròn Khứu Giác Scentory</h2>
+    <p class="sf-map-sub">Tỷ trọng số lượng đã bán của từng nhóm hương (tính từ dữ liệu đơn hàng thực tế).</p>
+    <div class="sf-map-body">
+      <div class="sf-donut is-svg" role="img" aria-label="Biểu đồ tỷ trọng lượt bán theo nhóm hương">
+        <svg viewBox="0 0 300 300" class="sf-wheel" aria-hidden="true">
+          <circle cx="150" cy="150" r="122" class="sf-wheel-track"></circle><circle cx="150" cy="150" r="96" class="sf-wheel-inner"></circle>
+          <g transform="rotate(-90 150 150)">
+            @for (c of cung(); track c.f.id) { <circle cx="150" cy="150" r="122" class="sf-wheel-arc" [attr.stroke]="c.mau" [attr.stroke-dasharray]="c.dash" [attr.stroke-dashoffset]="c.off" [style.--len]="c.len" [style.--delay]="c.delay + 'ms'"
+              [class.is-active]="dangChon() === c.f" [class.is-dim]="dangChon() && dangChon() !== c.f" (mouseenter)="chon(c.f)" (mouseleave)="chon(null)" (click)="cuonToi(c.f)"></circle> }
+          </g>
+        </svg>
+        <div class="sf-donut-center" [class.is-swapping]="doiTam()" [style.--accent]="dangChon() ? mau(dangChon()!) : null">
+          @if (dangChon(); as f) { <em>{{ f.name.toUpperCase() }}</em><b>{{ pct(f) }}%</b><span>{{ f.productCount }} SP · LƯỢT BÁN</span> }
+          @else { <em>BỘ SƯU TẬP</em><b>{{ tongSP() }}</b><span>TÁC PHẨM</span> }
+        </div>
+      </div>
+      <ul class="sf-legend" [class.has-active]="!!dangChon()">
+        @for (f of xepHang(); track f.id) {
+          <li><a href="javascript:void(0)" (click)="cuonToi(f)" [style.--w]="rong(f)" [style.--c]="mau(f)" [class.is-active]="dangChon() === f"
+                 (mouseenter)="chon(f)" (mouseleave)="chon(null)" (focus)="chon(f)" (blur)="chon(null)"><i [style.--c]="mau(f)"></i><span class="n">{{ f.name }}</span><span class="p">{{ pct(f) }}%</span><span class="c">{{ f.productCount }} SP</span><span class="bar"></span></a></li>
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="sf-list">
+    <div class="sf-list-head"><p class="sf-eyebrow dark">BỘ SƯU TẬP</p><h2>Tám Nhóm Hương Của Scentory</h2><p>Chọn một nhóm hương để xem các tác phẩm thuộc nhóm đó.</p></div>
+    <div class="sf-grid">
+      @for (f of nhom(); track f.id) {
+        <article class="sf-card" [id]="neo(f)">
+          <div class="sf-card-img"><img [src]="f.imageUrl" [alt]="'Nhóm hương ' + f.name" loading="lazy">@if (hang(f)) { <span class="sf-rank">{{ hang(f) }}</span> }</div>
+          <div class="sf-card-body">
+            <small>{{ f.name.toUpperCase() }}</small>
+            <h3>{{ f.nameVi }}</h3>
+            <p>{{ f.description }}</p>
+            <dl class="sf-meta">
+              <div><dt>NỐT CHỦ ĐẠO</dt><dd>{{ f.keyNotes }}</dd></div>
+              <div><dt>MẪU NỔI BẬT</dt><dd>{{ noiBat()[f.name] || '—' }}</dd></div>
+            </dl>
+            <a class="sf-card-btn" routerLink="/nuoc-hoa" [queryParams]="{ family: f.name }">XEM {{ f.productCount }} TÁC PHẨM →</a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="sf-cta">
+    <h2>Bạn chưa rõ nhóm hương nào dành cho mình?</h2>
+    <p>Trả lời 8 câu hỏi ngắn, Scent Match AI™ sẽ gợi ý nhóm hương hợp với bạn nhất.</p>
+    <div class="sf-cta-actions"><a class="sf-cta-primary" routerLink="/scent-quiz/buoc/1">BẮT ĐẦU SCENT QUIZ →</a><a class="sf-cta-secondary" routerLink="/nuoc-hoa">XEM TẤT CẢ NƯỚC HOA</a></div>
+  </section>
+</main>

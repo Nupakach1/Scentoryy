@@ -1,0 +1,61 @@
+<div class="qt-thanh-tren"><span></span><span>{{ tu }} → {{ den }}</span></div>
+<div class="qt-dau">
+  <div><span class="nhan-muc">Bảng điều khiển</span><h1>Tổng quan</h1></div>
+  <form class="qt-loc-ngay" (ngSubmit)="tai()">
+    <label>Từ ngày<input class="o-nhap" type="date" name="tu" [(ngModel)]="tu"></label>
+    <label>Đến ngày<input class="o-nhap" type="date" name="den" [(ngModel)]="den"></label>
+    <button class="nut nut-chinh nut-nho">Xem</button>
+  </form>
+</div>
+@if (d(); as d) {
+  <div class="qt-kpi">
+    <div class="the"><small>Doanh thu thuần</small><b>{{ d.revenue | tien }}</b><span>Đơn đã giao trừ hoàn tiền</span></div>
+    <div class="the"><small>Đơn hàng</small><b>{{ d.totalOrders }}</b><span>{{ d.ordersByStatus['PROCESSING'] }} đang chờ xử lý</span></div>
+    <div class="the"><small>Khách hàng mới</small><b>{{ d.newCustomers }}</b><span>Đăng ký trong kỳ</span></div>
+    <div class="the"><small>Việc cần làm</small><b>{{ d.pendingReturns + d.unreadMessages }}</b><span><a routerLink="/admin/doi-tra">{{ d.pendingReturns }} đổi trả</a> · <a routerLink="/admin/hop-thu">{{ d.unreadMessages }} tin chưa đọc</a></span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-top:16px">
+    <section class="the">
+      <div class="qt-the-dau"><h3>Doanh số theo ngày</h3></div>
+      @if (d.daily.length) {
+        <div class="bieu-do-cot" style="gap:6px">
+          @for (x of d.daily; track x.date) {
+            <div class="cot" [title]="x.date + ': ' + x.orders + ' đơn'"><small style="font-size:10px">{{ x.orders }}</small><i [style.height.%]="(x.amount / maxNgay()) * 85"></i><span style="font-size:10px">{{ x.date.slice(5) }}</span></div>
+          }
+        </div>
+      } @else { <div class="trong-rong">Chưa có đơn hàng trong khoảng thời gian này.</div> }
+    </section>
+    <section class="the">
+      <h3>Đơn theo trạng thái</h3>
+      @for (s of trangThai(); track s[0]) {
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--vien)">
+          <a [routerLink]="'/admin/don-hang'" [queryParams]="{ trangThai: s[0] }"><span class="nhan-tt" [class]="'nhan-tt ' + mau[s[0]]">{{ nhan[s[0]] }}</span></a><b>{{ s[1] }}</b></div>
+      }
+    </section>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+    <section class="the">
+      <h3>Top 5 sản phẩm bán chạy</h3>
+      <table class="bang"><thead><tr><th>Sản phẩm</th><th>SL</th><th>Doanh thu</th></tr></thead><tbody>
+        @for (t of d.topProducts; track t.productId) { <tr><td>{{ t.name }}</td><td>{{ t.quantity }}</td><td>{{ t.revenue | tien }}</td></tr> }
+        @empty { <tr><td colspan="3" class="chu-nhat">Chưa có đơn đã giao trong kỳ.</td></tr> }
+      </tbody></table>
+    </section>
+    <section class="the">
+      <h3>Sắp hết hàng (≤ 5)</h3>
+      <table class="bang"><thead><tr><th>SKU</th><th>Sản phẩm</th><th>Tồn</th></tr></thead><tbody>
+        @for (p of d.lowStock; track p.id) { <tr><td>{{ p.sku }}</td><td>{{ p.name }}</td><td><span class="nhan-tt" [class]="'nhan-tt ' + (p.stock === 0 ? 'nhan-do' : 'nhan-cam')">{{ p.stock }}</span></td></tr> }
+        @empty { <tr><td colspan="3" class="chu-nhat">Không có sản phẩm sắp hết.</td></tr> }
+      </tbody></table>
+    </section>
+  </div>
+  <section class="the" style="margin-top:16px">
+    <div class="qt-the-dau"><h3>Đơn hàng gần đây</h3><a routerLink="/admin/don-hang" class="chu-nho">Xem tất cả →</a></div>
+    <table class="bang"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày</th><th>Tổng</th><th>Trạng thái</th></tr></thead><tbody>
+      @for (o of d.recentOrders; track o.id) {
+        <tr><td><a [routerLink]="['/admin/don-hang', o.id]"><b>{{ o.orderCode }}</b></a></td><td>{{ o.customer?.fullName || o.recipientName }}</td><td>{{ o.createdAt | ngay: true }}</td><td>{{ o.totalAmount | tien }}</td>
+          <td><span class="nhan-tt" [class]="'nhan-tt ' + mau[o.status]">{{ nhan[o.status] }}</span></td></tr>
+      }
+    </tbody></table>
+  </section>
+}

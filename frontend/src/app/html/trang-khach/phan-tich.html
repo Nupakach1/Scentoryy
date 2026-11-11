@@ -1,0 +1,54 @@
+<main class="analysis-main an-lux">
+  <div class="an-bg" aria-hidden="true"></div>
+  <div class="an-dust" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="analysis-status"><b>Bước 8 / 8 · Tổng hợp dữ liệu cá nhân hóa</b><span>Bảo mật dữ liệu khứu giác ✓</span></div>
+  @if (hs(); as h) {
+  <section class="analysis-hero">
+    <div class="an-copy">
+      <p class="analysis-tag"><span class="an-spin" aria-hidden="true"></span>Thuật toán Scent Match AI™</p>
+      <h1>{{ pt() < 100 ? 'Đang giải mã' : 'Đã giải mã' }} <em>dấu ấn khứu giác</em> của bạn</h1>
+      <p class="an-lede">Tổng hợp 7 câu trả lời — phong cách, tông hương, tâm trạng, thần thái, thói quen và độ tuổi — thành hồ sơ mùi hương độc bản.</p>
+      <div class="analysis-progress">
+        <b>Đang chấm điểm danh mục theo 5 tiêu chí Scent Match <strong>{{ pt() }}%</strong></b>
+        <i [style.width.%]="pt()"></i>
+        <div>
+          <span>Cự ly tỏa<b>{{ h.preferredProjection }}</b></span>
+          <span>Dung tích<b>{{ h.preferredVolume }}</b></span>
+          <span>Nhóm chủ đạo<b>{{ h.preferredFamilies[0] || '—' }}</b></span>
+          <span>Khớp cao nhất<b>{{ top()?.matchScore ?? '—' }}%</b></span>
+        </div>
+      </div>
+      <ul class="an-steps">
+        <li [class.is-done]="pt() >= 35" [class.is-active]="pt() < 35">Chấm điểm 6 nhóm hương theo phong cách & tông hương</li>
+        <li [class.is-done]="pt() >= 70" [class.is-active]="pt() >= 35 && pt() < 70">Suy ra dịp dùng “{{ h.expectedOccasion }}” và độ tỏa {{ h.preferredProjection }}</li>
+        <li [class.is-done]="pt() >= 100" [class.is-active]="pt() >= 70 && pt() < 100">{{ pt() < 100 ? 'Đang trích xuất 3 tác phẩm đồng điệu nhất…' : 'Đã chọn 3 tác phẩm đồng điệu nhất' }}</li>
+      </ul>
+    </div>
+    <aside class="an-visual">
+      <div class="an-orbit" aria-hidden="true">
+        <span class="an-ring r1"></span><span class="an-ring r2"></span><span class="an-ring r3"></span>
+        <div class="an-core"><img [src]="anhNhom(ve(h.preferredFamilies, 0))" alt=""></div>
+        <div class="an-sat-track">
+          <img class="an-sat s1" [src]="anhNhom(ve(h.preferredFamilies, 1))" alt="">
+          <img class="an-sat s2" [src]="anhNhom(ve(h.preferredFamilies, 2))" alt="">
+          <img class="an-sat s3" src="/hinh-anh/nhom-huong/citrus.webp" alt="">
+        </div>
+      </div>
+      @if (top(); as t) {
+        <section class="an-pyramid">
+          <header><span>Tháp hương tác phẩm khớp nhất</span><b>Khớp {{ t.matchScore }}%</b></header>
+          <ol><li><small>Hương đầu</small>{{ t.product.topNotes }}</li><li><small>Hương giữa</small>{{ t.product.middleNotes }}</li><li><small>Hương cuối</small>{{ t.product.baseNotes }}</li></ol>
+        </section>
+      }
+    </aside>
+  </section>
+  <div class="an-footer">
+    <button type="button" class="analysis-submit" (click)="xem()" [disabled]="pt() < 100">Xem hồ sơ của tôi <span aria-hidden="true">→</span></button>
+    <div class="analysis-benefits">
+      <article><small>Tác phẩm khớp nhất</small><b>{{ top()?.product?.name ?? '—' }}</b></article>
+      <article><small>Hồ sơ</small><b>{{ h.profileTitle }}</b></article>
+      <article><small>Trạng thái lưu</small><b>{{ h.saved === false ? 'Hồ sơ tạm (đăng nhập để lưu)' : 'Đã lưu vào tài khoản' }}</b></article>
+    </div>
+  </div>
+  }
+</main>

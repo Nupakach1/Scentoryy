@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+package-lock.json
+inputs/
+.opencode/
+public/
+opencode.json
+*.md

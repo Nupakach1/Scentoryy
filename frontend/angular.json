@@ -1,0 +1,200 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "scentory": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/scentory",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "zone.js"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/hinh-anh",
+                "output": "hinh-anh"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/font-chu",
+                "output": "font-chu"
+              }
+            ],
+            "styles": [
+              {
+                "input": "src/css/font-chu.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/co-ban.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/trang.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/khung.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/danh-muc.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/chi-tiet-san-pham.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/gio-hang.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/thanh-toan.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/scent-quiz.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/ho-so-quiz.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/ho-so.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/goi-y.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/phan-tich.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/don-hang.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/chi-tiet-don.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/doi-tra.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/thuong-hieu.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/khach-hang/bo-sung.css",
+                "bundleName": "khach-hang",
+                "inject": false
+              },
+              {
+                "input": "src/css/font-chu.css",
+                "bundleName": "quan-tri",
+                "inject": false
+              },
+              {
+                "input": "src/css/quan-tri/nen-tang.css",
+                "bundleName": "quan-tri",
+                "inject": false
+              },
+              {
+                "input": "src/css/quan-tri/quan-tri.css",
+                "bundleName": "quan-tri",
+                "inject": false
+              }
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "1MB",
+                  "maximumError": "2MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "8kB",
+                  "maximumError": "16kB"
+                }
+              ],
+              "outputHashing": "media",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": false
+                },
+                "fonts": false
+              }
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "scentory:build:production"
+            },
+            "development": {
+              "buildTarget": "scentory:build:development"
+            }
+          },
+          "defaultConfiguration": "development",
+          "options": {
+            "proxyConfig": "src/proxy.conf.json"
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": false
+  }
+}

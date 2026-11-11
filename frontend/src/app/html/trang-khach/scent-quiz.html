@@ -1,0 +1,77 @@
+@let c = cau();
+<main [class]="['quiz-choice-main', 'quiz-option-main', 'quiz-family-main', 'quiz-mood-main', 'quiz-aura-main', 'quiz-habit-main', 'age-main'][n() - 1] + ' qz-ready'">
+  <div class="qz-head">
+    <button type="button" class="qz-back" (click)="lui()"><span aria-hidden="true">←</span> Quay lại</button>
+    <div class="qz-steps" aria-label="Tiến trình Scent Quiz">
+      <span class="qz-count">Câu <b>{{ hai(n()) }}</b> / 07</span>
+      <ol>@for (i of dsBuoc(); track i) { <li [class.is-done]="i < n()" [class.is-current]="i === n()"></li> }</ol>
+    </div>
+    <button type="button" class="qz-skip" (click)="tiep()">Tiếp <span aria-hidden="true">→</span></button>
+  </div>
+
+  <p class="quiz-kicker">{{ c.kicker }}</p>
+  <h1>{{ c.h1 }}</h1>
+  <p class="quiz-lede">{{ c.lede }}</p>
+
+  @switch (n()) {
+    @case (1) {
+      <div class="gender-cards qz-options">
+        @for (o of c.ds; track o.gt) {
+          <article tabindex="0" role="button" class="qz-card" [class.selected]="chon() === o.gt" [attr.aria-pressed]="chon() === o.gt" (click)="chonGT(o.gt)" (keydown.enter)="chonGT(o.gt)" style="cursor: pointer;">
+            <div class="quiz-photo qz-media" [class]="'quiz-photo qz-media ' + o.lop"><img [src]="o.anh" alt=""><span>{{ o.nhan }}</span></div>
+            <div class="qz-body"><div class="gender-title"><h2>{{ o.tieuDe }}</h2><b>{{ o.phu }}</b></div><p>{{ o.mo }}</p></div><i aria-hidden="true" class="qz-check"></i>
+          </article>
+        }
+      </div>
+    }
+    @case (2) {
+      <div class="option-stack qz-options">
+        @for (o of c.ds; track o.gt) {
+          <article class="qz-card" tabindex="0" role="button" [class.selected]="chon() === o.gt" [attr.aria-pressed]="chon() === o.gt" (click)="chonGT(o.gt)" (keydown.enter)="chonGT(o.gt)" style="cursor: pointer;">
+            <div class="qz-media"><img [src]="o.anh" alt="" loading="lazy"></div>
+            <div class="option-icon qz-check">{{ chon() === o.gt ? '✓' : '○' }}</div>
+            <div class="qz-body"><h2>{{ o.tieuDe }}@if (o.phu) { <small>{{ o.phu }}</small> }</h2><p>{{ o.mo }}</p>@for (t of o.the; track t) { <span>{{ t }}</span> }</div>
+            <b class="qz-badge">{{ o.huy }}</b>
+          </article>
+        }
+      </div>
+      <p class="quiz-quote qz-tip">“Nước hoa không có giới tính, chỉ có tâm hồn”<br><small>— Jean-Claude Ellena</small></p>
+    }
+    @case (7) {
+      <section class="age-card">
+        <div class="age-card-head"><b>KHOẢNG HƯƠNG NIÊN BIỂU</b><span>Tuổi hợp lệ: 16 – 80</span></div>
+        <div class="age-control"><small>SỐ TUỔI HIỆN TẠI</small>
+          <div><button type="button" (click)="datTuoi(tuoi() - 1)">−</button><strong>{{ tuoi() }}<em>tuổi</em></strong><button type="button" (click)="datTuoi(tuoi() + 1)">+</button></div>
+          <hr><span>16 TUỔI</span><span>45 TUỔI</span><span>80 TUỔI</span></div>
+        <b class="age-label">HOẶC CHỌN NHANH NHÓM THẾ HỆ</b>
+        <div class="age-pills">@for (g of nhomTuoi; track g[0]) { <span [class.selected]="tuoi() === g[1]" (click)="datTuoi(g[1])" style="cursor: pointer;">{{ g[0] }}</span> }</div>
+      </section>
+      <button type="button" class="age-submit" (click)="tiep()" [disabled]="dangGui">XEM KẾT QUẢ PHÂN TÍCH KHỨU GIÁC&nbsp; →</button>
+      <p class="privacy-note">▣ &nbsp; Độ tuổi chỉ dùng để tinh chỉnh gợi ý và không hiển thị công khai.</p>
+    }
+    @default {
+      <div class="qz-options" [class]="'qz-options ' + ['', '', 'family-options', 'mood-cards', 'aura-list', 'habit-list'][n() - 1]">
+        @for (o of c.ds; track o.gt) {
+          <article class="qz-card" [class]="'qz-card ' + (n() === 3 ? o.lop : '')" [class.selected]="chon() === o.gt" tabindex="0" role="button" [attr.aria-pressed]="chon() === o.gt" (click)="chonGT(o.gt)" (keydown.enter)="chonGT(o.gt)" style="cursor: pointer;">
+            <div class="qz-media" [class]="'qz-media ' + ['', '', 'family-photo', 'mood-photo ' + o.lop, 'aura-photo ' + o.lop, 'habit-photo ' + o.lop][n() - 1]">
+              <img [src]="o.anh" alt="">@if (n() === 4) { <span>{{ o.nhan }}</span> }
+            </div>
+            <div class="qz-body">
+              @if (o.nhan && n() !== 4) { <b>{{ o.nhan }}</b> }
+              <h2>{{ o.tieuDe }}<small>{{ o.phu }}</small></h2>
+              <p>{{ o.mo }}</p>
+              @if (n() === 5) { <b>{{ o.the[0] }}</b> } @else { @for (t of o.the; track t) { <span>{{ t }}</span> } }
+            </div>
+            <i class="qz-check">{{ chon() === o.gt ? '✓' : '○' }}</i>
+          </article>
+        }
+      </div>
+      @switch (n()) {
+        @case (3) { <div class="expert-note qz-tip"><b>MẸO TỪ CHUYÊN GIA MÙI HƯƠNG SCENTORY</b><p>Nếu bạn tìm mùi hương cho tiệc tối hoặc khí hậu se lạnh, nhóm Ấm Áp là lựa chọn tối ưu. Nhóm Tươi Mát hoàn hảo cho năng lượng ban ngày.</p></div> }
+        @case (4) { <div class="survey-note qz-tip">Gợi ý từ Scentory Sommelier: tâm trạng bạn chọn sẽ quyết định dịp dùng (tiệc tối, công sở, du lịch…) trong hồ sơ hương.</div> }
+        @case (5) { <div class="aura-stats"><b>MẠNH<small>TỎA XA · EXTRAIT / EDP</small></b><b>NHẸ<small>SÁT DA · EDT / COLOGNE</small></b><b>20%<small>TRỌNG SỐ SCENT MATCH</small></b></div> }
+        @case (6) { <div class="habit-benefits"><b>✧ Scent Match AI™<br><small>Gợi ý dung tích 50ml hoặc 100ml phù hợp</small></b><b>♧ Niche Parfums<br><small>Tuyển chọn từ 6 nhà chế tác</small></b><b>♢ Đổi trả 7 ngày<br><small>Khi sản phẩm còn nguyên seal</small></b></div> }
+      }
+    }
+  }
+</main>

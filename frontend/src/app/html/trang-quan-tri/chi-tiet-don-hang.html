@@ -1,0 +1,54 @@
+@if (d(); as d) {
+<div class="qt-thanh-tren"><span></span><span><a routerLink="/admin/don-hang">← Danh sách đơn</a></span></div>
+<div class="qt-dau">
+  <div><span class="nhan-muc">Đơn hàng</span><h1>#{{ d.orderCode }}</h1><p class="chu-nhat">Đặt lúc {{ d.createdAt | ngay: true }} · {{ d.customer?.fullName }} ({{ d.customer?.email }})</p></div>
+  <div><span class="nhan-tt" [class]="'nhan-tt ' + mau[d.status]">{{ nhan[d.status] }}</span> <span class="nhan-tt" [class]="'nhan-tt ' + mauTT[d.paymentStatus]">{{ nhanTT[d.paymentStatus] }}</span></div>
+</div>
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+  <div style="display:grid;gap:16px">
+    <section class="the">
+      <h3>Sản phẩm</h3>
+      <table class="bang"><thead><tr><th></th><th>Sản phẩm</th><th>Đơn giá</th><th>SL</th><th>Thành tiền</th></tr></thead><tbody>
+        @for (i of d.items; track i.id) { <tr><td><img [src]="anh(i.product)" alt="" style="width:40px;height:40px;object-fit:contain"></td><td>{{ i.productName }}<div class="chu-nho chu-nhat">{{ i.product?.sku }}</div></td><td>{{ i.unitPrice | tien }}</td><td>{{ i.quantity }}</td><td>{{ i.lineTotal | tien }}</td></tr> }
+      </tbody></table>
+      <div style="text-align:right;margin-top:12px;line-height:1.9">
+        Tạm tính: <b>{{ d.subtotal | tien }}</b><br>Phí vận chuyển ({{ d.deliveryMethod === 'EXPRESS' ? 'hỏa tốc' : 'tiêu chuẩn' }}): <b>{{ d.shippingFee | tien }}</b><br>
+        @if (d.discountAmount) { Giảm giá ({{ d.voucherCode }}): <b>−{{ d.discountAmount | tien }}</b><br> }
+        <span style="font-size:18px">Tổng: <b>{{ d.totalAmount | tien }}</b></span>
+      </div>
+    </section>
+    <section class="the">
+      <h3>Giao nhận &amp; thanh toán</h3>
+      <div class="hang-truong chu-nho">
+        <div><b>Người nhận</b><br>{{ d.recipientName }} · {{ d.phone }}</div>
+        <div><b>Địa chỉ</b><br>{{ d.shippingAddress }}</div>
+        <div><b>Thanh toán</b><br>{{ nhanPT[d.paymentMethod] }}{{ d.cardLast4 ? ' · •••• ' + d.cardLast4 : '' }}</div>
+        <div><b>Mã vận đơn</b><br>{{ d.trackingCode || '—' }}</div>
+        @if (d.orderNote) { <div><b>Ghi chú</b><br>{{ d.orderNote }}</div> }
+        @if (d.cancelReason) { <div><b>Lý do hủy</b><br>{{ d.cancelReason }}</div> }
+      </div>
+    </section>
+    @if (d.returnRequest; as r) {
+      <section class="the"><h3>Yêu cầu đổi trả</h3><p class="chu-nho">{{ r.requestType === 'REFUND' ? 'Hoàn tiền' : 'Đổi hàng' }} · {{ r.reason }} · <span class="nhan-tt nhan-vang">{{ nhanDT[r.status] }}</span></p><a routerLink="/admin/doi-tra" class="nut nut-vien nut-nho">Xử lý đổi trả →</a></section>
+    }
+  </div>
+  <div style="display:grid;gap:16px;align-content:start">
+    <section class="the">
+      <h3>Cập nhật trạng thái</h3>
+      @if (chuyen().length) {
+        <div class="truong"><label>Chuyển sang</label>
+          <select class="o-nhap" [ngModel]="den()" (ngModelChange)="den.set($event)"><option value="">— Chọn trạng thái —</option>@for (s of chuyen(); track s) { <option [value]="s">{{ nhan[s] }}</option> }</select></div>
+        @if (den() === 'SHIPPING') { <div class="truong"><label>Mã vận đơn <span class="bat-buoc">*</span></label><input class="o-nhap" [(ngModel)]="maVD" placeholder="VD: GHN123456789"></div> }
+        <div class="truong"><label>Ghi chú (tùy chọn)</label><input class="o-nhap" [(ngModel)]="ghiChu" maxlength="255"></div>
+        @if (den() === 'CANCELLED') { <p class="chu-nho chu-loi">Hủy đơn sẽ hoàn tồn kho{{ d.paymentStatus === 'PAID' ? ' và chuyển thanh toán sang Đã hoàn tiền' : '' }}.</p> }
+        @if (loi()) { <div class="hop-loi chu-nho">{{ loi() }}</div> }
+        <button class="nut nut-chinh nut-rong" style="width:100%" [disabled]="!den()" (click)="capNhat()">Xác nhận</button>
+      } @else { <p class="chu-nhat chu-nho">Đơn ở trạng thái kết thúc — không thể chuyển tiếp.</p> }
+    </section>
+    <section class="the">
+      <h3>Nhật ký trạng thái</h3>
+      @for (t of d.timeline; track $index) { <div class="chu-nho" style="padding:6px 0;border-bottom:1px solid var(--vien)"><b>{{ nhan[t.status] || t.status }}</b> · {{ t.at | ngay: true }} · {{ t.by }}@if (t.note) { <div class="chu-nhat">{{ t.note }}</div> }</div> }
+    </section>
+  </div>
+</div>
+}

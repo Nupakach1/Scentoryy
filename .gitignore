@@ -1,0 +1,19 @@
+# Bí mật — TUYỆT ĐỐI không đưa lên GitHub
+.env
+.env.*
+!.env.example
+
+# Phụ thuộc & sản phẩm build
+node_modules/
+backend/dist/
+frontend/dist/
+frontend/.angular/
+coverage/
+*.log
+.vercel/
+
+# Hệ điều hành / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

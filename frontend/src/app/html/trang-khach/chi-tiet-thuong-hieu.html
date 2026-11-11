@@ -1,0 +1,64 @@
+@if (loi()) { <main><section class="scentory-empty-result-box" style="text-align:center;padding:100px 20px"><h2>{{ loi() }}</h2><a routerLink="/thuong-hieu">← Quay lại danh sách thương hiệu</a></section></main> }
+@if (th(); as b) {
+<main>
+  <div class="bd-crumb-bar"><nav class="bd-crumb" aria-label="Breadcrumb"><a routerLink="/">TRANG CHỦ</a> / <a routerLink="/thuong-hieu">THƯƠNG HIỆU</a> / <b>{{ b.name.toUpperCase() }}</b></nav></div>
+  <section class="bd-hero" [style.background-image]="'url(' + b.imageUrl + ')'">
+    <div class="bd-hero-inner">
+      <span class="bd-hero-tag">● {{ b.origin.toUpperCase() }}</span>
+      <h1>{{ b.name.toUpperCase() }}</h1>
+      <p class="bd-hero-quote">“{{ b.style }}”</p>
+      <div class="bd-hero-chips"><span>{{ b.products?.length }} TÁC PHẨM TẠI SCENTORY</span><i>•</i><span>100% CHÍNH HÃNG</span></div>
+    </div>
+  </section>
+  <section class="bd-story">
+    <div class="bd-story-text">
+      <p class="bd-eyebrow">TRIẾT LÝ SÁNG TẠO &amp; NGHỆ THUẬT CHẾ TÁC</p>
+      <h2>CÂU CHUYỆN CỦA {{ b.name.toUpperCase() }}</h2>
+      @for (d of doanVan(); track $index) { <p>{{ d }}</p> }
+      <div class="bd-features">
+        <div class="bd-feature"><span class="bd-feature-ico">✦</span><small>Cam kết</small><b>CHÍNH HÃNG 100%</b><span>Nhập khẩu trực tiếp, có hóa đơn và tem phân phối.</span></div>
+        <div class="bd-feature"><span class="bd-feature-ico">◇</span><small>Cam kết</small><b>NGUYÊN SEAL</b><span>Đổi trả trong 7 ngày nếu sản phẩm còn nguyên seal.</span></div>
+        <div class="bd-feature"><span class="bd-feature-ico">◉</span><small>Cá nhân hóa</small><b>SCENT MATCH</b><span>Xem mức độ phù hợp của từng chai với hồ sơ hương của bạn.</span></div>
+      </div>
+    </div>
+    <figure class="bd-figure">
+      <div class="bd-figure-photo"><img [src]="anhDoc()" [alt]="b.name"></div>
+      <figcaption><b>Ký sự hình ảnh</b><i>{{ b.origin }}</i></figcaption>
+    </figure>
+  </section>
+  <section class="bd-products">
+    <div class="bd-products-inner">
+      <div class="bd-products-head">
+        <div><p class="bd-eyebrow">BỘ SƯU TẬP TUYỂN CHỌN</p><h2>SẢN PHẨM TỪ {{ b.name.toUpperCase() }}</h2><p>Khám phá những sáng tạo mùi hương biểu tượng của {{ b.name }}, được tuyển chọn tại Scentory.</p></div>
+        <span class="bd-count">{{ spLoc().length }} TÁC PHẨM MÙI HƯƠNG</span>
+      </div>
+      <div class="bd-tabs" role="tablist">
+        <button type="button" class="bd-tab" [class.is-active]="!loc()" (click)="loc.set('')">TẤT CẢ</button>
+        @for (f of nhomCo(); track f) { <button type="button" class="bd-tab" [class.is-active]="loc() === f" (click)="loc.set(f)">{{ f.toUpperCase() }}</button> }
+      </div>
+      <div class="bd-grid">
+        @for (p of spLoc(); track p.id; let i = $index) {
+          <article class="bd-card">
+            <a class="bd-card-photo" [routerLink]="['/nuoc-hoa', p.sku]" [style.background-image]="'url(' + anh(p) + ')'" style="background-size:contain;background-repeat:no-repeat;background-position:center">
+              <span class="bd-badge">{{ i < 3 && p.soldCount > 0 ? 'BÁN CHẠY #' + (i + 1) : p.family.toUpperCase() }}</span></a>
+            <button type="button" class="wishlist-btn bd-heart" [attr.aria-label]="'Yêu thích ' + p.name" (click)="yt.batTat(p)">{{ yt.co(p.id) ? '♥' : '♡' }}</button>
+            <div class="bd-card-body">
+              <small>{{ p.brand.toUpperCase() }}</small>
+              <h3><a [routerLink]="['/nuoc-hoa', p.sku]">{{ p.name }}</a></h3>
+              <p class="bd-spec">{{ p.concentration }} · {{ p.volume }}ml</p>
+              <p class="bd-notes">{{ p.topNotes }}</p>
+              <div class="bd-price-row"><strong>{{ p.price | tien }}</strong><span>{{ p.stock > 0 ? 'Có sẵn' : 'Hết hàng' }}</span></div>
+              <button type="button" class="add-to-cart-btn bd-add" (click)="them(p)" [disabled]="p.stock === 0">THÊM VÀO GIỎ HÀNG</button>
+            </div>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+  <section class="bd-quote" [style.--bd-quote-bg]="'url(' + b.imageUrl + ')'">
+    <span class="bd-quote-mark">“</span>
+    <blockquote>{{ b.style }}</blockquote>
+    <cite>— {{ b.name.toUpperCase() }} · {{ b.origin.toUpperCase() }} —</cite>
+  </section>
+</main>
+}

@@ -1,0 +1,12 @@
+<div class="qt-dang-nhap">
+  <form class="qt-dang-nhap__hop" (ngSubmit)="gui()" novalidate>
+    <div class="qt-logo toi"><img src="/hinh-anh/logo/scentory-toi.png" alt="SCENTORY"><small>CỔNG QUẢN TRỊ</small></div>
+    <h2 style="font-size:24px">Đăng nhập quản trị</h2>
+    <p class="chu-nhat chu-nho">Chỉ tài khoản có vai trò quản trị viên mới truy cập được khu vực này.</p>
+    @if (loi()) { <div class="hop-loi" role="alert" style="margin-bottom:12px">{{ loi() }}</div> }
+    <div class="truong"><label>Email</label><input class="o-nhap" name="email" type="email" autocomplete="username" [(ngModel)]="email" placeholder="admin@scentory.vn"></div>
+    <div class="truong"><label>Mật khẩu</label><input class="o-nhap" name="pw" type="password" autocomplete="current-password" [(ngModel)]="matKhau"></div>
+    <button class="nut nut-chinh nut-rong" style="width:100%" [disabled]="dang()">{{ dang() ? 'Đang đăng nhập…' : 'Đăng nhập' }}</button>
+    <p class="chu-nho" style="margin-top:16px;text-align:center"><a routerLink="/">← Về cửa hàng</a></p>
+  </form>
+</div>

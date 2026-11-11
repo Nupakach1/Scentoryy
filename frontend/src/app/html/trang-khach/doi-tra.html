@@ -1,0 +1,70 @@
+<main class="return-main">
+  <div class="account-layout">
+    <app-thanh-tai-khoan muc="doi-tra" />
+    <section class="return-content">
+      <div class="return-heading"><a [routerLink]="d() ? ['/tai-khoan/don-hang', d()!.id] : '/tai-khoan/don-hang'"><span>← Quay lại đơn hàng</span></a><p>TRUNG TÂM HỖ TRỢ / ĐỔI TRẢ</p><h1>Yêu cầu đổi trả sản phẩm</h1>
+        <p>Đơn #{{ d()?.orderCode }} · {{ conHan() ? 'còn ' + conHan() + ' ngày để gửi yêu cầu' : '' }}</p></div>
+      @if (loi()) { <section class="return-card"><p style="color:#a33">{{ loi() }}</p><a routerLink="/tai-khoan/don-hang">← Đơn hàng của tôi</a></section> }
+      @else { @if (d(); as d) {
+        <div class="return-progress">
+          <b [class.on]="buoc() >= 1"><em>1</em><small>Sản phẩm</small></b><i></i><b [class.on]="buoc() >= 2"><em>2</em><small>Lý do &amp; minh chứng</small></b><i></i><b [class.on]="buoc() >= 3"><em>3</em><small>Xác nhận</small></b>
+        </div>
+        <section class="return-card">
+          @switch (buoc()) {
+            @case (1) {
+              <h2>LOẠI YÊU CẦU HỖ TRỢ</h2>
+              <div class="request-type-grid" style="display:flex;gap:24px;margin:12px 0 20px;flex-wrap:wrap">
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px"><input type="radio" name="loai" [checked]="loai() === 'EXCHANGE'" (change)="loai.set('EXCHANGE')"><span><b>Đổi hàng</b> (đổi sản phẩm tương đương)</span></label>
+                <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px"><input type="radio" name="loai" [checked]="loai() === 'REFUND'" (change)="loai.set('REFUND')"><span><b>Hoàn tiền</b> (về phương thức thanh toán ban đầu)</span></label>
+              </div>
+              <h2>CHỌN SẢN PHẨM CẦN HỖ TRỢ</h2>
+              @for (i of d.items; track i.id) {
+                <article class="return-product" style="display:grid;grid-template-columns:56px 1fr auto;gap:14px;align-items:center;padding:14px;border:1px solid #ede8de;border-radius:6px;margin-bottom:12px;background:#fff">
+                  <span style="overflow:hidden;width:56px;height:68px;display:grid;place-items:center;border:1px solid #ede8de;border-radius:4px"><img [src]="anh(i.product)" [alt]="i.productName" style="max-height:60px;max-width:44px;object-fit:contain"></span>
+                  <div><small style="color:#8e7853;font-weight:700;font-size:9px">ĐƠN HÀNG #{{ d.orderCode }}</small><h3 style="font-size:13px;color:#1c2a1e;margin:2px 0">{{ i.product?.brand }} {{ i.productName }}</h3><p style="font-size:10px;color:#77786e;margin:0">{{ i.product?.concentration }} · {{ i.product?.volume }}ml · Đã mua: {{ i.quantity }} · {{ i.unitPrice | tien }}</p></div>
+                  <label style="font-size:11px;color:#555">Số lượng đổi trả:
+                    <select [ngModel]="chon()[i.productId]" (ngModelChange)="datSL(i.productId, +$event)" style="margin-left:4px;padding:3px 6px;border:1px solid #dcd6c9;border-radius:4px;font-size:11px;background:#fff">@for (n of dsSL(i.quantity); track n) { <option [value]="n">{{ n }}</option> }</select></label>
+                </article>
+              }
+              <button class="return-submit" (click)="tiep()" style="cursor:pointer">TIẾP TỤC →</button>
+            }
+            @case (2) {
+              <h2>LÝ DO ĐỔI TRẢ</h2>
+              <div class="reason-grid">@for (l of lyDo; track l) { <label style="cursor:pointer"><input type="radio" name="ly" [checked]="ly() === l" (change)="ly.set(l)"> {{ l }}</label> }</div>
+              <h2>TÌNH TRẠNG SEAL</h2>
+              <div class="reason-grid">
+                <label style="cursor:pointer"><input type="radio" name="seal" [checked]="conSeal()" (change)="conSeal.set(true)"> Còn nguyên seal / chưa sử dụng</label>
+                <label style="cursor:pointer"><input type="radio" name="seal" [checked]="!conSeal()" (change)="conSeal.set(false)"> Đã mở seal (chỉ áp dụng khi lỗi sản phẩm)</label>
+              </div>
+              <h2>HÌNH ẢNH / VIDEO BẰNG CHỨNG *</h2>
+              <label class="upload-box" style="cursor:pointer;display:block">
+                <input type="file" accept=".jpg,.jpeg,.png,.mp4" style="display:none" (change)="chonTep($event)">
+                @if (dangTai()) { <b>Đang tải lên…</b> } @else if (tep()) { ✓ <b>{{ tep()!.ten }}</b><br><small>Bấm để chọn tệp khác</small> }
+                @else { ＋ <b>Tải ảnh hoặc video minh chứng lên</b><br><small>Định dạng JPG, PNG, MP4 · Tối đa 10 MB (Bắt buộc)</small> }
+              </label>
+              <label class="return-note">MÔ TẢ CHI TIẾT {{ ly() === 'Lý do khác' ? '*' : '(TÙY CHỌN)' }}<textarea [(ngModel)]="moTa" maxlength="1000" placeholder="Hãy mô tả vấn đề với sản phẩm..."></textarea></label>
+              <div style="display:flex;gap:12px">
+                <button class="return-submit" style="background:#fff;color:#444d32;border:1px solid #444d32;cursor:pointer" (click)="buoc.set(1)">← QUAY LẠI</button>
+                <button class="return-submit" (click)="tiep()" [disabled]="dangGui() || dangTai()" style="cursor:pointer">{{ dangGui() ? 'ĐANG GỬI…' : 'GỬI YÊU CẦU →' }}</button>
+              </div>
+            }
+            @case (3) {
+              @if (ketQua(); as r) {
+                <h2>YÊU CẦU ĐÃ ĐƯỢC GHI NHẬN</h2>
+                <p style="font-size:13px">Mã yêu cầu <b>{{ r.id.slice(-8).toUpperCase() }}</b> · Trạng thái <b>{{ r.status === 'PENDING' ? 'Chờ duyệt' : r.status }}</b></p>
+                <p style="font-size:12px;color:#666">Loại: {{ r.requestType === 'REFUND' ? 'Hoàn tiền ' + (r.refundAmount | tien) : 'Đổi sản phẩm' }} · Lý do: {{ r.reason }}</p>
+                @if (r.adminResponse) { <p style="font-size:12px">Phản hồi: {{ r.adminResponse }}</p> }
+                <a class="return-submit" style="display:inline-block;text-align:center" [routerLink]="['/tai-khoan/don-hang', d.id]">XEM ĐƠN HÀNG →</a>
+              }
+            }
+          }
+        </section>
+      } }
+    </section>
+    <aside class="return-summary">
+      <h3>QUY TRÌNH ĐỔI TRẢ</h3><p>① Gửi yêu cầu</p><p>② Scentory thẩm định</p><p>③ Nhận hàng hoàn</p><p>④ Hoàn tiền / đổi sản phẩm</p><hr>
+      @if (loai() === 'REFUND' && buoc() < 3) { <b>SỐ TIỀN DỰ KIẾN HOÀN</b><p>{{ hoanTien() | tien }}</p> }
+      <b>THỜI HẠN ĐỔI TRẢ</b><p>Trong vòng 07 ngày kể từ ngày nhận hàng.</p><b>HỖ TRỢ</b><p><a routerLink="/hop-thu">Nhắn tin với Scentory</a></p>
+    </aside>
+  </div>
+</main>

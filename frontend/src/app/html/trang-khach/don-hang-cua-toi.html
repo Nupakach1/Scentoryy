@@ -1,0 +1,85 @@
+<main class="account-main">
+  <div class="account-layout">
+    <app-thanh-tai-khoan [muc]="tab() === 'DELIVERED' ? 'doi-tra' : 'don'" />
+    <section class="orders-content">
+      <div class="orders-heading">
+        <div><p class="eyebrow">MY SCENTORY / ACCOUNT</p><h1>Đơn hàng của tôi</h1><p>Theo dõi hành trình của những dấu ấn hương thơm bạn đã chọn.</p></div>
+        <button routerLink="/nuoc-hoa">＋ TIẾP TỤC MUA SẮM</button>
+      </div>
+      <div class="ord-stats">
+        <article class="is-dark"><small>Tổng chi tiêu</small><b>{{ tongChi() | tien: 'vnd' }}</b><span>{{ dem()['ALL'] }} đơn hàng đã đặt</span></article>
+        <article class="is-processing"><small>Đang xử lý</small><b>{{ dem()['PROCESSING'] }}</b><span>Chuẩn bị &amp; niêm phong</span></article>
+        <article class="is-shipping"><small>Đang giao</small><b>{{ dem()['SHIPPING'] }}</b><span>Trên đường tới bạn</span></article>
+        <article class="is-delivered"><small>Đã giao</small><b>{{ dem()['DELIVERED'] }}</b><span>Sẵn sàng đánh giá</span></article>
+      </div>
+      <div class="order-tabs">
+        @for (t of tabs; track t[0]) { <button type="button" class="ord-tab" [class.active]="tab() === t[0]" (click)="doiTab(t[0])">{{ t[1] }}<em>{{ dem()[t[0]] }}</em></button> }
+      </div>
+      @for (d of ds(); track d.id) {
+        @let m = moc(d);
+        <article class="order-card ord-card" [class]="'order-card ord-card is-' + d.status.toLowerCase()">
+          <header class="ord-head">
+            <div><small>Đơn hàng</small><b>#{{ d.orderCode }}</b></div>
+            <div><small>Ngày đặt</small><span>{{ d.createdAt | ngay }}</span></div>
+            <div><small>Số lượng</small><span>{{ soChai(d) }} chai</span></div>
+            <span class="ord-status">{{ d.statusLabel }}@if (d.paymentMethod === 'QR' && d.paymentStatus === 'PENDING' && d.status === 'PROCESSING') { · chờ thanh toán QR }</span>
+          </header>
+          @if (d.status !== 'CANCELLED') {
+            <ol class="ord-track" [style.--p]="m.phanTram + '%'">
+              @for (s of m.moc; track s.ten; let i = $index) { <li [class]="s.trangThai"><i>{{ s.trangThai === 'is-done' ? '✓' : i + 1 }}</i><b>{{ s.ten }}</b><small>{{ s.phu }}</small></li> }
+            </ol>
+          } @else {
+            <p style="margin:12px 20px;color:#a33;font-size:12px">✕ Đơn đã hủy{{ d.cancelReason ? ': ' + d.cancelReason : '' }}{{ d.paymentStatus === 'REFUNDED' ? ' · Đã hoàn tiền' : '' }}</p>
+          }
+          <div class="order-body ord-body">
+            @for (i of d.items; track i.id) {
+              <div class="order-item ord-item">
+                <span class="ord-thumb"><img [src]="anh(i.product)" [alt]="i.productName"><i>{{ i.quantity }}</i></span>
+                <div class="ord-item-info"><small>{{ i.product?.brand }}</small><b>{{ i.productName }}</b><em>{{ i.product?.concentration }} · {{ i.product?.volume }}ml</em>
+                  @if (d.status === 'DELIVERED') { <a class="ord-link" [routerLink]="['/tai-khoan/don-hang', d.id]" [queryParams]="{ danhGia: i.productId }">★ Đánh giá sản phẩm này</a> }</div>
+                <strong>{{ i.lineTotal | tien: 'vnd' }}</strong>
+              </div>
+            }
+          </div>
+          <footer class="ord-foot">
+            <p>Tổng cộng<b>{{ d.totalAmount | tien: 'vnd' }}</b></p>
+            <div class="order-card-actions">
+              @switch (d.status) {
+                @case ('PROCESSING') {
+                  <a [routerLink]="['/tai-khoan/don-hang', d.id]" class="ord-btn">Chi tiết đơn hàng</a>
+                  <button type="button" class="ord-btn is-danger" (click)="huy.set(d)">Yêu cầu hủy đơn</button>
+                }
+                @case ('SHIPPING') {
+                  <a [routerLink]="['/tai-khoan/don-hang', d.id]" class="ord-btn is-solid">Theo dõi hành trình</a>
+                  <a routerLink="/hop-thu" [queryParams]="{ don: d.orderCode }" class="ord-btn">Liên hệ hỗ trợ</a>
+                }
+                @case ('DELIVERED') {
+                  <a [routerLink]="['/tai-khoan/don-hang', d.id]" class="ord-btn is-solid">Viết đánh giá</a>
+                  @if (hanDoiTra(d)) { <a [routerLink]="['/tai-khoan/doi-tra', d.id]" class="ord-btn is-gold">Đổi trả (còn {{ hanDoiTra(d) }} ngày)</a> }
+                  <button type="button" class="ord-btn" (click)="muaLai(d)">Mua lại</button>
+                }
+                @default {
+                  <a [routerLink]="['/tai-khoan/don-hang', d.id]" class="ord-btn">Chi tiết</a>
+                  <button type="button" class="ord-btn is-solid" (click)="muaLai(d)">Mua lại</button>
+                }
+              }
+            </div>
+          </footer>
+        </article>
+      } @empty {
+        @if (!dangTai()) {
+          <div class="scentory-empty-result-box" style="text-align:center;padding:50px 20px;background:#fff;border:1px solid #e5e0d4">
+            <h3>Chưa có đơn hàng {{ tab() === 'ALL' ? '' : 'ở trạng thái này' }}</h3>
+            <p style="color:#777">Khám phá bộ sưu tập và đặt chai nước hoa đầu tiên của bạn.</p>
+            <a routerLink="/nuoc-hoa" class="ord-btn is-solid" style="display:inline-block;margin-top:10px">KHÁM PHÁ NƯỚC HOA</a>
+          </div>
+        }
+      }
+      @if (soTrang() > 1) {
+        <nav style="display:flex;gap:8px;justify-content:center;margin:20px 0">@for (n of trangSo(); track n) { <button class="ord-btn" [class.is-solid]="n === trang()" (click)="tai(n)">{{ n }}</button> }</nav>
+      }
+      <div class="policy-banner"><b>HƯƠNG THƠM CỦA BẠN, ĐƯỢC BẢO VỆ BỞI SCENTORY</b><p>Đơn đang xử lý có thể hủy trực tuyến. Đơn đã giao được đổi trả trong 7 ngày nếu còn nguyên seal.</p><a routerLink="/hop-thu">Liên hệ hỗ trợ →</a></div>
+    </section>
+  </div>
+  @if (huy(); as h) { <app-hop-thoai-huy-don [don]="h" (dong)="huy.set(null)" (daHuy)="daHuy()" /> }
+</main>

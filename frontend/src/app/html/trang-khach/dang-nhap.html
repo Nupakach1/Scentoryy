@@ -1,0 +1,28 @@
+<main class="form-main login-main">
+  <p class="form-breadcrumb">⌂ <a routerLink="/">TRANG CHỦ</a>　/　<b>ĐĂNG NHẬP</b></p>
+  <div class="login-shell">
+    <aside class="login-art">
+      <span>⚙ SCENTORY PRIVILEGE</span><h2>KHỞI NGUỒN KHỨU GIÁC</h2>
+      <h1>“Mỗi mùi hương là một thế giới riêng. Đăng nhập để tiếp tục hành trình nốt hương độc bản.”</h1>
+      <div class="register-benefits">
+        <article><b>♧　LƯU NỐT HƯƠNG QUIZ</b><span>Lưu trữ bản đồ khứu giác và tháp hương phân tích cá nhân hoá từ AI.</span></article>
+        <article><b>▣　BỘ SƯU TẬP LƯU TRỮ</b><span>Theo dõi danh sách nước hoa độc bản và ghi chú cảm nhận khứu giác.</span></article>
+        <article><b>♧　BẢO MẬT CHUẨN EU</b><span>Mã hoá thông tin cá nhân &amp; hồ sơ bảo mật tiêu chuẩn Haute Parfumerie.</span></article>
+      </div>
+    </aside>
+    <section class="login-content">
+      <div class="register-heading"><p class="eyebrow">TÀI KHOẢN CÁ NHÂN</p><small>Salon Privé</small><h1>ĐĂNG NHẬP</h1><p>Đăng nhập vào tài khoản Scentory để lưu trữ bộ sưu tập và lịch sử mùi hương của bạn.</p></div>
+      @if (loi(); as l) { <div class="auth-alert" role="alert"><b>ⓘ　{{ l.tieuDe }}</b><span>{{ l.noiDung }}</span></div> }
+      <form novalidate (ngSubmit)="gui()">
+        <label>ĐỊA CHỈ EMAIL *@if (loiTruong()['email']) { <small>ⓧ {{ loiTruong()['email'] }}</small> }
+          <input name="identifier" type="email" autocomplete="username" placeholder="✉　name@example.com" [(ngModel)]="email" [class.invalid]="loiTruong()['email'] || loi()"></label>
+        <label>MẬT KHẨU *<small style="cursor: pointer;" routerLink="/quen-mat-khau">Quên mật khẩu?</small>
+          <div class="scentory-password-wrapper"><input name="password" [type]="hien() ? 'text' : 'password'" autocomplete="current-password" placeholder="▣　Nhập mật khẩu của bạn" [(ngModel)]="matKhau" [class.invalid]="loiTruong()['password'] || loi()">
+            <button type="button" class="scentory-pwd-toggle-btn" [attr.aria-pressed]="hien()" (click)="hien.set(!hien())" title="Hiện mật khẩu">👁</button></div></label>
+        <button class="primary-button" [disabled]="dang()">{{ dang() ? 'ĐANG ĐĂNG NHẬP…' : 'ĐĂNG NHẬP　→' }}</button>
+      </form>
+      <div class="login-register">Chưa có tài khoản Scentory?　<u style="cursor: pointer;" routerLink="/dang-ky" [queryParams]="thamSo">Đăng ký tài khoản mới</u></div>
+      <div class="security-line">♧ Mã hoá SSL 256-bit　 •　 ♧ 100% Niche chính hãng</div>
+    </section>
+  </div>
+</main>

@@ -1,0 +1,104 @@
+@if (loi()) { <main class="order-detail-main od-page"><section class="od-card"><h2>{{ loi() }}</h2><a routerLink="/tai-khoan/don-hang">← Lịch sử đơn hàng</a></section></main> }
+@if (d(); as d) {
+<main class="order-detail-main od-page">
+  @if (moi()) {
+    <div class="checkout-steps" style="margin-bottom:18px"><span class="is-done"><i>✓</i>Giỏ hàng</span><span class="ck-line"></span><span class="is-done"><i>✓</i>Thanh toán</span><span class="ck-line"></span><span class="is-current"><i>3</i>Hoàn tất</span></div>
+  }
+  <nav class="od-crumb" aria-label="Breadcrumb"><span>Tài khoản</span><i>›</i><a routerLink="/tai-khoan/don-hang">Lịch sử đơn hàng</a><i>›</i><b>#{{ d.orderCode }}</b></nav>
+  <section class="od-hero" [class]="'od-hero ' + tone()">
+    <div class="od-hero-main">
+      <p class="od-hero-meta">Mã tham chiếu đơn<span>•</span>Đặt lúc {{ d.createdAt | ngay: true }}</p>
+      <h1>{{ moi() ? 'Đặt hàng thành công' : 'Đơn hàng' }} <em>#{{ d.orderCode }}</em></h1>
+      <span class="od-status"><i></i>{{ d.statusLabel }}</span>
+      @switch (d.status) {
+        @case ('PROCESSING') { <p class="od-note is-ok"><span aria-hidden="true">ⓘ</span>Đơn đang được chuẩn bị. Bạn có thể hủy trực tuyến trước khi đơn được bàn giao vận chuyển.</p> }
+        @case ('SHIPPING') { <p class="od-note is-locked"><span aria-hidden="true">🔒</span>Đơn đã bàn giao vận chuyển nên không thể hủy trực tuyến{{ d.trackingCode ? ' · Mã vận đơn ' + d.trackingCode : '' }}.</p> }
+        @case ('DELIVERED') { <p class="od-note is-locked"><span aria-hidden="true">✓</span>Đơn đã giao thành công{{ hanDoiTra() ? '. Bạn có thể gửi yêu cầu đổi trả trong ' + hanDoiTra() + ' ngày nữa.' : '.' }}</p> }
+        @case ('CANCELLED') { <p class="od-note is-cancelled"><span aria-hidden="true">✕</span>Đơn đã hủy{{ d.cancelReason ? ': ' + d.cancelReason : '' }}.</p> }
+      }
+    </div>
+    <div class="od-hero-side">
+      <p>Tổng thanh toán</p><strong>{{ d.totalAmount | tien: 'vnd' }}</strong>
+      <small>{{ soSP() }} sản phẩm · {{ nhanTToan[d.paymentStatus] }}</small>
+      <div class="od-actions">
+        @if (d.status === 'PROCESSING') { <button type="button" class="od-btn od-btn-light" (click)="huy.set(true)">Hủy đơn hàng</button> }
+        @if (hanDoiTra() && !d.returnRequest) { <a class="od-btn od-btn-light" [routerLink]="['/tai-khoan/doi-tra', d.id]">Yêu cầu đổi trả</a> }
+        <a class="od-btn od-btn-outline" routerLink="/hop-thu" [queryParams]="{ don: d.orderCode }">Liên hệ cố vấn hương</a>
+      </div>
+    </div>
+  </section>
+
+  @if (choQR()) {
+    <section class="od-card" style="display:flex;gap:18px;align-items:center;justify-content:space-between;flex-wrap:wrap;border:1px solid #e6cf9a;background:#fffaf0">
+      <div><p class="od-eyebrow">Thanh toán QR đang chờ</p><h2 style="margin:4px 0">Còn {{ dongHo() }} để hoàn tất chuyển khoản</h2><small>Quá 15 phút đơn sẽ tự hủy và hoàn tồn kho.</small></div>
+      <button type="button" class="od-btn od-btn-solid" (click)="xacNhanQR()" [disabled]="!conLai()">Tôi đã chuyển khoản</button>
+    </section>
+  }
+
+  @if (m(); as m) { @if (d.status !== 'CANCELLED') {
+    <section class="od-card od-progress" aria-label="Tiến trình đơn hàng">
+      <ol>@for (s of m.moc; track s.ten; let i = $index) { <li class="od-step" [class]="'od-step ' + s.trangThai"><span class="od-step-dot">{{ s.trangThai === 'is-done' ? '✓' : i + 1 }}</span><strong>{{ s.ten }}</strong><small>{{ s.phu }}</small></li> }</ol>
+    </section>
+  } }
+
+  <div class="od-grid">
+    <div class="od-col">
+      <section class="od-card od-package">
+        <header><h2>Kiện hàng hương thơm</h2><span>{{ d.items?.length }} tác phẩm</span></header>
+        @for (i of d.items; track i.id) {
+          <article class="od-item">
+            <div class="od-item-img"><img [src]="anh(i.product)" [alt]="i.productName" loading="lazy"></div>
+            <div class="od-item-info"><small>{{ i.product?.brand?.toUpperCase() }}</small><h3>{{ i.productName }}</h3><p>{{ i.product?.concentration }} · {{ i.product?.volume }}ml · SL: {{ i.quantity }}</p>
+              @if (d.status === 'DELIVERED') {
+                @if (daDanhGia(i)) { <small style="color:#2f6b3a">✓ Đã đánh giá</small> } @else { <button type="button" class="od-btn od-btn-ghost" (click)="danhGia.set(i)">★ Viết đánh giá</button> }
+              }
+            </div>
+            <div class="od-item-price"><strong>{{ i.lineTotal | tien: 'vnd' }}</strong><small>Đơn giá: {{ i.unitPrice | tien: 'vnd' }}</small></div>
+          </article>
+        }
+        <dl class="od-totals">
+          <div><dt>Tạm tính</dt><dd>{{ d.subtotal | tien: 'vnd' }}</dd></div>
+          <div><dt>Phí vận chuyển</dt><dd>{{ d.shippingFee ? (d.shippingFee | tien: 'vnd') : 'Miễn phí' }}</dd></div>
+          @if (d.discountAmount) { <div><dt>Giảm giá ({{ d.voucherCode }})</dt><dd>−{{ d.discountAmount | tien: 'vnd' }}</dd></div> }
+          <div class="od-grand"><dt>Tổng thanh toán</dt><dd>{{ d.totalAmount | tien: 'vnd' }}</dd></div>
+        </dl>
+      </section>
+      <section class="od-card od-delivery">
+        <p class="od-eyebrow">Thông tin giao nhận</p>
+        <dl>
+          <div><dt>Người nhận</dt><dd>{{ d.recipientName }}</dd></div>
+          <div><dt>Số điện thoại</dt><dd>{{ d.phone }}</dd></div>
+          <div><dt>Địa chỉ giao hàng</dt><dd>{{ d.shippingAddress }}</dd></div>
+          <div><dt>Mã vận đơn</dt><dd>{{ d.trackingCode || 'Chưa cập nhật (đang xử lý xuất kho)' }}</dd></div>
+          <div><dt>Phương thức vận chuyển</dt><dd>{{ d.deliveryMethod === 'EXPRESS' ? 'Giao hỏa tốc' : 'Giao hàng tiêu chuẩn' }}</dd></div>
+          <div><dt>Phương thức thanh toán</dt><dd>{{ nhanTT[d.paymentMethod] }}{{ d.cardLast4 ? ' · •••• ' + d.cardLast4 : '' }}</dd></div>
+          <div><dt>Trạng thái thanh toán</dt><dd>{{ nhanTToan[d.paymentStatus] }}</dd></div>
+          @if (d.orderNote) { <div><dt>Ghi chú</dt><dd>{{ d.orderNote }}</dd></div> }
+        </dl>
+      </section>
+      @if (d.returnRequest; as r) {
+        <section class="od-card">
+          <p class="od-eyebrow">Yêu cầu đổi trả</p>
+          <dl class="od-totals">
+            <div><dt>Loại</dt><dd>{{ r.requestType === 'REFUND' ? 'Hoàn tiền' : 'Đổi sản phẩm' }}</dd></div>
+            <div><dt>Lý do</dt><dd>{{ r.reason }}</dd></div>
+            <div><dt>Trạng thái</dt><dd>{{ nhanDT[r.status] }}</dd></div>
+            @if (r.refundAmount) { <div><dt>Số tiền hoàn</dt><dd>{{ r.refundAmount | tien: 'vnd' }}</dd></div> }
+            @if (r.adminResponse) { <div><dt>Phản hồi của Scentory</dt><dd>{{ r.adminResponse }}</dd></div> }
+          </dl>
+        </section>
+      }
+    </div>
+    <aside class="od-card od-help" [class.od-help-cancelled]="d.status === 'CANCELLED'">
+      <p class="od-eyebrow">Lịch sử trạng thái</p>
+      <h2>Nhật ký đơn hàng</h2>
+      <ol class="od-guide">
+        @for (t of d.timeline; track $index) { <li><b>{{ t.note || t.status }}</b><p>{{ t.at | ngay: true }} · {{ t.by === 'customer' ? 'Bạn' : t.by === 'admin' ? 'Scentory' : 'Hệ thống' }}</p></li> }
+      </ol>
+      <a class="od-btn od-btn-solid od-btn-block" routerLink="/hop-thu" [queryParams]="{ don: d.orderCode }">Chat trực tiếp với Scent Concierge</a>
+    </aside>
+  </div>
+  @if (huy()) { <app-hop-thoai-huy-don [don]="d" (dong)="huy.set(false)" (daHuy)="sauHuy()" /> }
+  @if (danhGia(); as i) { <app-hop-thoai-danh-gia [orderId]="d.id" [dongDon]="i" (dong)="danhGia.set(null)" (daGui)="sauDanhGia()" /> }
+</main>
+}

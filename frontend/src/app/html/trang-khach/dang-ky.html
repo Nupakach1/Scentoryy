@@ -1,0 +1,57 @@
+@if (!xong()) {
+<main class="form-main">
+  <p class="form-breadcrumb">⌂ <a routerLink="/">TRANG CHỦ</a>　/　<b>TẠO TÀI KHOẢN</b></p>
+  <div class="register-shell">
+    <aside class="register-art">
+      <span>⚙ SCENTORY PRIVILEGE</span><h2>KHỞI NGUỒN KHỨU GIÁC</h2>
+      <h1>“Mỗi mùi hương là một thế giới riêng. Tạo tài khoản để lưu giữ nốt hương bản sắc của bạn.”</h1>
+      <div class="register-benefits">
+        <article><b>♧　LƯU NỐT HƯƠNG QUIZ</b><span>Lưu trữ bản đồ khứu giác và tháp hương phân tích cá nhân hoá từ AI.</span></article>
+        <article><b>▣　ĐẶC QUYỀN THỬ HƯƠNG</b><span>Đặt lịch ưu tiên thưởng hương riêng tại Boutique Hà Nội &amp; Sài Gòn.</span></article>
+        <article><b>▣　THEO DÕI ĐƠN ƯU TIÊN</b><span>Đóng gói chuẩn hộp sơn mài và giao hoả tốc kèm niêm phong bảo hiểm.</span></article>
+        <article><b>♧　BẢO MẬT CHUẨN EU</b><span>Mã hoá thông tin thẻ &amp; hồ sơ bảo mật tiêu chuẩn Haute Parfumerie.</span></article>
+      </div>
+      <small>●　100% Phân phối chính hãng từ Paris, Grasse &amp; Milano</small>
+    </aside>
+    <section class="register-content">
+      <div class="register-heading"><p class="eyebrow">THÀNH VIÊN MỚI</p><small>* Bắt buộc nhập</small><h1>TẠO TÀI KHOẢN SCENTORY</h1><p>Bắt đầu hành trình khám phá thế giới mùi hương độc bản của riêng bạn.</p></div>
+      @if (loiChung()) { <div class="auth-alert" role="alert"><b>ⓘ　Thông tin chưa hợp lệ</b><span>{{ loiChung() }}</span></div> }
+      <form novalidate (ngSubmit)="gui()">
+        <label>HỌ VÀ TÊN *<input name="fullName" type="text" autocomplete="name" placeholder="♙　Ví dụ: Nguyễn Minh Anh" [(ngModel)]="f.fullName" [class.invalid]="loiTruong()['fullName']">@if (loiTruong()['fullName']) { <em class="err">ⓘ {{ loiTruong()['fullName'] }}</em> }</label>
+        <label>ĐỊA CHỈ EMAIL *<input name="email" type="email" autocomplete="email" placeholder="✉　name@example.com" [(ngModel)]="f.email" [class.invalid]="loiTruong()['email']">@if (loiTruong()['email']) { <em class="err">ⓘ {{ loiTruong()['email'] }} <a routerLink="/dang-nhap">Đăng nhập</a></em> }</label>
+        <label>SỐ ĐIỆN THOẠI <small>Không bắt buộc</small><input name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="♧　0912 345 678" [(ngModel)]="f.phoneNumber" [class.invalid]="loiTruong()['phoneNumber']">
+          @if (loiTruong()['phoneNumber']) { <em class="err">ⓘ {{ loiTruong()['phoneNumber'] }}</em> } @else { <em>Dùng để liên hệ khi giao hàng.</em> }</label>
+        <label>MẬT KHẨU *<div class="scentory-password-wrapper"><input name="password" [type]="hien() ? 'text' : 'password'" autocomplete="new-password" placeholder="▣　Nhập ít nhất 8 ký tự..." [(ngModel)]="f.password" [class.invalid]="loiTruong()['password']">
+          <button type="button" class="scentory-pwd-toggle-btn" (click)="hien.set(!hien())" [attr.aria-pressed]="hien()">👁</button></div>
+          <em [class.err]="loiTruong()['password']">ⓘ {{ loiTruong()['password'] || '8–64 ký tự, bao gồm ít nhất một chữ cái và một chữ số.' }}</em></label>
+        <label>NHẬP LẠI MẬT KHẨU *<input name="confirmPassword" [type]="hien() ? 'text' : 'password'" autocomplete="new-password" placeholder="▣　Nhập lại mật khẩu" [(ngModel)]="f.confirmPassword" [class.invalid]="loiTruong()['confirmPassword']">@if (loiTruong()['confirmPassword']) { <em class="err">ⓘ {{ loiTruong()['confirmPassword'] }}</em> }</label>
+        <label class="remember" style="cursor:pointer;flex-direction:row;display:flex;gap:8px;align-items:center"><input type="checkbox" name="terms" [(ngModel)]="f.acceptTerms"><span class="register-legal" style="margin:0">Tôi đồng ý với <u>Điều khoản dịch vụ</u> và <b>Chính sách bảo mật</b> của Scentory.</span></label>
+        @if (loiTruong()['acceptTerms']) { <em class="err">ⓘ {{ loiTruong()['acceptTerms'] }}</em> }
+        <button class="primary-button" [disabled]="dang()">{{ dang() ? 'ĐANG TẠO TÀI KHOẢN…' : 'ĐĂNG KÝ TÀI KHOẢN　→' }}</button>
+      </form>
+      <p class="login-prompt">Đã có tài khoản?　<u style="cursor: pointer;" routerLink="/dang-nhap" [queryParams]="thamSo">Đăng nhập</u></p>
+      <div class="security-line">♧ Mã hoá SSL 256-bit　 •　 ♧ Bảo vệ danh tính</div>
+    </section>
+  </div>
+</main>
+} @else {
+<main class="auth-success-main">
+  <div class="success-shell">
+    <aside class="success-art"><span>✧ SCENTORY PRIVILEGE　　HAUTE PARFUMERIE</span><div><b>✧ DẤU ẤN KHỨU GIÁC</b><p>“Mỗi mùi hương là một thế giới riêng, khắc ghi chân dung tâm hồn và những ký ức không bao giờ phai nhạt.”</p><small>— Scentory Atelier</small></div></aside>
+    <section class="success-content">
+      <div class="success-icon">✓</div>
+      <p class="eyebrow">XÁC NHẬN ĐĂNG KÝ THÀNH VIÊN</p>
+      <h1>ĐĂNG KÝ TÀI KHOẢN THÀNH CÔNG!</h1>
+      <p>Chào mừng {{ xt.nguoiDung()?.fullName }} gia nhập Scentory. Bạn đã được đăng nhập tự động.</p>
+      <div class="member-card"><h3>◎ TÀI KHOẢN THÀNH VIÊN <b>ĐÃ KÍCH HOẠT</b></h3><p>Địa chỉ email: <strong>{{ xt.nguoiDung()?.email }}</strong></p><p>Hồ sơ mùi hương: <strong>{{ xt.nguoiDung()?.hasScentProfile ? '◉ Đã đồng bộ từ Scent Quiz' : '○ Chưa có — hãy làm Scent Quiz' }}</strong></p></div>
+      <button class="success-cta" (click)="router.navigateByUrl(xt.nguoiDung()?.hasScentProfile ? '/scent-quiz/goi-y' : '/scent-quiz/buoc/1')">{{ xt.nguoiDung()?.hasScentProfile ? 'XEM GỢI Ý CỦA TÔI →' : 'BẮT ĐẦU SCENT QUIZ →' }}</button>
+      <a class="back-link" routerLink="/">← KHÁM PHÁ TRANG CHỦ</a>
+    </section>
+  </div>
+  <div class="benefit-row">
+    <article><b>▧ Scent Quiz</b><span>Lưu giữ bản đồ nốt hương riêng biệt của bạn.</span></article>
+    <article><b>▣ Theo dõi đơn hàng</b><span>Cập nhật trạng thái đơn theo thời gian thực.</span></article>
+    <article><b>♧ Tư vấn trực tuyến</b><span>Nhắn tin với Scentory qua hộp thư.</span></article>
+  </div>
+</main>
+}

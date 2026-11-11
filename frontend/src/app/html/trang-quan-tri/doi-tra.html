@@ -1,0 +1,40 @@
+<div class="qt-thanh-tren"><span></span><span>{{ ds().length }} yêu cầu</span></div>
+<div class="qt-dau"><div><span class="nhan-muc">Hậu mãi</span><h1>Đổi trả &amp; hoàn tiền</h1></div></div>
+<div class="qt-loc">
+  @for (t of ['PENDING', 'APPROVED', 'COMPLETED', 'REJECTED', '']; track t) { <button class="chip chip-chon" [class.dang-chon]="tt() === t" (click)="tt.set(t); tai()">{{ t ? nhan[t] : 'Tất cả' }}</button> }
+</div>
+<div class="the" style="padding:0;overflow:auto">
+  <table class="bang">
+    <thead><tr><th>Ngày gửi</th><th>Đơn</th><th>Khách hàng</th><th>Loại</th><th>Lý do</th><th>Seal</th><th>Hoàn tiền</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+      @for (r of ds(); track r.id) {
+        <tr><td>{{ r.createdAt | ngay }}</td><td><a [routerLink]="['/admin/don-hang', r.orderId]"><b>{{ r.orderCode }}</b></a></td><td>{{ r.customer?.fullName }}</td>
+          <td>{{ r.requestType === 'REFUND' ? 'Hoàn tiền' : 'Đổi hàng' }}</td><td class="chu-nho">{{ r.reason }}</td><td>{{ r.isIntactSeal ? 'Còn' : 'Đã mở' }}</td>
+          <td>{{ r.refundAmount ? (r.refundAmount | tien) : '—' }}</td><td><span class="nhan-tt" [class]="'nhan-tt ' + mau[r.status]">{{ nhan[r.status] }}</span></td>
+          <td><button class="nut nut-vien nut-nho" (click)="mo(r)">{{ chuyen[r.status].length ? 'Xử lý' : 'Xem' }}</button></td></tr>
+      } @empty { <tr><td colspan="9" class="chu-nhat" style="text-align:center;padding:32px">Không có yêu cầu.</td></tr> }
+    </tbody>
+  </table>
+</div>
+@if (chon(); as r) {
+  <div class="lop-phu" (click)="chon.set(null)">
+    <div class="hop-thoai" style="max-width:640px" (click)="$event.stopPropagation()">
+      <h3>Yêu cầu đổi trả — đơn {{ r.orderCode }}</h3>
+      <p class="chu-nho">{{ r.customer?.fullName }} ({{ r.customer?.email }}) · {{ r.requestType === 'REFUND' ? 'Hoàn tiền ' + (r.refundAmount | tien) : 'Đổi hàng' }} · Seal: {{ r.isIntactSeal ? 'còn nguyên' : 'đã mở' }}</p>
+      <p><b>Lý do:</b> {{ r.reason }}</p>
+      @if (r.description) { <p class="chu-nho">{{ r.description }}</p> }
+      <p class="chu-nho"><b>Minh chứng:</b> <a [href]="r.evidenceUrl" target="_blank" style="text-decoration:underline">Mở tệp ↗</a></p>
+      <img class="minh-chung" [src]="r.evidenceUrl" alt="Minh chứng" (error)="$any($event.target).style.display = 'none'">
+      @if (chuyen[r.status].length) {
+        <div class="truong" style="margin-top:14px"><label>Quyết định</label>
+          <select class="o-nhap" [ngModel]="den()" (ngModelChange)="den.set($event)"><option value="">— Chọn —</option>@for (s of chuyen[r.status]; track s) { <option [value]="s">{{ nhan[s] }}</option> }</select></div>
+        <div class="truong"><label>Phản hồi cho khách {{ den() === 'REJECTED' ? '*' : '(tùy chọn)' }}</label><textarea class="o-nhap" rows="3" maxlength="255" [(ngModel)]="phanHoi"></textarea></div>
+        @if (loi()) { <div class="hop-loi chu-nho">{{ loi() }}</div> }
+        <div class="hop-thoai__nut"><button class="nut nut-vien" (click)="chon.set(null)">Đóng</button><button class="nut nut-chinh" [disabled]="!den()" (click)="luu()">Lưu quyết định</button></div>
+      } @else {
+        @if (r.adminResponse) { <p class="chu-nho"><b>Phản hồi:</b> {{ r.adminResponse }}</p> }
+        <div class="hop-thoai__nut"><button class="nut nut-vien" (click)="chon.set(null)">Đóng</button></div>
+      }
+    </div>
+  </div>
+}

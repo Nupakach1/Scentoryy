@@ -1,0 +1,17 @@
+<article class="catalog-card scentory-product-card" [attr.data-sku]="sp().sku">
+  @if (diem() !== null) { <b class="match">✦ {{ diem() }}% MATCH</b> }
+  <div class="catalog-photo scentory-card-photo">
+    <a [routerLink]="['/nuoc-hoa', sp().sku]"><img class="card-img-primary" [src]="anh(sp())" [alt]="sp().name" loading="lazy">
+    <img class="card-img-gallery" [src]="anh2(sp())" [alt]="sp().name + ' Lifestyle'" loading="lazy"></a>
+    <button type="button" class="card-wishlist wishlist-btn" [class.is-active]="yt.co(sp().id)" (click)="yt.batTat(sp())" [attr.aria-label]="yt.co(sp().id) ? 'Bỏ yêu thích' : 'Thêm vào yêu thích'">{{ yt.co(sp().id) ? '♥' : '♡' }}</button>
+  </div>
+  <small class="card-brand">{{ sp().brand.toUpperCase() }}</small>
+  <h2 class="card-title"><a [routerLink]="['/nuoc-hoa', sp().sku]">{{ sp().name.toUpperCase() }}</a></h2>
+  <strong class="card-price">{{ sp().price | tien }}</strong>
+  <p class="card-notes">{{ sp().topNotes }}</p>
+  @if (thoiTiet(); as w) {
+    <div class="product-weather-fit"><span>{{ bieuTuong(w.score!) }}</span><b>Thời tiết hôm nay</b><small>{{ w.reason }}</small></div>
+  }
+  @if (sp().stock > 0) { <button type="button" class="add-to-cart-btn" (click)="them()">THÊM VÀO GIỎ HÀNG</button> }
+  @else { <button type="button" class="add-to-cart-btn" disabled>TẠM HẾT HÀNG</button> }
+</article>

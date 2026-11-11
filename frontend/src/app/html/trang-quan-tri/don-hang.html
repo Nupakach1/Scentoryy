@@ -1,0 +1,25 @@
+<div class="qt-thanh-tren"><span></span><span>{{ tong() }} đơn</span></div>
+<div class="qt-dau"><div><span class="nhan-muc">Bán hàng</span><h1>Đơn hàng</h1></div></div>
+<div class="qt-loc">
+  @for (t of tabs; track t) { <button class="chip chip-chon" [class.dang-chon]="tt() === t" (click)="chonTab(t)">{{ t ? nhan[t] : 'Tất cả' }} ({{ t ? (dem()[t] || 0) : tongDem() }})</button> }
+</div>
+<form class="qt-loc" (ngSubmit)="tai(1)"><input class="o-nhap" name="q" [(ngModel)]="q" placeholder="Mã đơn, tên khách, email, SĐT"><button class="nut nut-vien nut-nho">Tìm</button></form>
+<div class="the" style="padding:0;overflow:auto">
+  <table class="bang">
+    <thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày đặt</th><th>Tổng tiền</th><th>Thanh toán</th><th>Giao hàng</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+      @for (o of ds(); track o.id) {
+        <tr>
+          <td><b>{{ o.orderCode }}</b></td>
+          <td>{{ o.customer?.fullName || o.recipientName }}<div class="chu-nho chu-nhat">{{ o.phone }}</div></td>
+          <td>{{ o.createdAt | ngay: true }}</td><td>{{ o.totalAmount | tien }}</td>
+          <td>{{ o.paymentMethod }} <span class="nhan-tt" [class]="'nhan-tt ' + mauTT[o.paymentStatus]">{{ nhanTT[o.paymentStatus] }}</span></td>
+          <td class="chu-nho">{{ o.deliveryMethod === 'EXPRESS' ? 'Hỏa tốc' : 'Tiêu chuẩn' }}</td>
+          <td><span class="nhan-tt" [class]="'nhan-tt ' + mau[o.status]">{{ nhan[o.status] }}</span></td>
+          <td><a class="nut nut-vien nut-nho" [routerLink]="['/admin/don-hang', o.id]">Chi tiết</a></td>
+        </tr>
+      } @empty { <tr><td colspan="8" class="chu-nhat" style="text-align:center;padding:32px">Không có đơn hàng.</td></tr> }
+    </tbody>
+  </table>
+</div>
+@if (soTrang() > 1) { <div class="phan-trang">@for (n of dsTrang(); track n) { <button [class.dang-chon]="n === trang()" (click)="tai(n)">{{ n }}</button> }</div> }

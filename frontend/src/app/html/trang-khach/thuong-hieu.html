@@ -1,0 +1,44 @@
+<main>
+  <section class="brand-intro">
+    <small>TRANG CHỦ / THƯƠNG HIỆU</small>
+    <h1>Nhà Chế Tác Mùi Hương</h1>
+    <p>Khám phá thế giới mùi hương lừng danh khắp nơi cùng những nhà điều hương danh tiếng.</p>
+    <form class="bl-search" role="search" autocomplete="off" (submit)="$event.preventDefault()">
+      <span class="bl-search-icon" aria-hidden="true">⌕</span>
+      <input type="search" [ngModel]="tuKhoa()" (ngModelChange)="tuKhoa.set($event)" name="q" placeholder="Tìm kiếm nhà chế tác, quốc gia hoặc phong cách..." aria-label="Tìm kiếm nhà chế tác">
+      @if (tuKhoa()) { <button type="button" class="bl-search-clear" aria-label="Xóa từ khóa" (click)="tuKhoa.set('')">×</button> }
+    </form>
+    @if (tuKhoa()) { <p class="bl-note">Tìm thấy {{ loc().length }} nhà chế tác cho “{{ tuKhoa() }}”.</p> }
+    <nav class="bl-hero-chips" aria-label="Chuyển nhanh tới nhà chế tác">@for (b of ds(); track b.id) { <a [routerLink]="['/thuong-hieu', b.slug]">{{ b.name }}</a> }</nav>
+  </section>
+  <section class="brand-feature">
+    <small>NHÀ CHẾ TÁC ĐANG PHÂN PHỐI</small>
+    <div class="brand-grid">
+      @for (b of loc(); track b.id) {
+        <article [id]="b.slug">
+          <div class="brand-photo" [style.background-image]="'url(' + b.imageUrl + ')'" style="background-size:cover;background-position:center"></div>
+          <span class="bl-meta">{{ b.origin.split('·')[0].toUpperCase() }} · {{ b.productCount }} TÁC PHẨM</span>
+          <h2>{{ b.name }}</h2>
+          <p>{{ b.style }}</p>
+          <a [routerLink]="['/thuong-hieu', b.slug]">Khám phá bộ sưu tập →</a>
+        </article>
+      }
+    </div>
+    @if (ds().length && !loc().length) { <p class="bl-empty">Không tìm thấy nhà chế tác phù hợp. Hãy thử từ khóa khác, ví dụ “Pháp”, “Paris” hoặc “Heritage”.</p> }
+  </section>
+  <section class="alphabet">
+    <small>THƯ MỤC TOÀN DIỆN</small>
+    <h2>Tra Cứu Theo Ký Tự A — Z</h2>
+    <div class="bl-az-bar">
+      <button type="button" class="bl-az-btn bl-az-all" [class.is-active]="!chu()" (click)="chu.set('')">TẤT CẢ</button>
+      @for (c of bangChu; track c) { <button type="button" class="bl-az-btn" [class.is-active]="chu() === c" [disabled]="!coChu().has(c)" (click)="chu.set(c)">{{ c }}</button> }
+    </div>
+    <div>
+      @for (g of nhomChu(); track g.c) {
+        <div class="bl-az-group"><h3 class="bl-az-letter">{{ g.c }}</h3>
+          <div class="bl-az-names">@for (x of g.ds; track x.ten) { @if (x.slug) { <a class="bl-az-name is-stocked" [routerLink]="['/thuong-hieu', x.slug]">{{ x.ten }}</a> } @else { <span class="bl-az-name">{{ x.ten }}</span> } }</div>
+        </div>
+      }
+    </div>
+  </section>
+</main>

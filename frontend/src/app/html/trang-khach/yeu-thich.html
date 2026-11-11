@@ -1,0 +1,22 @@
+<main>
+  <section class="catalog-heading"><small>SCENTORY MEMBER</small><h1>TÁC PHẨM YÊU THÍCH</h1><p>Những nốt hương bạn muốn lưu lại để khám phá sau.</p></section>
+  <div class="catalog-layout">
+    <aside class="filter-panel wishlist-side"><h3>BỘ SƯU TẬP RIÊNG</h3><p>Chạm vào trái tim trên mỗi sản phẩm để lưu lại những mùi hương bạn muốn thử. Sản phẩm yêu thích cũng giúp Scent Match hiểu gu của bạn hơn.</p></aside>
+    <section class="product-list">
+      <div class="product-toolbar"><span>Đang lưu <b>{{ ds().length }}</b> tác phẩm</span></div>
+      <div class="product-grid">
+        @for (p of ds(); track p.id) { <app-the-san-pham [sp]="p" /> }
+        @empty {
+          @if (!dangTai()) {
+            <div class="scentory-empty-result-box" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
+              <div style="font-size: 42px; margin-bottom: 16px; opacity: 0.6;">♡</div>
+              <h3 style="font-size: 22px; margin-bottom: 10px; color: #1c2a1e;">Chưa có tác phẩm yêu thích</h3>
+              <p style="color: #6b6b5b; font-size: 14px; max-width: 480px; margin: 0 auto 24px;">Khám phá bộ sưu tập và chạm vào biểu tượng trái tim để lưu lại.</p>
+              <a routerLink="/nuoc-hoa" style="padding: 12px 28px; background: #444d32; color: #fff; font-weight: 700; font-size: 11px; letter-spacing: 1px;">KHÁM PHÁ NƯỚC HOA</a>
+            </div>
+          }
+        }
+      </div>
+    </section>
+  </div>
+</main>

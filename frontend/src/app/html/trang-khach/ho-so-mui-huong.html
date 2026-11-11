@@ -1,0 +1,83 @@
+@if (!dangTai() && !hs()) {
+  <main class="sp-main"><section class="sp-hero"><div class="sp-hero-copy">
+    <p class="sp-kicker">CHƯA CÓ HỒ SƠ MÙI HƯƠNG</p><h1 class="sp-title">Bạn chưa làm Scent Quiz</h1>
+    <p class="sp-lede">Trả lời 7 câu hỏi ngắn để Scentory lập hồ sơ khứu giác và gợi ý mùi hương phù hợp.</p>
+    <div class="sp-cta-actions"><a class="sp-cta-primary" routerLink="/scent-quiz/buoc/1">BẮT ĐẦU SCENT QUIZ →</a></div></div></section></main>
+}
+@if (hs(); as h) {
+<main class="sp-main">
+  <section class="sp-hero">
+    <div class="sp-hero-copy">
+      <p class="sp-badge">✦ HỒ SƠ CỦA BẠN · CẬP NHẬT {{ homNay | ngay }}</p>
+      <p class="sp-kicker">KẾT QUẢ PHÂN TÍCH CÁ NHÂN HÓA</p>
+      <h1 class="sp-title">Khám phá dấu ấn mùi hương của bạn <em class="sp-title-name">"{{ h.profileTitle }}"</em></h1>
+      <p class="sp-lede">{{ h.lede }}</p>
+      <div class="sp-tags">
+        <span><small>Nhóm hương chủ đạo</small><b>{{ h.preferredFamilies[0] || '—' }}</b></span>
+        <span><small>Phong cách</small><b>{{ cauTraLoi()?.includeUnisex ? 'Unisex' : nhan[cauTraLoi()?.style ?? ''] }}</b></span>
+        <span><small>Độ tỏa</small><b>{{ h.preferredProjection }}</b></span>
+        <span><small>Dung tích</small><b>{{ h.preferredVolume }}</b></span>
+      </div>
+      @if (h.saved === false || !xt.daDangNhap()) {
+        <p class="sp-card-desc" style="margin-top:14px">⚠ Đây là hồ sơ tạm trên trình duyệt. <a routerLink="/dang-nhap" [queryParams]="{ next: '/scent-quiz/ho-so' }" style="font-weight:700;text-decoration:underline">Đăng nhập</a> để lưu vào tài khoản.</p>
+      }
+    </div>
+    <figure class="sp-hero-media">
+      <img class="sp-hero-img" [src]="anhNhom(h.preferredFamilies[0])" [alt]="'Nhóm hương ' + h.preferredFamilies[0]">
+      <figcaption><small>NHÓM HƯƠNG CHỦ ĐẠO</small><strong class="sp-hero-family">{{ h.preferredFamilies[0] }}</strong></figcaption>
+    </figure>
+  </section>
+  <div class="sp-grid">
+    <section class="sp-card sp-chart">
+      <p class="sp-eyebrow">BIỂU ĐỒ KHỨU GIÁC VÒNG</p>
+      <h2>Bánh xe nhóm hương bản sắc</h2>
+      <p class="sp-card-desc">Tỷ lệ điểm (thang 1–5) của 6 nhóm hương, tính từ câu trả lời trong bài quiz và hành vi mua sắm.</p>
+      <div class="sp-chart-body">
+        <div class="sp-donut" role="img" aria-label="Biểu đồ nhóm hương">
+          <svg viewBox="0 0 200 200"><g transform="rotate(-90 100 100)">
+            <circle cx="100" cy="100" r="80" fill="none" stroke="#efe9dc" stroke-width="22"></circle>
+            @for (c of cung(); track $index) { <circle cx="100" cy="100" r="80" fill="none" stroke-width="22" [attr.stroke]="c.mau" [attr.stroke-dasharray]="c.dash" [attr.stroke-dashoffset]="c.off" [style.opacity]="dangChon() === $index ? 1 : .55"></circle> }
+          </g></svg>
+          <div class="sp-donut-center"><strong class="sp-donut-value">{{ dangPhan()?.pct }}%</strong><span class="sp-donut-label">{{ dangPhan()?.ten }}</span></div>
+        </div>
+        <ul class="sp-legend">
+          @for (p of phan(); track p.ten; let i = $index) {
+            <li tabindex="0" [style.--seg]="p.mau" [style.--pct]="p.pct + '%'" (mouseenter)="dangChon.set(i)" (focus)="dangChon.set(i)">
+              <div class="sp-legend-row"><i aria-hidden="true"></i><span>{{ p.ten }}</span><b>{{ p.pct }}%</b></div><div class="sp-legend-bar" aria-hidden="true"><span></span></div></li>
+          }
+        </ul>
+      </div>
+    </section>
+    <aside class="sp-card sp-insight">
+      <p class="sp-eyebrow">DẤU ẤN CÁ NHÂN</p>
+      <h2>Thói quen &amp; khí chất của bạn</h2>
+      <p class="sp-card-desc">Những lựa chọn trong bài quiz giúp chúng tôi hiểu cách bạn muốn mùi hương đồng hành mỗi ngày.</p>
+      <div class="sp-insight-list">
+        <article><span class="sp-insight-icon" aria-hidden="true">✦</span><div><h3>KHÍ CHẤT</h3><p>{{ nhan[cauTraLoi()?.aura ?? ''] || h.preferredProjection }}</p></div></article>
+        <article><span class="sp-insight-icon" aria-hidden="true">◷</span><div><h3>NHỊP SỬ DỤNG</h3><p>{{ nhan[cauTraLoi()?.habit ?? ''] || h.preferredVolume }}</p></div></article>
+        <article><span class="sp-insight-icon" aria-hidden="true">☾</span><div><h3>DỊP DÙNG</h3><p>{{ h.expectedOccasion }}</p></div></article>
+      </div>
+    </aside>
+    <section class="sp-card sp-notes">
+      <div class="sp-notes-head"><div><p class="sp-eyebrow">THÀNH PHẦN HƯƠNG TƯƠNG THÍCH</p><h2>Nốt hương dành riêng cho bạn</h2></div>
+        <p class="sp-card-desc">Bốn nguyên liệu nổi bật trong những chai nước hoa hợp với bạn nhất.</p></div>
+      <div class="sp-note-grid">
+        @for (n of notes(); track n.ten; let i = $index) {
+          <article class="sp-note" [style.animation-delay]="(0.1 + i * 0.08) + 's'"><img [src]="anh2(n.sp)" alt="" loading="lazy"><div class="sp-note-caption"><strong>{{ n.ten }}</strong><small>{{ n.sp?.name }}</small></div></article>
+        }
+      </div>
+    </section>
+    <section class="sp-cta">
+      <div class="sp-cta-copy">
+        <p class="sp-eyebrow">SẴN SÀNG CHO DẤU ẤN MỚI?</p>
+        <h2>Mở khóa tủ hương phù hợp với bạn</h2>
+        <p>Khám phá những sáng tạo hương thơm được gợi ý theo dấu ấn khứu giác của bạn.</p>
+        <div class="sp-cta-actions">
+          <button type="button" class="sp-cta-primary" routerLink="/scent-quiz/goi-y">KHÁM PHÁ NƯỚC HOA PHÙ HỢP →</button>
+          <button type="button" class="sp-cta-secondary" (click)="lamLai()">LÀM LẠI SCENT QUIZ</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+}

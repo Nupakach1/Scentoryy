@@ -1,0 +1,1280 @@
+/**
+ * SCENTORY - Shell & Common Components Styling
+ * File: customer-ui/css/shell.css
+ * Bổ trợ các thành phần dùng chung: Toast notification, Cart Drawer, Search popup, Modal dialog.
+ * Bảo toàn 100% quy chuẩn Haute Parfumerie: Plus Jakarta Sans, Dark Olive, Gold Accent, Cream.
+ */
+
+/* ==========================================================================
+   1. GLOBAL TOAST NOTIFICATION CONTAINER
+   ========================================================================== */
+#scentory-toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.scentory-toast {
+  pointer-events: auto;
+  min-width: 340px;
+  max-width: 440px;
+  background: #1c2a1e; /* Dark Olive */
+  color: #fbf9f4; /* Cream */
+  border: 1px solid rgba(212, 175, 55, 0.35); /* Subtle Gold */
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(-16px) scale(0.96);
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scentory-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.scentory-toast-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  border-radius: 50%;
+  background: rgba(212, 175, 55, 0.18);
+  color: #d4af37;
+}
+
+.scentory-toast.is-success .scentory-toast-icon {
+  background: rgba(91, 138, 83, 0.25);
+  color: #7bc372;
+}
+
+.scentory-toast.is-error .scentory-toast-icon {
+  background: rgba(224, 83, 83, 0.25);
+  color: #ff7878;
+}
+
+.scentory-toast-body {
+  flex: 1;
+}
+
+.scentory-toast-title {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.scentory-toast-msg {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #c9c5b8;
+}
+
+.scentory-toast-link {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: underline;
+  color: #d4af37;
+  cursor: pointer;
+}
+
+.scentory-toast-close {
+  background: transparent;
+  border: none;
+  color: #9c978b;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 0 0 6px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.scentory-toast-close:hover {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   2. CART DRAWER (NGĂN KÉO GIỎ HÀNG TRƯỢT LỀ PHẢI)
+   ========================================================================== */
+.scentory-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 20, 15, 0.65);
+  backdrop-filter: blur(2px);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.scentory-drawer-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.scentory-auth-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(18, 24, 15, 0.68);
+  backdrop-filter: blur(4px);
+}
+
+.scentory-auth-gate-card {
+  position: relative;
+  width: min(430px, 100%);
+  padding: 38px 40px 34px;
+  text-align: center;
+  background: #fbf9f4;
+  color: #1c2a1e;
+  border: 1px solid #ddd5c5;
+  border-radius: 16px;
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.32);
+}
+
+.scentory-auth-gate-close {
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  border: 0;
+  background: transparent;
+  color: #797968;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.scentory-auth-gate-mark { display: grid; place-items: center; width: 48px; height: 48px; margin: 0 auto 16px; border-radius: 50%; background: #e9edd6; color: #4b5837; font-size: 23px; }
+.scentory-auth-gate-eyebrow { margin: 0 0 8px; color: #8b7040; font-size: 10px; font-weight: 800; letter-spacing: 2px; }
+.scentory-auth-gate-card h2 { margin: 0 0 12px; font-size: 23px; }
+.scentory-auth-gate-card > p:not(.scentory-auth-gate-eyebrow) { margin: 0; color: #6d6b62; font-size: 12px; line-height: 1.7; }
+.scentory-auth-gate-actions { display: grid; gap: 10px; margin-top: 24px; }
+.scentory-auth-gate-actions a { display: block; padding: 13px 18px; border-radius: 8px; font-size: 11px; font-weight: 800; letter-spacing: 1px; text-decoration: none; }
+.scentory-auth-gate-primary { background: #35402f; color: #fff; }
+.scentory-auth-gate-secondary { border: 1px solid #b9b39f; color: #4b5837; }
+
+.scentory-cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 440px;
+  max-width: 90vw;
+  background: #fbf9f4; /* Cream */
+  color: #1c2a1e;
+  z-index: 9999;
+  box-shadow: -8px 0 36px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.scentory-cart-drawer.is-open {
+  transform: translateX(0);
+}
+
+.scentory-drawer-header {
+  height: 80px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e3dece;
+  background: #ffffff;
+}
+
+.scentory-drawer-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #1c2a1e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.scentory-drawer-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #797968;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.scentory-drawer-close:hover {
+  color: #1c2a1e;
+}
+
+.scentory-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+}
+
+.scentory-drawer-empty {
+  text-align: center;
+  padding: 48px 16px;
+  color: #797968;
+}
+
+.scentory-drawer-empty span {
+  font-size: 40px;
+  display: block;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.scentory-drawer-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.scentory-drawer-item {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #ece7dc;
+  align-items: center;
+}
+
+.scentory-drawer-item-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 4px;
+  background-color: #f2eee3;
+  background-size: cover;
+  background-position: center;
+  border: 1px solid #ded8c8;
+}
+
+.scentory-drawer-item-info small {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #767860;
+  text-transform: uppercase;
+}
+
+.scentory-drawer-item-info h4 {
+  margin: 2px 0 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1c2a1e;
+}
+
+.scentory-drawer-item-info .item-spec {
+  font-size: 11px;
+  color: #797968;
+}
+
+.scentory-drawer-item-price {
+  text-align: right;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1c2a1e;
+}
+
+.scentory-drawer-item-price small {
+  display: block;
+  font-weight: normal;
+  color: #797968;
+}
+
+.scentory-drawer-item-remove {
+  background: none;
+  border: none;
+  color: #a39e8f;
+  cursor: pointer;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.scentory-drawer-item-remove:hover {
+  color: #e05353;
+}
+
+.scentory-drawer-footer {
+  padding: 24px 28px;
+  border-top: 1px solid #e3dece;
+  background: #f5f1e7;
+}
+
+.scentory-drawer-subtotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #646456;
+}
+
+.scentory-drawer-subtotal strong {
+  font-size: 18px;
+  color: #1c2a1e;
+}
+
+.scentory-drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.scentory-drawer-btn-checkout {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  text-align: center;
+  background: #1c2a1e;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s ease;
+}
+
+.scentory-drawer-btn-checkout:hover {
+  background: #111a12;
+}
+
+.scentory-drawer-btn-cart {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  text-align: center;
+  background: transparent;
+  color: #1c2a1e;
+  border: 1px solid #cfc8b6;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-decoration: none;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.scentory-drawer-btn-cart:hover {
+  background: #ece7dc;
+  border-color: #1c2a1e;
+}
+
+/* ==========================================================================
+   3. QUICK SEARCH DROPDOWN POPUP
+   ========================================================================== */
+.scentory-search-popover {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 8px;
+  background: #ffffff;
+  border: 1px solid #ddd7c8;
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  overflow: hidden;
+  display: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #1c2a1e;
+}
+
+.scentory-search-popover.is-open {
+  display: block;
+}
+
+.scentory-search-history-head {
+  padding: 10px 14px 6px;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #8c897e;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.scentory-search-history-item {
+  padding: 8px 14px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #3b3a32;
+  transition: background 0.12s ease;
+}
+
+.scentory-search-history-item:hover {
+  background: #f5f1e8;
+  color: #1c2a1e;
+}
+
+/* ==========================================================================
+   4. NEWSLETTER INLINE STATUS FEEDBACK
+   ========================================================================== */
+.newsletter-feedback {
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  display: none;
+}
+
+.newsletter-feedback.is-error {
+  display: block;
+  background: #fde8e8;
+  color: #c81e1e;
+  border: 1px solid #f8b4b4;
+}
+
+.newsletter-feedback.is-success {
+  display: block;
+  background: #def7ec;
+  color: #03543f;
+  border: 1px solid #bcf0da;
+}
+
+/* ==========================================================================
+   5. NAVBAR DROPDOWN ("NƯỚC HOA" MENU)
+   ========================================================================== */
+.scentory-nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 260px;
+  background: #1c2a1e;
+  color: #fbf9f4;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  border-radius: 6px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  padding: 14px 0 0;
+  /* Keep the panel connected to its trigger so hover can reach child links. */
+  margin-top: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px);
+  transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  z-index: 1000;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.scentory-nav-dropdown.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scentory-nav-dropdown .dropdown-brands {
+  display: flex;
+  flex-direction: column;
+}
+
+.scentory-nav-dropdown .dropdown-brands a {
+  display: block;
+  padding: 10px 20px;
+  color: #c9c5b8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background 0.15s ease, color 0.15s ease, padding-left 0.15s ease;
+}
+
+.scentory-nav-dropdown .dropdown-brands a:hover {
+  background: rgba(212, 175, 55, 0.12);
+  color: #d4af37;
+  padding-left: 24px;
+}
+
+.scentory-family-dropdown {
+  min-width: 260px;
+}
+
+.scentory-family-dropdown .dropdown-brands a {
+  display: block;
+  padding: 10px 20px;
+  color: #c9c5b8;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Logo thay cho chữ SCENTORY */
+.wordmark {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.wordmark-logo {
+  height: 92px;
+  width: auto;
+  display: block;
+}
+
+/* ==========================================================================
+   6. FLOATING LIVE CHAT WIDGET
+   ========================================================================== */
+.scentory-chat-floating-widget {
+  position: fixed;
+  bottom: 90px;
+  right: 32px;
+  width: 336px;
+  max-width: calc(100vw - 48px);
+  height: 438px;
+  max-height: calc(100vh - 96px);
+  z-index: 9999;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  border-radius: 20px;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.96);
+  transition: opacity 0.26s cubic-bezier(0.16, 1, 0.3, 1), transform 0.26s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.26s;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.scentory-chat-floating-widget.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.scentory-chat-floating-widget.is-minimized {
+  height: 80px;
+}
+
+.scentory-chat-floating-widget .chatbot-window {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.scentory-chat-floating-widget .chatbot-header {
+  height: 64px;
+  padding: 9px 12px;
+}
+
+.scentory-chat-floating-widget .chatbot-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 22px;
+}
+
+.scentory-chat-floating-widget .chatbot-title strong {
+  font-size: 14px;
+}
+
+.scentory-chat-floating-widget .chatbot-title small {
+  font-size: 10px;
+}
+
+.scentory-chat-floating-widget .chatbot-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+}
+
+.scentory-chat-floating-widget .chatbot-message {
+  gap: 8px;
+  margin: 0;
+}
+
+.scentory-chat-floating-widget .chatbot-message > div:last-child {
+  max-width: 244px;
+  padding: 10px 12px;
+  border-radius: 0 14px 14px 14px;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.scentory-chat-floating-widget .chatbot-message p {
+  margin: 0;
+}
+
+.scentory-chat-floating-widget .chatbot-message small {
+  display: none;
+}
+
+.scentory-chat-floating-widget .chatbot-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 2px 34px;
+}
+
+.scentory-chat-floating-widget .chatbot-suggestions button {
+  padding: 6px 8px;
+  color: #4b5837;
+  background: #f4f1e8;
+  border: 1px solid #ddd5c5;
+  border-radius: 12px;
+  font: 10px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+}
+
+.scentory-chat-floating-widget .chatbot-suggestions button:hover {
+  background: #e9edd6;
+  border-color: #b9b39f;
+}
+
+.scentory-chat-floating-widget .chatbot-composer {
+  min-height: 64px;
+  height: auto;
+  padding: 8px 10px;
+  gap: 8px;
+}
+
+.scentory-chat-floating-widget .chatbot-composer textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 38px;
+  max-height: 70px;
+  padding: 8px 10px;
+  resize: vertical;
+  border: 1px solid #e4e0da;
+  border-radius: 12px;
+  color: #4c4a44;
+  background: #f8f6f2;
+  font: 11px/1.35 'Plus Jakarta Sans', sans-serif;
+  text-align: center;
+}
+
+.scentory-chat-floating-widget .chatbot-composer textarea:focus {
+  outline: 2px solid rgba(197, 160, 89, .35);
+  border-color: #c5a059;
+}
+
+.scentory-chat-floating-widget .chatbot-composer button:disabled {
+  opacity: .45;
+  cursor: wait;
+}
+
+.scentory-chat-floating-widget .chatbot-message.is-user {
+  justify-content: flex-end;
+  margin: 10px 0;
+}
+
+.scentory-chat-floating-widget .chatbot-message.is-user > div:last-child {
+  color: #fff;
+  background: #35402f;
+  border-radius: 16px 0 16px 16px;
+}
+
+.chatbot-admin-notice {
+  margin: 12px 0;
+  padding: 10px 12px;
+  color: #76623c;
+  background: #fff8e7;
+  border: 1px solid #ead9ae;
+  border-radius: 10px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.scentory-chat-floating-widget .chatbot-product {
+  margin: 12px 0;
+}
+
+.chat-act-btn {
+  background: transparent;
+  border: none;
+  color: #bab8ae;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.chat-act-btn:hover {
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   7. AUTHENTICATION & FORM VALIDATION STYLES (BATCH 2)
+   ========================================================================== */
+.scentory-password-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.scentory-password-wrapper input {
+  width: 100% !important;
+  padding-right: 42px !important;
+  box-sizing: border-box;
+}
+
+.scentory-pwd-toggle-btn {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #888375;
+  padding: 4px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  user-select: none;
+  transition: color 0.18s ease, transform 0.15s ease;
+  z-index: 2;
+}
+
+.scentory-pwd-toggle-btn:hover {
+  color: #2b3021;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.scentory-otp-digit {
+  height: 64px !important;
+  width: 100% !important;
+  text-align: center !important;
+  border: 1px solid #c9c0ae !important;
+  border-radius: 9px !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  background: #ffffff !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  color: #1c2a1e !important;
+  box-sizing: border-box;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.scentory-otp-digit:focus {
+  border-color: #444d32 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(68, 77, 50, 0.16) !important;
+  background: #fffdfa !important;
+}
+
+.scentory-otp-digit.invalid {
+  border-color: #cf302a !important;
+  background: #fff5f5 !important;
+}
+
+.scentory-field-err {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #cf302a;
+  letter-spacing: 0.2px;
+}
+
+input.is-invalid, input.invalid, .form-group.has-error input {
+  border-color: #cf302a !important;
+  background-color: #fff9f9 !important;
+}
+
+.scentory-auth-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #fff2f0;
+  border: 1px solid #edaaa0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #b73526;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  box-sizing: border-box;
+}
+
+.scentory-auth-alert strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 3px;
+  color: #9c271b;
+}
+
+.scentory-auth-alert p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  color: #b73526;
+}
+
+/* ==========================================================================
+   8. PRODUCT DISCOVERY & CATALOGUE STYLES (BATCH 3)
+   ========================================================================== */
+.scentory-product-card {
+  position: relative;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  background: #ffffff !important;
+}
+
+.scentory-product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(40, 45, 30, 0.08);
+}
+
+.scentory-card-photo {
+  position: relative;
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: radial-gradient(circle, #ffffff 30%, #f7f5ed 80%);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.scentory-card-photo img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.scentory-card-photo .card-img-primary {
+  opacity: 1;
+}
+
+.scentory-card-photo .card-img-gallery {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+/* Hover crossfade sang ảnh Editorial Lifestyle */
+.scentory-product-card:hover .scentory-card-photo .card-img-gallery {
+  opacity: 1;
+}
+
+.scentory-product-card:hover .scentory-card-photo .card-img-primary {
+  opacity: 0;
+}
+
+.scentory-chip {
+  animation: fadeInChip 0.2s ease-in-out;
+}
+
+@keyframes fadeInChip {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.scentory-detail-gallery-wrap .thumb-btn img {
+  border-radius: 4px;
+}
+
+/* Scent Quiz Interactive Styles & Feedback */
+.gender-cards article,
+.option-stack article,
+.family-options article,
+.mood-cards article,
+.aura-list article,
+.habit-list article,
+.note-options article,
+.experience-cards article {
+  transition: transform 0.2s ease, outline 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.gender-cards article:hover,
+.option-stack article:hover,
+.family-options article:hover,
+.mood-cards article:hover,
+.aura-list article:hover,
+.habit-list article:hover {
+  transform: translateY(-2px);
+}
+
+.gender-cards article.selected,
+.option-stack article.selected,
+.family-options article.selected,
+.mood-cards article.selected,
+.aura-list article.selected,
+.habit-list article.selected,
+.note-options article.selected,
+.experience-cards article.selected {
+  outline: 2px solid #c5a880 !important;
+  border-color: #c5a880 !important;
+  box-shadow: 0 4px 20px rgba(197, 168, 128, 0.25) !important;
+}
+
+.age-pills span.selected {
+  background: #c5a880 !important;
+  color: #111 !important;
+  font-weight: 600;
+}
+
+.product-recs article {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.product-recs article:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  border-color: #555;
+}
+
+.add-to-cart-rec-btn:hover {
+  background: #c5a880 !important;
+  color: #000 !important;
+}
+
+/* ==========================================================================
+   BATCH 5 - CART ENHANCEMENTS
+   ========================================================================== */
+.cart-item {
+  transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+.cart-item.is-unselected {
+  opacity: 0.65;
+}
+
+.cart-item .cart-photo img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.cart-item:hover .cart-photo img {
+  transform: scale(1.05);
+}
+
+.btn-qty-minus:hover,
+.btn-qty-plus:hover {
+  background: #e5dfd0 !important;
+  border-radius: 2px;
+}
+
+.btn-cart-remove:hover {
+  color: #b91c1c !important;
+  transform: scale(1.15);
+}
+
+.cart-empty-view a:hover {
+  background: #333a26 !important;
+}
+
+.scentory-drawer-item {
+  transition: background 0.2s ease;
+}
+
+.scentory-drawer-item:hover {
+  background: #fbfaf6;
+}
+
+.drawer-qty-minus:hover,
+.drawer-qty-plus:hover {
+  background: #eee !important;
+}
+
+.drawer-item-remove:hover {
+  color: #b91c1c !important;
+}
+
+
+
+
+
+
+
+/* ==========================================================================
+   BATCH 6: CHECKOUT UI & SIMULATED PAYMENT STYLES
+   ========================================================================== */
+
+.checkout-columns .choice-line {
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.checkout-columns .choice-line:hover {
+  border-color: #444d32;
+  box-shadow: 0 2px 8px rgba(68, 77, 50, 0.08);
+}
+
+.checkout-columns .choice-line.selected {
+  border-color: #444d32 !important;
+  background: #f4f3e8 !important;
+}
+
+.scentory-field-error {
+  animation: scentoryFadeIn 0.25s ease forwards;
+}
+
+@keyframes scentoryFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+#payment-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.scentory-dynamic-orders .order-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.scentory-dynamic-orders .order-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.buy-now-button:hover {
+  background: #444d32 !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   BATCH 7: ORDER MANAGEMENT, CANCELLATION, RETURN & REVIEW STYLES
+   ========================================================================== */
+
+.order-tabs b,
+.order-tabs span {
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.order-tabs b.active,
+.order-tabs span.active {
+  color: #444d32 !important;
+  font-weight: 800 !important;
+  border-bottom: 2px solid #444d32;
+  padding-bottom: 4px;
+}
+
+.timeline i.cancelled-step {
+  color: #c53030 !important;
+}
+
+.timeline i.cancelled-step small {
+  color: #c53030 !important;
+}
+
+.cancel-dialog .reason {
+  transition: all 0.2s ease;
+}
+
+.cancel-dialog .reason:hover {
+  border-color: #444d32 !important;
+  background: #fbf9f2 !important;
+}
+
+.cancel-dialog .reason.selected {
+  border-color: #444d32 !important;
+  background: #f4f3e8 !important;
+}
+
+.btn-longevity {
+  transition: all 0.2s ease;
+}
+
+.btn-longevity:hover {
+  border-color: #444d32 !important;
+}
+
+.verified-badge {
+  letter-spacing: 0.3px;
+}
+
+/* ==========================================================================
+   HEADER SEARCH BAR (ô nhập + gợi ý)
+   ========================================================================== */
+.rebuild-search.scentory-search-box {
+  position: relative;
+  width: 240px;
+  padding: 0;
+  cursor: text;
+  overflow: visible;
+}
+
+/* Focus: viền sáng lên */
+.rebuild-search.scentory-search-box:focus-within {
+  border-color: #c5a059;
+  box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.35);
+}
+
+.scentory-search-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+.scentory-search-submit {
+  flex: 0 0 34px;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #55554e;
+  background: transparent;
+  border: 0;
+  border-radius: 999px 0 0 999px;
+  cursor: pointer;
+}
+
+.scentory-search-submit:hover {
+  color: #161a11;
+}
+
+.scentory-search-input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0 12px 0 0;
+  color: #1c2a1e;
+  background: transparent;
+  border: 0;
+  outline: 0;
+  font: 500 11px 'Plus Jakarta Sans', sans-serif;
+}
+
+.scentory-search-input::placeholder {
+  color: #7a7970;
+}
+
+/* Danh sách gợi ý */
+.rebuild-search .scentory-search-popover {
+  top: calc(100% + 8px);
+  left: auto;
+  right: 0;
+  width: 340px;
+  max-height: 70vh;
+  margin-top: 0;
+  padding: 4px 0 8px;
+  overflow-y: auto;
+  text-align: left;
+  white-space: normal;
+  cursor: default;
+}
+
+.scentory-search-section + .scentory-search-section {
+  border-top: 1px solid #eee9dc;
+}
+
+.scentory-search-history-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.scentory-search-clear-all,
+.scentory-search-item-remove {
+  padding: 2px 4px;
+  color: #8a6a35;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font: 700 10px 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.scentory-search-clear-all:hover,
+.scentory-search-item-remove:hover {
+  color: #b91c1c;
+  text-decoration: underline;
+}
+
+.scentory-search-history-item .item-icon {
+  width: 16px;
+  text-align: center;
+  color: #8c897e;
+}
+
+.scentory-search-history-item .item-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scentory-search-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px 14px 10px;
+}
+
+.scentory-search-chip {
+  padding: 6px 12px;
+  color: #3b3a32;
+  background: #f7f5ee;
+  border: 1px solid #ddd7c8;
+  border-radius: 999px;
+  font: 600 11px 'Plus Jakarta Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.scentory-search-chip:hover {
+  color: #fff;
+  background: #35402f;
+  border-color: #35402f;
+}
+
+/* Icon header dạng ảnh */
+.header-icons .icon-link .header-icon-img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+}
+/* Link trong dropdown không bao giờ mang gạch chân "active" của menu cấp 1 */
+.rebuild-header nav .scentory-nav-dropdown a.active,
+.site-header nav .scentory-nav-dropdown a.active { border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 10px; }

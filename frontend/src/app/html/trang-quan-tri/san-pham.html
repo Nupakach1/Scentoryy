@@ -1,0 +1,63 @@
+<div class="qt-thanh-tren"><span></span><span>{{ ds().length }} sản phẩm</span></div>
+<div class="qt-dau">
+  <div><span class="nhan-muc">Danh mục</span><h1>Sản phẩm</h1></div>
+  <button class="nut nut-chinh" (click)="mo()">＋ Thêm sản phẩm</button>
+</div>
+<form class="qt-loc" (ngSubmit)="tai()">
+  <input class="o-nhap" name="q" [(ngModel)]="q" placeholder="Tìm theo tên, SKU, thương hiệu">
+  <select class="o-nhap" name="tt" [(ngModel)]="tt" (change)="tai()"><option value="">Tất cả trạng thái</option><option value="active">Đang bán</option><option value="inactive">Ngừng bán</option></select>
+  <button class="nut nut-vien nut-nho">Lọc</button>
+</form>
+<div class="the" style="padding:0;overflow:auto">
+  <table class="bang">
+    <thead><tr><th></th><th>SKU</th><th>Tên</th><th>Thương hiệu</th><th>Nhóm hương</th><th>Giá</th><th>Tồn</th><th>Đã bán</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+      @for (p of ds(); track p.id) {
+        <tr [style.opacity]="p.isActive ? 1 : .55">
+          <td><img [src]="anh(p)" alt="" style="width:40px;height:40px;object-fit:contain"></td>
+          <td><b>{{ p.sku }}</b></td><td>{{ p.name }}<div class="chu-nho chu-nhat">{{ p.concentration }} · {{ p.volume }}ml</div></td><td>{{ p.brand }}</td><td class="chu-nho">{{ p.family }}</td>
+          <td>{{ p.price | tien }}</td><td><span class="nhan-tt" [class]="'nhan-tt ' + (p.stock === 0 ? 'nhan-do' : p.stock <= 5 ? 'nhan-cam' : 'nhan-xam')">{{ p.stock }}</span></td><td>{{ p.soldCount }}</td>
+          <td><span class="nhan-tt" [class]="'nhan-tt ' + (p.isActive ? 'nhan-luc' : 'nhan-xam')">{{ p.isActive ? 'Đang bán' : 'Ngừng bán' }}</span></td>
+          <td class="o-thao-tac"><button class="nut nut-vien nut-nho" (click)="mo(p)">Sửa</button>
+            @if (p.isActive) { <button class="nut nut-nguy nut-nho" (click)="ngung.set(p)">Ngừng bán</button> } @else { <button class="nut nut-sang nut-nho" (click)="moBan(p)">Mở bán</button> }</td>
+        </tr>
+      } @empty { <tr><td colspan="10" class="chu-nhat" style="text-align:center;padding:32px">Không có sản phẩm phù hợp.</td></tr> }
+    </tbody>
+  </table>
+</div>
+@if (form()) {
+  <div class="lop-phu" (click)="form.set(false)">
+    <form class="hop-thoai" style="max-width:860px" (click)="$event.stopPropagation()" (ngSubmit)="luu()">
+      <h3>{{ sua() ? 'Sửa sản phẩm ' + sua()!.sku : 'Thêm sản phẩm mới' }}</h3>
+      <div class="hang-truong">
+        <div class="truong"><label>SKU <span class="bat-buoc">*</span></label><input class="o-nhap" name="sku" [(ngModel)]="f.sku" [class.co-loi]="loiTruong()['sku']"></div>
+        <div class="truong"><label>Tên sản phẩm <span class="bat-buoc">*</span></label><input class="o-nhap" name="name" [(ngModel)]="f.name" [class.co-loi]="loiTruong()['name']"></div>
+        <div class="truong"><label>Thương hiệu <span class="bat-buoc">*</span></label><input class="o-nhap" name="brand" [(ngModel)]="f.brand"></div>
+        <div class="truong"><label>Nhóm hương <span class="bat-buoc">*</span></label><select class="o-nhap" name="family" [(ngModel)]="f.family">@for (n of nhom; track n) { <option [value]="n">{{ n }}</option> }</select></div>
+        <div class="truong"><label>Giá (VNĐ) <span class="bat-buoc">*</span></label><input class="o-nhap" name="price" type="number" min="1" [(ngModel)]="f.price" [class.co-loi]="loiTruong()['price']"></div>
+        <div class="truong"><label>Tồn kho <span class="bat-buoc">*</span></label><input class="o-nhap" name="stock" type="number" min="0" [(ngModel)]="f.stock" [class.co-loi]="loiTruong()['stock']"></div>
+        <div class="truong"><label>Nồng độ</label><input class="o-nhap" name="conc" [(ngModel)]="f.concentration"></div>
+        <div class="truong"><label>Dung tích (ml)</label><input class="o-nhap" name="vol" type="number" [(ngModel)]="f.volume"></div>
+        <div class="truong"><label>Độ tỏa</label><select class="o-nhap" name="proj" [(ngModel)]="f.projection"><option>Nhẹ</option><option>Vừa</option><option>Mạnh</option></select></div>
+        <div class="truong"><label>Độ lưu hương</label><select class="o-nhap" name="lon" [(ngModel)]="f.longevity"><option>Ngắn</option><option>Vừa</option><option>Lâu</option></select></div>
+      </div>
+      <div class="truong"><label>Hương đầu <span class="bat-buoc">*</span></label><input class="o-nhap" name="top" [(ngModel)]="f.topNotes"></div>
+      <div class="truong"><label>Hương giữa <span class="bat-buoc">*</span></label><input class="o-nhap" name="mid" [(ngModel)]="f.middleNotes"></div>
+      <div class="truong"><label>Hương cuối <span class="bat-buoc">*</span></label><input class="o-nhap" name="base" [(ngModel)]="f.baseNotes"></div>
+      <div class="truong"><label>Dịp dùng (phân tách bằng dấu phẩy) <span class="bat-buoc">*</span></label><input class="o-nhap" name="occ" [(ngModel)]="f.occasion" placeholder="Hàng ngày, Công sở"></div>
+      <div class="truong"><label>Đường dẫn ảnh</label><input class="o-nhap" name="img" [(ngModel)]="f.imageUrl" placeholder="/hinh-anh/san-pham/ll-001.webp"></div>
+      <div class="truong"><label>Mô tả</label><textarea class="o-nhap" name="desc" rows="3" [(ngModel)]="f.description"></textarea></div>
+      @if (loiTruong() | keyvalue; as l) { @for (x of l; track x.key) { <div class="chu-loi">{{ x.key }}: {{ x.value }}</div> } }
+      <div class="hop-thoai__nut"><button type="button" class="nut nut-vien" (click)="form.set(false)">Hủy</button><button class="nut nut-chinh">Lưu</button></div>
+    </form>
+  </div>
+}
+@if (ngung(); as p) {
+  <div class="lop-phu" (click)="ngung.set(null)">
+    <div class="hop-thoai" (click)="$event.stopPropagation()">
+      <h3>Ngừng bán “{{ p.name }}”?</h3>
+      <p class="chu-nhat">Sản phẩm sẽ ẩn khỏi cửa hàng và không thể thêm vào giỏ. Đơn hàng cũ vẫn giữ thông tin. Có thể mở bán lại sau.</p>
+      <div class="hop-thoai__nut"><button class="nut nut-vien" (click)="ngung.set(null)">Hủy</button><button class="nut nut-nguy" (click)="xacNhanNgung()">Ngừng bán</button></div>
+    </div>
+  </div>
+}

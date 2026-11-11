@@ -1,0 +1,155 @@
+@if (loi()) {
+  <main><section class="scentory-empty-result-box" style="text-align:center;padding:100px 20px;">
+    <div style="font-size:42px;opacity:.6">⚲</div><h2>Không tìm thấy sản phẩm</h2><p>{{ loi() }}</p>
+    <a routerLink="/nuoc-hoa" class="hero-btn-dark">QUAY LẠI DANH MỤC →</a></section></main>
+}
+@if (sp(); as p) {
+<main>
+  <div class="detail-crumb"><a routerLink="/">Trang chủ</a> / <a routerLink="/nuoc-hoa">Nước hoa</a> / <a routerLink="/nuoc-hoa" [queryParams]="{ brand: p.brand }">{{ p.brand }}</a> / <b>{{ p.name }}</b></div>
+  <section class="detail-hero">
+    <div class="buy-panel pdx-buy">
+      <small class="pdx-eyebrow">Giá niêm yết chính thức</small>
+      <div class="pdx-price">{{ p.price | tien }}</div>
+      <p class="pdx-vat">Đã gồm thuế VAT · {{ p.stock > 0 ? 'Còn ' + p.stock + ' sản phẩm' : 'Tạm hết hàng' }}</p>
+      <span class="pdx-label">Dung tích</span>
+      <div class="pdx-vol"><span class="pdx-vol-chip"><b>{{ p.volume }}ml</b><small>{{ p.concentration }}</small></span></div>
+      <span class="pdx-label">Số lượng</span>
+      <div class="quantity" style="cursor: default; user-select: none;">
+        <span class="qty-btn qty-minus" style="cursor: pointer; padding: 0 8px;" (click)="doiSL(-1)">−</span>
+        <span class="qty-val" style="padding: 0 12px; font-weight: 700;">{{ sl() }}</span>
+        <span class="qty-btn qty-plus" style="cursor: pointer; padding: 0 8px;" (click)="doiSL(1)">+</span>
+      </div>
+      <button type="button" class="buy-button" (click)="them()" [disabled]="p.stock === 0">{{ p.stock === 0 ? 'TẠM HẾT HÀNG' : 'THÊM VÀO GIỎ HÀNG' }}</button>
+      <button type="button" class="buy-now-button" (click)="muaNgay()" [disabled]="p.stock === 0" style="width: 100%; margin-top: 10px; padding: 14px; background: transparent; border: 1.5px solid rgb(68, 77, 50); color: rgb(68, 77, 50); font-weight: 700; font-size: 11px; letter-spacing: 1px; cursor: pointer; border-radius: 12px;">⚡ MUA NGAY (GIAO TẬN TAY)</button>
+      <button type="button" class="wishlist-btn pdx-wish" [attr.aria-pressed]="yt.co(p.id)" (click)="yt.batTat(p)"><span aria-hidden="true">{{ yt.co(p.id) ? '♥' : '♡' }}</span> <em>{{ yt.co(p.id) ? 'Đã lưu yêu thích' : 'Lưu vào yêu thích' }}</em></button>
+      <ul class="pdx-perks">
+        <li><i aria-hidden="true">✦</i>Giao tiêu chuẩn miễn phí · hỏa tốc 50.000đ</li>
+        <li><i aria-hidden="true">✦</i>Đổi trả 7 ngày khi còn nguyên seal</li>
+        <li><i aria-hidden="true">✦</i>Cam kết chính hãng 100%</li>
+      </ul>
+    </div>
+    <div class="detail-bottle" style="background: none;">
+      <div class="scentory-detail-gallery-wrap" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%;">
+        <div class="main-bottle-view" style="width: 100%; height: 380px; display: grid; place-items: center; background: radial-gradient(circle, #ffffff 25%, #f5f2e9 75%); border-radius: 12px; overflow: hidden; padding: 16px;">
+          <img [src]="anhChinh()" [alt]="p.name" style="max-height: 350px; max-width: 100%; object-fit: contain;">
+        </div>
+        <div class="gallery-thumbs-row" style="display: flex; gap: 12px; margin-top: 16px;">
+          @for (a of anhs(); track a) {
+            <button type="button" class="thumb-btn" [class.active]="a === anhChinh()" (click)="anhChinh.set(a)" [style.border]="a === anhChinh() ? '2px solid #444d32' : '1px solid #d3ccbd'" style="width: 54px; height: 54px; padding: 4px; background: #fff; border-radius: 6px; cursor: pointer;">
+              <img [src]="a" alt="" style="width: 100%; height: 100%; object-fit: contain;"></button>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="detail-summary pdx-sum">
+      <small class="pdx-eyebrow">{{ p.brand }} <span>· SKU {{ p.sku }}</span></small>
+      <h1>{{ p.name }}</h1>
+      <a class="pdx-rating" href="#reviews"><span class="pdx-stars">{{ sao(diemTB() || p.avgRating) }}</span><b>{{ (diemTB() || p.avgRating).toFixed(1) }}</b><em>{{ danhGia().length }} đánh giá</em></a>
+      <p class="pdx-desc">{{ p.description }}</p>
+      <span class="pdx-label">Họ hương chính</span>
+      <div class="pdx-chips"><span class="pdx-chip is-fam">{{ p.family }}</span>@for (n of tang()[0].notes.slice(0, 2); track n) { <span class="pdx-chip">{{ n }}</span> }</div>
+      <div class="pdx-perf">
+        <div><small>Độ lưu hương</small><b>{{ gio_(p.longevity) }}</b><span class="pdx-dots" aria-hidden="true">@for (d of dots(p.longevity); track $index) { <i [class.on]="d"></i> }</span></div>
+        <div><small>Độ tỏa hương</small><b>{{ toa(p.projection) }}</b><span class="pdx-dots" aria-hidden="true">@for (d of dots(p.projection); track $index) { <i [class.on]="d"></i> }</span></div>
+      </div>
+      <div class="product-weather-detail">
+        <div class="product-weather-detail-heading"><span>{{ hopThoiTiet().icon }}</span><div><small>THỜI TIẾT PHÙ HỢP</small><strong>{{ hopThoiTiet().tieuDe }}</strong></div></div>
+        <p>{{ hopThoiTiet().mo }}</p>
+        <div class="product-weather-live" aria-live="polite">
+          @if (thoiTiet(); as w) { Hiện tại {{ w.temperature }}°C · {{ w.label }}. {{ w.hint }} } @else { Chưa lấy được thời tiết hiện tại. Nhãn trên cho biết điều kiện dùng phù hợp nhất. }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pdx-pyr">
+    <header class="pdx-head"><div><small class="pdx-eyebrow">Cấu trúc khứu giác</small><h2>Tháp hương <em>nguyên bản</em></h2></div>
+      <p>Ba tầng hương giải phóng tuần tự theo nhiệt độ da — từ nốt khai mở thoáng qua đến dư vị sâu lắng kéo dài.</p></header>
+    <div class="pdx-pyr-grid">
+      <figure class="pdx-pyr-visual">
+        <img [src]="anhSP2(p)" [alt]="p.name" loading="lazy">
+        <figcaption><span class="pdx-fam">{{ p.family }}</span><small>{{ p.brand }}</small><strong>{{ p.name }}</strong><span class="pdx-conc">{{ p.concentration }} · {{ p.volume }}ml</span></figcaption>
+      </figure>
+      <ol class="pdx-tiers">
+        @for (t of tang(); track t.so; let i = $index) {
+          <li class="pdx-tier" [style.--i]="i">
+            <div class="pdx-tier-icon">
+              <svg viewBox="0 0 44 40" aria-hidden="true"><path d="M22 3 L31 15 H13 Z" [class.on]="i === 0"></path><path d="M12 18 H32 L39 27 H5 Z" [class.on]="i === 1"></path><path d="M4 30 H40 L43 37 H1 Z" [class.on]="i === 2"></path></svg>
+              <span>{{ t.so }}</span></div>
+            <div class="pdx-tier-body">
+              <div class="pdx-tier-top"><h3>{{ t.ten }}<small>{{ t.phu }}</small></h3><span class="pdx-time">{{ t.gio }}</span></div>
+              <ul class="pdx-notes">@for (n of t.notes; track n) { <li>{{ n }}</li> }</ul>
+              <p>{{ t.mo }}</p>
+              <div class="pdx-track" aria-hidden="true"><i [attr.style]="t.track"></i></div>
+            </div>
+          </li>
+        }
+        <li class="pdx-scale" aria-hidden="true"><span>0h</span><span>3h</span><span>6h</span><span>9h</span><span>12h</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pdx-match" [style.--bg]="'url(' + anhSP2(p) + ')'">
+    <div class="pdx-match-inner">
+      @if (match(); as m) {
+        <div class="pdx-ring">
+          <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52"></circle><circle class="val" cx="60" cy="60" r="52" [attr.stroke-dasharray]="vong().c" [attr.stroke-dashoffset]="vong().off"></circle></svg>
+          <b>{{ m.matchScore }}<small>%</small></b><span>Scent Match</span><em>{{ nhanMatch(m.matchScore) }}</em>
+        </div>
+        <div class="pdx-match-copy">
+          <small class="pdx-eyebrow">Phân tích tương thích khứu giác cá nhân</small>
+          <h2>Vì sao mùi hương này <em>hợp với bạn</em></h2>
+          <ul class="pdx-criteria">
+            @for (c of m.breakdown; track c.key) {
+              @if (c.score != null) {
+                <li><span class="pdx-ci">{{ icon(c.key) }}</span>
+                  <div><b>{{ c.label }}<small>trọng số {{ c.appliedWeight }}%</small></b><p>{{ c.reason }}</p></div>
+                  <div class="pdx-bar"><i [style.--v]="(c.score * 100) + '%'"></i><span>{{ (c.score * 100).toFixed(0) }}<small>/100</small></span></div></li>
+              }
+            }
+          </ul>
+          <div class="pdx-match-actions">
+            <span class="pdx-tip">✦ Mẹo từ chuyên gia: xịt lên cổ tay và xương quai xanh khi da còn ẩm để hương bung tỏa trọn vẹn.</span>
+            <a class="pdx-link" routerLink="/scent-quiz/buoc/1">Làm lại Scent Quiz →</a>
+          </div>
+        </div>
+      } @else {
+        <div class="pdx-match-copy" style="grid-column: 1 / -1; text-align:center">
+          <small class="pdx-eyebrow">Phân tích tương thích khứu giác cá nhân</small>
+          <h2>Mùi hương này <em>có hợp với bạn?</em></h2>
+          <p>Hoàn thành Scent Quiz 8 bước để Scent Match AI™ chấm điểm mức độ phù hợp theo nhóm hương, độ tỏa, dịp dùng, dung tích và thời tiết.</p>
+          <div class="pdx-match-actions" style="justify-content:center"><a class="pdx-link" routerLink="/scent-quiz/buoc/1">Làm Scent Quiz →</a></div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <section class="pdx-rv" id="reviews">
+    <header class="pdx-rv-head"><small class="pdx-eyebrow">Tiếng nói khách hàng</small><h2>Cảm nhận <em>khách hàng</em></h2>
+      <p>Những chia sẻ thật từ khách hàng đã mua và nhận hàng tại Scentory.</p></header>
+    <div class="pdx-rv-grid">
+      <aside class="pdx-rv-score">
+        <small>Điểm trung bình</small>
+        <div class="pdx-rv-big">{{ diemTB().toFixed(1) }}<span>/5</span></div>
+        <div class="pdx-rv-stars">{{ sao(diemTB()) }}</div>
+        <p>Dựa trên {{ danhGia().length }} đánh giá đã xác minh mua hàng</p>
+        <ul class="pdx-rv-bars">@for (b of phanBo(); track b.s) { <li><span>{{ b.s }}★</span><i><b [style.--v]="b.pct + '%'"></b></i><em>{{ b.pct }}%</em></li> }</ul>
+        <a class="write-review-btn" routerLink="/tai-khoan/don-hang" [queryParams]="{ trangThai: 'DELIVERED' }" style="display:block;text-align:center">Viết cảm nhận từ đơn đã nhận</a>
+      </aside>
+      <div class="pdx-rv-list">
+        @for (d of danhGia(); track d.id; let i = $index) {
+          <article class="pdx-rv-card" [class.is-featured]="i === 0">
+            <span class="pdx-rv-quote" aria-hidden="true">“</span>
+            <div class="pdx-rv-stars">{{ sao(d.overallRating) }}</div>
+            <h3>{{ d.author || 'Khách hàng Scentory' }} · <small>{{ nhanThucTe[d.actualProjection] }}</small></h3>
+            <p>{{ d.reviewText || 'Khách hàng không để lại nhận xét.' }}</p>
+            <small style="color:#888">{{ d.createdAt | ngay }} · Đã mua hàng</small>
+          </article>
+        } @empty {
+          <article class="pdx-rv-card"><h3>Chưa có đánh giá</h3><p>Hãy là người đầu tiên chia sẻ cảm nhận sau khi nhận hàng.</p></article>
+        }
+      </div>
+    </div>
+  </section>
+</main>
+}

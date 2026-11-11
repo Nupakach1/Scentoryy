@@ -1,0 +1,68 @@
+<main class="cart-main">
+  <div class="cart-steps" data-lux="1"><span class="is-current"><i>1</i>Giỏ hàng</span><span class="ck-line"></span><span><i>2</i>Thanh toán</span><span class="ck-line"></span><span><i>3</i>Hoàn tất</span></div>
+  <section class="cart-intro">
+    <p class="eyebrow">Scentory Curation</p>
+    <h1>Giỏ hàng của bạn</h1>
+    <p class="cart-intro-meta">{{ g.gio().items.length }} tác phẩm · {{ g.gio().itemCount }} chai — mỗi chai được niêm phong và giao trong hộp bảo ôn.</p>
+  </section>
+  @if (!g.gio().items.length) {
+    <section class="scentory-empty-result-box" style="text-align:center;padding:60px 20px;">
+      <div style="font-size:42px;opacity:.6">👜</div>
+      <h3 style="font-size:22px;margin-bottom:10px">Giỏ hàng đang trống</h3>
+      <p style="color:#6b6b5b">Khám phá bộ sưu tập hoặc làm Scent Quiz để tìm mùi hương dành cho bạn.</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:20px">
+        <a routerLink="/nuoc-hoa" style="padding:12px 28px;background:#444d32;color:#fff;font-weight:700;font-size:11px;letter-spacing:1px">KHÁM PHÁ NƯỚC HOA</a>
+        <a routerLink="/scent-quiz/buoc/1" style="padding:12px 28px;border:1px solid #444d32;color:#444d32;font-weight:700;font-size:11px;letter-spacing:1px">LÀM SCENT QUIZ</a>
+      </div>
+    </section>
+  } @else {
+  <div class="cart-layout">
+    <section class="cart-items">
+      <div class="cart-head">
+        <label class="cart-check"><input type="checkbox" [checked]="tatCa()" (change)="chonTatCa($any($event.target).checked)"><i aria-hidden="true"></i><span>Chọn tất cả ({{ g.gio().items.length }})</span></label>
+        <span class="cart-head-cols"><span>Số lượng</span><span>Thành tiền</span></span>
+      </div>
+      @for (d of g.gio().items; track d.id) {
+        <article class="cart-item" [class.is-selected]="g.chon().has(d.id)">
+          <label class="cart-check" title="Chọn sản phẩm này để đặt hàng"><input type="checkbox" [checked]="g.chon().has(d.id)" (change)="g.datChon(d.id, $any($event.target).checked)"><i aria-hidden="true"></i></label>
+          <a class="cart-photo" [routerLink]="['/nuoc-hoa', d.product.sku]"><img [src]="anh(d.product)" [alt]="d.product.name"></a>
+          <div class="cart-product">
+            <small>{{ d.product.brand }}</small>
+            <h2><a [routerLink]="['/nuoc-hoa', d.product.sku]">{{ d.product.name }}</a></h2>
+            <div class="cart-specs"><span>{{ d.product.volume }}ml</span><span>{{ d.product.concentration }}</span><span>{{ d.product.price | tien: 'vnd' }} / chai</span></div>
+            <em>Hương đầu: {{ d.product.topNotes }}</em>
+            @if (d.product.stock === 0) { <div class="cart-note" style="color:#c53030">Sản phẩm tạm hết hàng</div> }
+            @else if (d.product.stock < 5) { <div class="cart-note">Chỉ còn {{ d.product.stock }} sản phẩm</div> }
+            @else { <div class="cart-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16v9H4zM3 7h18v4H3zM12 7v13M12 7c-2-4-6-3-5 0M12 7c2-4 6-3 5 0"></path></svg>Đóng hộp quà &amp; niêm phong chính hãng</div> }
+          </div>
+          <div class="qty">
+            <button type="button" (click)="doi(d, d.quantity - 1)" [disabled]="d.quantity <= 1" aria-label="Giảm">−</button>
+            <input type="number" class="qty-input" min="1" [max]="d.maxQuantity" [value]="d.quantity" (change)="doi(d, +$any($event.target).value)" aria-label="Số lượng">
+            <button type="button" (click)="doi(d, d.quantity + 1)" [disabled]="d.quantity >= d.maxQuantity" aria-label="Tăng">+</button>
+          </div>
+          <b class="cart-line-total">{{ d.lineTotal | tien: 'vnd' }}</b>
+          <button type="button" class="trash" (click)="xoa(d)" aria-label="Xóa khỏi giỏ" title="Xóa khỏi giỏ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"></path></svg></button>
+        </article>
+      }
+      <div class="cart-links"><a routerLink="/nuoc-hoa">← Tiếp tục khám phá nước hoa</a><button type="button" (click)="g.tai()">Làm mới giỏ hàng</button></div>
+      <section class="care-card">
+        <article><span>01</span><b>Niêm phong chính hãng</b><p>Mỗi chai giữ nguyên seal nhà sản xuất — điều kiện đổi trả 7 ngày.</p></article>
+        <article><span>02</span><b>Giao vận bảo ôn</b><p>Tiêu chuẩn miễn phí 2–4 ngày, hỏa tốc 50.000đ.</p></article>
+        <article><span>03</span><b>Theo dõi đơn</b><p>Trạng thái đơn cập nhật theo thời gian thực trong tài khoản.</p></article>
+      </section>
+    </section>
+    <aside class="cart-summary">
+      <h2>Tóm tắt đơn hàng</h2>
+      <dl class="cart-sum-rows">
+        <dt>Tạm tính ({{ daChon().length }} tác phẩm · {{ soChai() }} chai)</dt><dd>{{ tamTinh() | tien: 'vnd' }}</dd>
+        <dt>Vận chuyển</dt><dd>Chọn ở bước thanh toán</dd>
+        <dt>Mã ưu đãi</dt><dd>Áp dụng ở bước thanh toán</dd>
+      </dl>
+      <div class="cart-sum-total"><span>Tạm tính<small>Đã gồm VAT</small></span><strong>{{ tamTinh() | tien: 'vnd' }}</strong></div>
+      <button type="button" class="btn-proceed-checkout" (click)="thanhToan()" [disabled]="!daChon().length">Tiến hành thanh toán ({{ daChon().length }})</button>
+      <p class="summary-note">Chỉ các sản phẩm được chọn mới được đặt hàng; phần còn lại vẫn nằm trong giỏ.</p>
+      <ul class="cart-assure"><li>Cam kết chính hãng 100%</li><li>Đổi trả nguyên seal trong 07 ngày</li><li>COD · Chuyển khoản QR · Thẻ quốc tế</li></ul>
+    </aside>
+  </div>
+  }
+</main>

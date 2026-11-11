@@ -1,0 +1,43 @@
+<div class="qt-thanh-tren"><span></span><span>{{ ds().length }} khách hàng</span></div>
+<div class="qt-dau"><div><span class="nhan-muc">Người dùng</span><h1>Khách hàng</h1></div></div>
+<form class="qt-loc" (ngSubmit)="tai()">
+  <input class="o-nhap" name="q" [(ngModel)]="q" placeholder="Tên hoặc email">
+  <select class="o-nhap" name="tt" [(ngModel)]="tt" (change)="tai()"><option value="">Tất cả</option><option value="Active">Hoạt động</option><option value="Blocked">Đã khóa</option></select>
+  <button class="nut nut-vien nut-nho">Lọc</button>
+</form>
+<div class="the" style="padding:0;overflow:auto">
+  <table class="bang">
+    <thead><tr><th>Khách hàng</th><th>Điện thoại</th><th>Ngày đăng ký</th><th>Hồ sơ hương</th><th>Đơn</th><th>Chi tiêu</th><th>Trạng thái</th><th></th></tr></thead>
+    <tbody>
+      @for (u of ds(); track u.id) {
+        <tr><td><b>{{ u.fullName }}</b><div class="chu-nho chu-nhat">{{ u.email }}</div></td><td>{{ u.phoneNumber || '—' }}</td><td>{{ u.createdAt | ngay }}</td>
+          <td>{{ u.hasScentProfile ? '✓' : '—' }}</td><td>{{ u.orderCount }}</td><td>{{ u.totalSpent | tien }}</td>
+          <td><span class="nhan-tt" [class]="'nhan-tt ' + (u.status === 'Active' ? 'nhan-luc' : 'nhan-do')" [title]="u.blockReason || ''">{{ u.status === 'Active' ? 'Hoạt động' : 'Đã khóa' }}</span></td>
+          <td class="o-thao-tac"><button class="nut nut-vien nut-nho" (click)="moXem(u)">Xem</button>
+            @if (u.status === 'Active') { <button class="nut nut-nguy nut-nho" (click)="khoa.set(u)">Khóa</button> } @else { <button class="nut nut-sang nut-nho" (click)="doiTT(u, 'Active')">Mở khóa</button> }</td></tr>
+      } @empty { <tr><td colspan="8" class="chu-nhat" style="text-align:center;padding:32px">Không có khách hàng.</td></tr> }
+    </tbody>
+  </table>
+</div>
+@if (khoa(); as u) {
+  <div class="lop-phu" (click)="khoa.set(null)"><div class="hop-thoai" (click)="$event.stopPropagation()">
+    <h3>Khóa tài khoản {{ u.fullName }}?</h3><p class="chu-nho chu-nhat">Khách sẽ bị đăng xuất ngay và không thể đăng nhập đến khi được mở khóa.</p>
+    <div class="truong"><label>Lý do <span class="bat-buoc">*</span></label><textarea class="o-nhap" rows="3" maxlength="255" [(ngModel)]="lyDo"></textarea></div>
+    <div class="hop-thoai__nut"><button class="nut nut-vien" (click)="khoa.set(null)">Hủy</button><button class="nut nut-nguy" (click)="xacNhanKhoa()">Khóa tài khoản</button></div>
+  </div></div>
+}
+@if (xem(); as u) {
+  <div class="lop-phu" (click)="xem.set(null)"><div class="hop-thoai" style="max-width:720px" (click)="$event.stopPropagation()">
+    <h3>{{ u.fullName }}</h3><p class="chu-nho chu-nhat">{{ u.email }} · {{ u.phoneNumber || 'Chưa có SĐT' }} · Đăng ký {{ u.createdAt | ngay }}</p>
+    @if (u.blockReason) { <div class="hop-loi chu-nho">Lý do khóa: {{ u.blockReason }}</div> }
+    <h4 style="margin-top:12px">Hồ sơ mùi hương</h4>
+    @if (u.scentProfile; as h) { <p class="chu-nho"><b>{{ h.profileTitle }}</b> · Nhóm: {{ h.preferredFamilies.join(', ') }} · Độ tỏa: {{ h.preferredProjection }} · Dịp: {{ h.expectedOccasion }} · {{ h.preferredVolume }}</p> }
+    @else { <p class="chu-nho chu-nhat">Chưa làm Scent Quiz.</p> }
+    <h4>Đơn hàng gần đây</h4>
+    <table class="bang"><tbody>
+      @for (o of u.orders; track o.id) { <tr><td><a [routerLink]="['/admin/don-hang', o.id]" (click)="xem.set(null)"><b>{{ o.orderCode }}</b></a></td><td>{{ o.createdAt | ngay }}</td><td>{{ o.totalAmount | tien }}</td><td><span class="nhan-tt" [class]="'nhan-tt ' + mau[o.status]">{{ nhan[o.status] }}</span></td></tr> }
+      @empty { <tr><td class="chu-nhat">Chưa có đơn.</td></tr> }
+    </tbody></table>
+    <div class="hop-thoai__nut"><button class="nut nut-vien" (click)="xem.set(null)">Đóng</button></div>
+  </div></div>
+}

@@ -1,0 +1,39 @@
+<main class="recommend-main">
+  <div class="recommend-nav"><span style="cursor: pointer;" routerLink="/scent-quiz/ho-so">← Quay lại hồ sơ hương</span><b>✦ Kết quả Scent Quiz</b></div>
+  <p class="quiz-kicker">Hồ sơ “{{ hs()?.profileTitle }}” · Scent Match AI™ 5 tiêu chí</p>
+  <h1>Những mùi hương <em>sinh ra dành cho bạn</em></h1>
+  <p>Được chấm điểm theo nhóm hương (30%), dịp dùng (25%), độ tỏa (20%), ngân sách (15%, chỉ tính khi hồ sơ có ngân sách) và thời tiết hiện tại (10%); tiêu chí thiếu dữ liệu được loại và chuẩn hóa lại trọng số.</p>
+  <div class="recommend-tags">
+    <span>Nhóm: {{ hs()?.preferredFamilies?.join(' · ') }}</span>
+    <span>Độ tỏa: {{ hs()?.preferredProjection }}</span>
+    <span>Dịp dùng: {{ hs()?.expectedOccasion }}</span>
+    @if (thoiTiet(); as w) { <span>Thời tiết: {{ w.temperature }}°C · {{ w.label }}</span> }
+  </div>
+  <section class="product-recs">
+    @for (m of ds(); track m.product.id; let i = $index) {
+      <article class="rec-card" [class.is-top]="i === 0">
+        <div class="product-art">
+          <img [src]="anh(m.product)" [alt]="m.product.name" loading="lazy">
+          <span class="rec-rank">{{ i === 0 ? '✦ Khớp nhất với bạn' : 'Gợi ý #' + (i + 1) }}</span>
+          <span class="rec-score" [style.--p]="m.matchScore"><b>{{ m.matchScore }}%</b><small>khớp</small></span>
+        </div>
+        <div class="rec-body">
+          <small class="rec-brand">{{ m.product.brand }}</small>
+          <h2><a [routerLink]="['/nuoc-hoa', m.product.sku]">{{ m.product.name }}</a></h2>
+          <b class="rec-meta">{{ m.product.concentration }} · {{ m.product.volume }}ml · {{ m.product.family }}</b>
+          <p class="rec-notes">@for (l of lyDo(m); track l.key) { <span title="{{ l.label }}">{{ l.reason }}</span> }</p>
+          <div class="rec-buy"><strong>{{ m.product.price | tien }}</strong><button class="add-to-cart-rec-btn" (click)="them(m.product)" [disabled]="m.product.stock === 0">Thêm vào giỏ</button></div>
+        </div>
+      </article>
+    } @empty {
+      @if (!dangTai()) { <p style="grid-column:1/-1;text-align:center;padding:40px">Chưa có sản phẩm còn hàng phù hợp hồ sơ của bạn. Hãy thử <a routerLink="/scent-quiz/buoc/1">làm lại quiz</a>.</p> }
+    }
+  </section>
+  <div class="recommend-bottom-ctas">
+    <a class="rec-cta-ghost" routerLink="/scent-quiz/ho-so">Xem lại hồ sơ hương</a>
+    <a class="rec-cta-solid" routerLink="/nuoc-hoa">Khám phá toàn bộ bộ sưu tập ({{ tongSP() }} tác phẩm, sắp theo độ phù hợp) →</a>
+  </div>
+  <div class="service-compare"><h2>VÌ SAO CHỌN TRẢI NGHIỆM KHỨU GIÁC TẠI SCENTORY?</h2><div>
+    <article><h3>✓ SCENTORY HAUTE PARFUMERIE</h3><p>100% nước hoa Niche chính hãng</p><p>Scent Match có giải thích theo từng tiêu chí</p><p>Hồ sơ hương tự cập nhật theo hành vi</p><p>Đổi trả trong 7 ngày khi còn nguyên seal</p></article>
+    <article><h3>✕ DỊCH VỤ THÔNG THƯỜNG</h3><p>Danh mục đại trà, ít nốt hương hiếm</p><p>Gợi ý không giải thích được lý do</p><p>Nguồn gốc trôi nổi, khó chứng thực</p><p>Không tính đến thời tiết nơi bạn sống</p></article></div></div>
+</main>

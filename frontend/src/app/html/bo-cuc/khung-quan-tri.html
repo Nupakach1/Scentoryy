@@ -1,0 +1,23 @@
+<div class="qt-khung">
+  <aside class="qt-thanh-ben">
+    <a class="qt-logo" routerLink="/admin/tong-quan" aria-label="SCENTORY - Tổng quan"><img src="/hinh-anh/logo/scentory-sang.png" alt="SCENTORY"><small>QUẢN TRỊ HỆ THỐNG</small></a>
+    <div class="qt-chao"><span class="qt-avatar">{{ viet() }}</span><div><small>Xin chào,</small><b>{{ xt.nguoiDung()?.fullName }}</b></div></div>
+    <nav class="qt-menu">
+      @for (m of menu; track m[0]) {
+        <a [routerLink]="['/admin', m[0]]" routerLinkActive="dang-chon"><span>{{ m[1] }}</span>{{ m[2] }}
+          @if (m[3] && dem(m[3]) > 0) { <b class="qt-so" [title]="dem(m[3]) + ' ' + goiY[m[3]]">{{ hienSo(dem(m[3])) }}</b> }
+        </a>
+      }
+      <a routerLink="/" target="_blank"><span>↗</span>Xem cửa hàng</a>
+    </nav>
+    <button class="qt-dang-xuat" (click)="dangXuat()">⏻ Đăng xuất</button>
+  </aside>
+  <main class="qt-noi-dung"><router-outlet /></main>
+</div>
+<div class="vung-thong-bao">
+  @for (t of tb.ds(); track t.id) {
+    <div class="thong-bao" [class.loi]="t.type === 'error'" [class.thong-tin]="t.type === 'info'" [style.opacity]="t.visible ? 1 : 0" (click)="tb.dong(t.id)">
+      <div><b>{{ t.title }}</b>@if (t.message) { <div class="chu-nho">{{ t.message }}</div> }@if (t.link) { <a [routerLink]="t.link" style="text-decoration:underline">{{ t.linkText }}</a> }</div>
+    </div>
+  }
+</div>

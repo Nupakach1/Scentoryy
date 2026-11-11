@@ -1,0 +1,151 @@
+/* SCENTORY – Scent Quiz: trang gợi ý sản phẩm (quiz-recommendations.html)
+   Hero rêu đêm + thẻ sản phẩm ảnh lifestyle, huy hiệu xếp hạng, vòng % khớp. */
+
+body.recommendations-page { background: #f6f2e8; }
+body.recommendations-page main.recommend-main {
+  --rc-ink: #22281a; --rc-muted: #6f7166; --rc-gold: #a9824a; --rc-gold-2: #c9a45c; --rc-champ: #e5c98a; --rc-line: #e7dfcd;
+  position: relative; isolation: isolate; overflow: clip;
+  max-width: none !important; margin: 0 !important; padding: 0 0 72px !important;
+  background: linear-gradient(180deg, #faf7ef, #f2ecdf) !important; color: var(--rc-ink); text-align: center;
+}
+
+/* ---------- Hero tối (nav + tiêu đề + tag) ---------- */
+body.recommendations-page main.recommend-main::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 430px; z-index: -1;
+  background:
+    radial-gradient(560px 300px at 50% 0%, rgba(212, 175, 55, .22), transparent 70%),
+    linear-gradient(180deg, rgba(16, 20, 12, .82), rgba(16, 20, 12, .92)),
+    url('/hinh-anh/san-pham/cr-004-2.webp') center 30% / cover;
+}
+body.recommendations-page main.recommend-main::after {
+  content: ''; position: absolute; left: 0; right: 0; top: 400px; height: 60px; z-index: -1;
+  background: linear-gradient(180deg, rgba(16, 20, 12, .92), #faf7ef);
+}
+main.recommend-main > * { max-width: 1160px; margin-left: auto !important; margin-right: auto !important; }
+
+main.recommend-main .recommend-nav {
+  display: flex !important; align-items: center; justify-content: space-between;
+  padding: 22px 40px 0 !important; margin-bottom: 30px !important; border: 0 !important; background: none !important;
+}
+main.recommend-main .recommend-nav span { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 16px; border-radius: 999px; color: #d9dccd !important; font-size: 13px !important; cursor: pointer; transition: background-color .2s ease, color .2s ease; }
+main.recommend-main .recommend-nav span:hover { color: #fff !important; background: rgba(255, 255, 255, .08); }
+main.recommend-main .recommend-nav b { padding: 7px 16px; border-radius: 999px; color: var(--rc-champ) !important; border: 1px solid rgba(229, 201, 138, .4); background: rgba(255, 255, 255, .05); font-size: 11.5px !important; font-weight: 800 !important; letter-spacing: 2px; text-transform: uppercase; }
+
+main.recommend-main .quiz-kicker {
+  display: flex !important; justify-content: center; align-items: center; gap: 14px; margin: 0 auto 14px !important;
+  color: var(--rc-champ) !important; font-size: 11.5px !important; font-weight: 800 !important; letter-spacing: 2.6px !important; text-transform: uppercase;
+}
+main.recommend-main .quiz-kicker::before, main.recommend-main .quiz-kicker::after { content: ''; width: 40px; height: 1px; background: linear-gradient(90deg, transparent, var(--rc-champ)); }
+main.recommend-main .quiz-kicker::after { transform: scaleX(-1); }
+main.recommend-main > h1 {
+  max-width: 900px !important; margin-bottom: 12px !important; color: #f7f3e8 !important;
+  font-size: clamp(34px, 3.2vw, 48px) !important; font-weight: 800 !important; line-height: 1.12 !important; letter-spacing: -1.2px !important; text-transform: none !important;
+}
+main.recommend-main > h1 em { color: var(--rc-champ); font-style: italic; font-weight: 500; }
+main.recommend-main > h1 + p { max-width: 640px !important; margin-bottom: 20px !important; color: #c9c7b4 !important; font-size: 15px !important; line-height: 1.65; }
+main.recommend-main .recommend-tags { display: flex !important; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 40px !important; }
+main.recommend-main .recommend-tags span {
+  padding: 8px 16px !important; border-radius: 999px !important; color: #f4efe2 !important;
+  background: rgba(255, 255, 255, .08) !important; border: 1px solid rgba(255, 255, 255, .18) !important; backdrop-filter: blur(8px);
+  font-size: 12.5px !important; font-weight: 600 !important;
+}
+
+/* ---------- Thẻ gợi ý ---------- */
+main.recommend-main .product-recs {
+  display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px !important;
+  padding: 0 40px !important; text-align: left; align-items: stretch;
+}
+main.recommend-main .rec-card {
+  position: relative; display: flex !important; flex-direction: column; overflow: hidden;
+  margin: 0 !important; padding: 0 !important; border-radius: 24px !important;
+  background: #fffdf8 !important; border: 1px solid var(--rc-line) !important;
+  box-shadow: 0 20px 44px rgba(40, 35, 20, .14) !important;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s ease, border-color .35s ease;
+}
+main.recommend-main .rec-card:hover { transform: translateY(-6px); border-color: rgba(201, 164, 92, .6) !important; box-shadow: 0 32px 60px rgba(40, 35, 20, .22) !important; }
+main.recommend-main .rec-card.is-top { border-color: var(--rc-gold-2) !important; box-shadow: 0 0 0 4px rgba(201, 164, 92, .2), 0 26px 56px rgba(120, 95, 45, .25) !important; }
+
+main.recommend-main .rec-card .product-art {
+  position: relative; height: 300px !important; margin: 0 !important; padding: 0 !important; overflow: hidden; cursor: pointer;
+  border-radius: 0 !important; background: #1d1a14 !important;
+}
+main.recommend-main .rec-card .product-art img { display: block; width: 100%; height: 100%; object-fit: cover; padding: 0 !important; transition: transform .8s ease; }
+main.recommend-main .rec-card:hover .product-art img { transform: scale(1.06); }
+main.recommend-main .rec-card .product-art::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 0, 0, .25), transparent 35%, transparent 65%, rgba(18, 16, 10, .45)); pointer-events: none; }
+main.recommend-main .rec-rank {
+  position: absolute; top: 16px; left: 16px; z-index: 1; padding: 7px 14px; border-radius: 999px;
+  color: #fff; background: rgba(20, 18, 12, .5); border: 1px solid rgba(255, 255, 255, .3); backdrop-filter: blur(8px);
+  font-size: 11.5px; font-weight: 800; letter-spacing: .6px;
+}
+main.recommend-main .rec-card.is-top .rec-rank { color: #2a2f1c; background: linear-gradient(135deg, #f5e3b5, #d4af37); border-color: transparent; box-shadow: 0 8px 20px rgba(212, 175, 55, .4); }
+main.recommend-main .rec-score {
+  position: absolute; right: 14px; bottom: 14px; z-index: 1; display: grid; place-items: center; align-content: center;
+  width: 70px; height: 70px; border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(20, 18, 12, .82) 58%, transparent 59%),
+    conic-gradient(var(--rc-champ) calc(var(--p) * 1%), rgba(255, 255, 255, .2) 0);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .35); backdrop-filter: blur(4px);
+}
+main.recommend-main .rec-score b { color: #fff; font-size: 17px; font-weight: 800; line-height: 1; }
+main.recommend-main .rec-score small { color: var(--rc-champ); font-size: 9.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+main.recommend-main .rec-body { display: flex; flex-direction: column; flex: 1; padding: 20px 22px 22px; }
+main.recommend-main .rec-brand { color: var(--rc-gold) !important; font-size: 11px !important; font-weight: 800; letter-spacing: 2.2px !important; text-transform: uppercase; }
+main.recommend-main .rec-body h2 { margin: 6px 0 4px !important; font-size: 23px !important; font-weight: 800 !important; letter-spacing: -.3px !important; line-height: 1.25 !important; text-transform: none !important; }
+main.recommend-main .rec-body h2 a { color: var(--rc-ink) !important; text-decoration: none; }
+main.recommend-main .rec-body h2 a:hover { color: var(--rc-gold) !important; }
+main.recommend-main .rec-meta { color: #8a8b80 !important; font-size: 13px !important; font-weight: 500 !important; font-style: italic; }
+main.recommend-main .rec-notes { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0 18px !important; }
+main.recommend-main .rec-notes span { padding: 5px 12px; border-radius: 999px; color: #6d5530; background: rgba(201, 164, 92, .12); border: 1px solid rgba(201, 164, 92, .25); font-size: 12px; font-weight: 600; }
+main.recommend-main .rec-buy { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: auto; padding-top: 16px; border-top: 1px dashed #e3d8c2; }
+main.recommend-main .rec-buy strong { color: #3d432b !important; font-size: 19px !important; font-weight: 800; font-variant-numeric: tabular-nums; }
+main.recommend-main .add-to-cart-rec-btn {
+  flex: none; height: 44px; padding: 0 20px !important; border-radius: 999px !important; cursor: pointer;
+  color: #fff !important; background: #3d432b !important; border: 0 !important;
+  font: 800 12.5px 'Plus Jakarta Sans', Arial, sans-serif !important; letter-spacing: .6px !important;
+  box-shadow: 0 10px 22px rgba(61, 67, 43, .22); transition: background-color .2s ease, transform .2s ease;
+}
+main.recommend-main .add-to-cart-rec-btn:hover { background: #22281a !important; transform: translateY(-1px); }
+main.recommend-main .add-to-cart-rec-btn.is-added { color: #2a2f1c !important; background: linear-gradient(135deg, #f5e3b5, #d4af37) !important; }
+
+/* ---------- CTA dưới ---------- */
+main.recommend-main .recommend-bottom-ctas { display: flex !important; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 40px !important; }
+main.recommend-main .rec-cta-ghost, main.recommend-main .rec-cta-solid {
+  display: inline-flex; align-items: center; height: 50px; padding: 0 26px; border-radius: 999px; text-decoration: none;
+  font-size: 13px; font-weight: 800; letter-spacing: .6px; transition: all .2s ease;
+}
+main.recommend-main .rec-cta-ghost { color: #3d432b; border: 1px solid rgba(61, 67, 43, .35); background: rgba(255, 255, 255, .6); }
+main.recommend-main .rec-cta-ghost:hover { background: #fff; border-color: var(--rc-gold-2); }
+main.recommend-main .rec-cta-solid { color: #2a2f1c; background: linear-gradient(135deg, #f5e3b5, #d4af37); box-shadow: 0 12px 28px rgba(212, 175, 55, .35); }
+main.recommend-main .rec-cta-solid:hover { transform: translateY(-2px); box-shadow: 0 16px 34px rgba(212, 175, 55, .5); }
+
+/* ---------- So sánh dịch vụ ---------- */
+main.recommend-main .service-compare { margin-top: 64px !important; padding: 0 40px !important; background: none !important; border: 0 !important; }
+main.recommend-main .service-compare > h2 { margin: 0 0 24px !important; color: var(--rc-ink) !important; font-size: 26px !important; font-weight: 800 !important; letter-spacing: -.4px !important; text-transform: none; }
+main.recommend-main .service-compare > div { display: grid !important; grid-template-columns: 1.1fr .9fr; gap: 22px; text-align: left; }
+main.recommend-main .service-compare article { margin: 0 !important; padding: 26px 28px !important; border-radius: 22px !important; }
+main.recommend-main .service-compare article:first-child { color: #e8e3d2; background: radial-gradient(400px 200px at 0% 0%, rgba(212, 175, 55, .2), transparent 70%), linear-gradient(150deg, #2a3020, #1b2015) !important; border: 0 !important; box-shadow: 0 22px 44px rgba(22, 26, 17, .25); }
+main.recommend-main .service-compare article:last-child { background: rgba(255, 255, 255, .55) !important; border: 1px solid var(--rc-line) !important; }
+main.recommend-main .service-compare h3 { margin: 0 0 14px !important; font-size: 13px !important; font-weight: 800 !important; letter-spacing: 1.6px !important; }
+main.recommend-main .service-compare article:first-child h3 { color: var(--rc-champ) !important; }
+main.recommend-main .service-compare article:last-child h3 { color: #8a8b80 !important; }
+main.recommend-main .service-compare p { position: relative; margin: 0 !important; padding: 9px 0 9px 26px !important; border-top: 1px solid rgba(169, 130, 74, .15); font-size: 14px !important; }
+main.recommend-main .service-compare article:first-child p { color: #e8e3d2 !important; border-top-color: rgba(255, 255, 255, .08); }
+main.recommend-main .service-compare article:last-child p { color: #8a8b80 !important; }
+main.recommend-main .service-compare article:first-child p::before { content: '✓'; position: absolute; left: 0; top: 9px; color: var(--rc-champ); font-weight: 800; }
+main.recommend-main .service-compare article:last-child p::before { content: '–'; position: absolute; left: 2px; top: 9px; color: #b3b3a6; }
+
+/* --- Ghi đè CSS cũ --- */
+body.recommendations-page main.recommend-main .product-recs { width: 100% !important; max-width: 1160px !important; box-sizing: border-box; }
+body.recommendations-page main.recommend-main .rec-card { width: auto !important; max-width: none !important; min-height: 0 !important; }
+body.recommendations-page main.recommend-main .rec-card .rec-notes { padding: 0 !important; background: none !important; border: 0 !important; border-radius: 0 !important; min-height: 0 !important; }
+body.recommendations-page main.recommend-main .rec-card .rec-notes span { display: inline-block; margin: 0 !important; }
+body.recommendations-page main.recommend-main .rec-card .add-to-cart-rec-btn { width: auto !important; margin: 0 !important; white-space: nowrap; }
+body.recommendations-page main.recommend-main .rec-buy strong { margin: 0 !important; }
+body.recommendations-page main.recommend-main > h1 + p { color: #d6d4c4 !important; }
+body.recommendations-page main.recommend-main .service-compare p { border-bottom: 0 !important; }
+body.recommendations-page main.recommend-main .service-compare article:first-child p { border-top: 1px solid rgba(255, 255, 255, .08) !important; }
+body.recommendations-page main.recommend-main .service-compare article:last-child p { border-top: 1px solid rgba(169, 130, 74, .15) !important; }
+body.recommendations-page main.recommend-main .service-compare h3 { border: 0 !important; }
+body.recommendations-page main.recommend-main .service-compare { width: 100% !important; max-width: 1160px !important; box-sizing: border-box; }
+body.recommendations-page.quiz-rebuild main.recommend-main > p:not(.quiz-kicker):not(.rec-x) { color: #d6d4c4 !important; font-size: 15px !important; }

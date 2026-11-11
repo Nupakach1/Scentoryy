@@ -1,0 +1,154 @@
+<header class="rebuild-header">
+  <a class="wordmark" routerLink="/" aria-label="SCENTORY - Về trang chủ"><img class="wordmark-logo" src="/hinh-anh/logo/scentory.png" alt="SCENTORY"></a>
+  <nav>
+    <a routerLink="/nhom-huong" [class.active]="mucHienTai() === 'nhom'" aria-haspopup="true" style="position: relative;">NHÓM HƯƠNG
+      <div class="scentory-nav-dropdown scentory-family-dropdown" (click)="$event.stopPropagation()"><div class="dropdown-brands">
+        @for (n of nhom; track n) { <a routerLink="/nhom-huong" [fragment]="neoNhom(n)">{{ n.toUpperCase() }}</a> }
+      </div></div>
+    </a>
+    <a routerLink="/nuoc-hoa" [class.active]="mucHienTai() === 'nuoc-hoa'" aria-haspopup="true" style="position: relative;">NƯỚC HOA
+      <div class="scentory-nav-dropdown" (click)="$event.stopPropagation()"><div class="dropdown-brands">
+        <a routerLink="/nuoc-hoa" [queryParams]="{ family: nhomNam }">NƯỚC HOA NAM</a>
+        <a routerLink="/nuoc-hoa" [queryParams]="{ family: nhomNu }">NƯỚC HOA NỮ</a>
+        @for (b of thuongHieu; track b.slug) { <a routerLink="/nuoc-hoa" [queryParams]="{ brand: b.ten2 }">{{ b.ten }} ({{ b.so }} tác phẩm)</a> }
+      </div></div>
+    </a>
+    <a routerLink="/scent-quiz/buoc/1" [class.active]="mucHienTai() === 'quiz'">SCENT QUIZ</a>
+    <a routerLink="/thuong-hieu" [class.active]="mucHienTai() === 'thuong-hieu'" aria-haspopup="true" style="position: relative;">THƯƠNG HIỆU
+      <div class="scentory-nav-dropdown" (click)="$event.stopPropagation()"><div class="dropdown-brands">
+        @for (b of thuongHieu; track b.slug) { <a [routerLink]="['/thuong-hieu', b.slug]">{{ b.ten }}</a> }
+      </div></div>
+    </a>
+    <a routerLink="/ve-scentory" [class.active]="mucHienTai() === 've'">VỀ SCENTORY</a>
+  </nav>
+  <div class="rebuild-search scentory-search-box">
+    <form class="scentory-search-form" role="search" autocomplete="off" (ngSubmit)="timKiem()">
+      <button type="submit" class="scentory-search-submit" aria-label="Tìm kiếm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      </button>
+      <input class="scentory-search-input" type="text" maxlength="100" name="q" [(ngModel)]="tuKhoa" placeholder="Tìm nốt hương, thương hiệu..." aria-label="Tìm nốt hương, thương hiệu">
+    </form>
+  </div>
+  <div class="header-actions">
+    <div class="header-auth">
+      @if (xt.daTai() && !xt.daDangNhap()) {
+        <a routerLink="/dang-nhap" class="auth-link login-btn">ĐĂNG NHẬP</a>
+        <a routerLink="/dang-ky" class="auth-link register-btn">ĐĂNG KÝ</a>
+      }
+    </div>
+    @if (xt.daDangNhap()) {
+      <div class="header-icons">
+        <a routerLink="/tai-khoan/don-hang" class="icon-link account-icon" aria-label="Tài khoản" [title]="xt.nguoiDung()?.fullName"><img class="header-icon-img" src="/hinh-anh/icon/user.png" alt="Tài khoản" draggable="false"></a>
+        <a routerLink="/yeu-thich" class="icon-link wishlist-link wishlist-icon" title="Danh sách yêu thích"><img class="header-icon-img" src="/hinh-anh/icon/heart.png" alt="Danh sách yêu thích" draggable="false"></a>
+        <a routerLink="/gio-hang" class="icon-link cart-icon" title="Giỏ hàng"><img class="header-icon-img" src="/hinh-anh/icon/cart.png" alt="Giỏ hàng" draggable="false"><span class="badge">{{ gio.soLuong() }}</span></a>
+      </div>
+    }
+  </div>
+</header>
+
+<router-outlet />
+
+<footer class="site-footer">
+  <div class="footer-col brand-col">
+    <strong class="footer-logo">SCENTORY</strong>
+    <p>Thành địa của những nốt hương độc bản và nghệ thuật điều hương đương đại, đồng hành cùng bạn tìm thấy mùi hương signature của riêng mình.</p>
+    <div class="boutiques-info"><b>BOUTIQUES:</b><br>Hà Nội &amp; TP. Hồ Chí Minh • Hotline: 1900 6828</div>
+  </div>
+  <div class="footer-col">
+    <b>KHÁM PHÁ HƯƠNG</b>
+    <p>
+      <a routerLink="/nuoc-hoa">Tất cả nước hoa</a><br>
+      <a routerLink="/nhom-huong">Bánh xe nhóm hương</a><br>
+      <a routerLink="/thuong-hieu">Thương hiệu niche</a><br>
+      <a routerLink="/uu-dai">Ưu đãi đang diễn ra</a><br>
+      <a routerLink="/scent-quiz/buoc/1">Scent Quiz 8 bước</a>
+    </p>
+  </div>
+  <div class="footer-col">
+    <b>HỖ TRỢ KHÁCH HÀNG</b>
+    <p>
+      <a routerLink="/ve-scentory">Chính sách đổi trả 7 ngày</a><br>
+      <a routerLink="/ve-scentory">Giao tiêu chuẩn miễn phí · Hỏa tốc 2h</a><br>
+      <a routerLink="/hop-thu">Hộp thư hỗ trợ</a><br>
+      <a routerLink="/tai-khoan/don-hang">Theo dõi đơn hàng</a>
+    </p>
+  </div>
+  <div class="footer-col newsletter-col">
+    <b>BẢN TIN HƯƠNG THƠM</b>
+    <p>Đăng ký để nhận thông tin về những nốt hương mới và ưu đãi trải nghiệm độc quyền.</p>
+    <form class="newsletter-form" (ngSubmit)="tb.thanhCong('Đã đăng ký bản tin', 'Cảm ơn bạn đã quan tâm Scentory.')">
+      <input type="email" name="bt" ngModel placeholder="Địa chỉ email của bạn..." aria-label="Email">
+      <button type="submit">ĐĂNG KÝ</button>
+    </form>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 SCENTORY VIỆT NAM. All rights reserved.</span>
+    <div class="footer-links"><a routerLink="/ve-scentory">Điều khoản dịch vụ</a><a routerLink="/ve-scentory">Chính sách bảo mật</a><a routerLink="/ve-scentory">Cam kết chính hãng</a></div>
+  </div>
+</footer>
+
+<a class="chat-button" href="javascript:void(0)" (click)="batChat()" aria-label="Mở Scent Concierge">💬</a>
+@if (moChat()) {
+  <div class="scentory-chat-floating-widget is-open" [class.is-minimized]="thuNho()" aria-label="Scent Concierge">
+    <section class="chatbot-window" aria-label="Scent Concierge">
+      <header class="chatbot-header">
+        <div class="chatbot-avatar">✧</div>
+        <div class="chatbot-title"><strong>Scent Concierge™</strong><small><i></i> Đang trực tuyến</small></div>
+        <div class="chatbot-actions">
+          <button type="button" class="chat-act-btn" title="Làm mới" (click)="lamMoi()">⟳</button>
+          <button type="button" class="chat-act-btn" title="Thu nhỏ" (click)="thuNho.set(!thuNho())">−</button>
+          <button type="button" class="chat-act-btn" title="Đóng" (click)="moChat.set(false)">×</button>
+        </div>
+      </header>
+      <div class="chatbot-messages">
+        <article class="chatbot-message"><div class="message-avatar">✦</div><div><p>Xin chào! Mình là Scent Concierge. Bạn muốn tìm một mùi hương như thế nào?</p></div></article>
+        @if (!tinChat().length) {
+          <div class="chatbot-suggestions" aria-label="Câu hỏi gợi ý">
+            @for (g of goiYChat; track g[0]) { <button type="button" (click)="gui(g[1])">{{ g[0] }}</button> }
+          </div>
+        }
+        @for (m of tinChat(); track $index) {
+          <article class="chatbot-message" [class.is-user]="m.tu === 'user'" [class.is-bot]="m.tu === 'bot'">
+            <div class="message-avatar">{{ m.tu === 'user' ? '♙' : '✦' }}</div>
+            <div><p>{{ m.noiDung }}</p>
+              @if (m.link) { <small><a href="javascript:void(0)" (click)="diToi(m.link)">{{ m.link === '/hop-thu' ? 'Nhắn cho nhân viên Scentory →' : 'Xem ngay →' }}</a></small> }
+              @else { <small>{{ m.tu === 'user' ? 'Bạn' : 'Scent Concierge' }}</small> }
+            </div>
+          </article>
+        }
+        @if (dangTraLoi()) { <article class="chatbot-message is-bot"><div class="message-avatar">✦</div><div><p>Scent Concierge đang xem xét câu hỏi của bạn…</p></div></article> }
+      </div>
+      <form class="chatbot-composer" (ngSubmit)="gui()">
+        <span>♢</span>
+        <textarea rows="2" name="nhap" [(ngModel)]="nhap" maxlength="1000" placeholder="Bạn muốn tìm mùi hương như thế nào?" aria-label="Nhập tin nhắn" (keydown.enter)="$event.preventDefault(); gui()"></textarea>
+        <button type="submit" aria-label="Gửi tin nhắn" [disabled]="dangTraLoi()">➤</button>
+      </form>
+    </section>
+  </div>
+}
+<div id="scentory-toast-container" aria-live="polite">
+  @for (t of tb.ds(); track t.id) {
+    <div class="scentory-toast is-{{ t.type }}" [class.is-visible]="t.visible">
+      <div class="scentory-toast-icon">{{ t.type === 'success' ? '✓' : t.type === 'error' ? '✕' : 'ℹ' }}</div>
+      <div class="scentory-toast-body"><h4 class="scentory-toast-title">{{ t.title }}</h4><p class="scentory-toast-msg">{{ t.message }}</p>
+        @if (t.link) { <a [routerLink]="t.link" class="scentory-toast-link">{{ t.linkText }}</a> }</div>
+      <button type="button" class="scentory-toast-close" aria-label="Đóng" (click)="tb.dong(t.id)">✕</button>
+    </div>
+  }
+</div>
+
+@if (cong.mo(); as c) {
+  <div class="scentory-auth-gate" (click)="dongCong()" (document:keydown.escape)="dongCong()">
+    <div class="scentory-auth-gate-card" role="dialog" aria-modal="true" aria-labelledby="scentory-auth-gate-title" (click)="$event.stopPropagation()">
+      <button type="button" class="scentory-auth-gate-close" aria-label="Đóng" (click)="dongCong()">×</button>
+      <span class="scentory-auth-gate-mark">♡</span>
+      <p class="scentory-auth-gate-eyebrow">SCENTORY MEMBER</p>
+      <h2 id="scentory-auth-gate-title">Đăng nhập để {{ c.hanhDong }}</h2>
+      <p>Vui lòng đăng nhập để lưu lựa chọn và đồng bộ trải nghiệm cá nhân. Chưa có tài khoản? Hãy đăng ký thành viên Scentory.</p>
+      <div class="scentory-auth-gate-actions">
+        <a class="scentory-auth-gate-primary" routerLink="/dang-nhap" [queryParams]="{ next: c.next }" (click)="cong.dong()">ĐĂNG NHẬP</a>
+        <a class="scentory-auth-gate-secondary" routerLink="/dang-ky" [queryParams]="{ next: c.next }" (click)="cong.dong()">ĐĂNG KÝ TÀI KHOẢN</a>
+      </div>
+    </div>
+  </div>
+}

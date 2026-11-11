@@ -1,0 +1,51 @@
+/* =========================================================
+   BỔ SUNG CHO BẢN ANGULAR (không có trong customer-ui gốc)
+   - Hộp thoại dùng chung (.sc-modal), lỗi trường (.err), chọn sao (.sc-stars)
+   - Trạng thái disabled, phân trang, trường thẻ thanh toán
+   ========================================================= */
+.sc-modal.cancel-backdrop { position: fixed; inset: 0; z-index: 1000; overflow-y: auto; min-height: 0; padding: 28px 16px; }
+.sc-modal .cancel-dialog { max-width: 100%; box-sizing: border-box; }
+body.sc-khoa-cuon { overflow: hidden; }
+.err, small.err, em.err, p.err { color: #c53030 !important; font-size: 11px; font-weight: 600; display: block; margin-top: 4px; }
+input.invalid, .form-grid input.ng-invalid.ng-touched { border-color: #d92323 !important; background: #fff8f7 !important; }
+.sc-stars { display: flex; gap: 6px; margin: 8px 0 4px; }
+.sc-stars button { border: 0; background: none; font-size: 30px; line-height: 1; color: #d9d3c4; cursor: pointer; padding: 0; transition: transform .15s; }
+.sc-stars button.on { color: #c49e65; }
+.sc-stars button:hover { transform: scale(1.12); }
+.sc-stars.small button { font-size: 22px; }
+button:disabled, .ord-btn[disabled] { opacity: .55; cursor: not-allowed !important; }
+.ck-card-form { margin: 6px 0 14px; padding: 14px; border: 1px dashed #d5cfbf; border-radius: 8px; background: #fbf9f2; }
+.scentory-quiz-invite a:hover { text-decoration: underline; }
+.qz-card:focus-visible, .sim-option:focus-visible { outline: 2px solid #444d32; outline-offset: 3px; }
+.mood-cards { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important; }
+.order-card-actions .ord-btn { text-decoration: none; }
+.hero-slide { transition: opacity .6s ease; }
+.pdx-bar i { width: var(--v); }
+@media (max-width: 760px) {
+  .sc-modal .cancel-dialog { padding: 22px 18px; }
+  .sc-modal .dialog-actions { grid-template-columns: 1fr; }
+}
+
+/* Hộp nhắc "Cần đăng nhập" ở trang đăng nhập (khi bấm Thêm vào giỏ / Scent Quiz lúc chưa đăng nhập) */
+.auth-note { margin: 24px 0 4px; padding: 16px 20px; color: #3d432b; background: #f2f3e6; border: 1px solid #cfd3b0; border-radius: 10px; }
+.auth-note b, .auth-note span { display: block; }
+.auth-note b { font-size: 14px; }
+.auth-note span { margin-top: 6px; font-size: 12.5px; line-height: 1.55; color: #55574e; }
+
+/* Menu xổ xuống Nhóm hương / Nước hoa / Thương hiệu: mở khi rê chuột (giao diện gốc dùng JS gắn .is-open) */
+.rebuild-header nav > a:hover > .scentory-nav-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.rebuild-header nav > a > .scentory-nav-dropdown { top: calc(100% + 14px); }
+.rebuild-header nav > a > .scentory-nav-dropdown::before { content: ''; position: absolute; left: 0; right: 0; top: -16px; height: 16px; }
+.rebuild-header nav > a > .scentory-nav-dropdown .dropdown-brands a { font-size: 12px; letter-spacing: 1.2px; padding: 13px 22px; }
+.rebuild-header nav > a > .scentory-nav-dropdown .dropdown-brands a:last-child { border-bottom: 0; }
+
+/* Nhãn nhỏ đầu poster (Đăng nhập / Đăng ký / Khôi phục mật khẩu / Thành công): đồng bộ phông, cỡ, màu; không viền, không nền */
+body .login-art > span, body .register-art > span, body .success-art > span,
+body .password-story > small, body .success-art > small, body .poster-nhan,
+body .login-art > h2, body .register-art > h2 {
+  display: block; margin: 0; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; line-height: 1.5;
+  letter-spacing: 2.4px; text-transform: uppercase; color: #dcd3b0;
+}
+body .login-art > h2, body .register-art > h2 { margin-top: 10px; font-weight: 600; color: rgba(220, 211, 176, .78); }
+body .login-art > h1, body .register-art > h1 { margin-top: 26px; }
