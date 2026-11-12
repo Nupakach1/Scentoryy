@@ -45,7 +45,7 @@ Scentory2/
 
 > Hướng dẫn: **[Chạy trên máy](HUONG-DAN-CHAY.md)** · **[Đưa lên Vercel](TRIEN-KHAI-VERCEL.md)**.
 
-1. Lấy tệp `backend/.env` từ trưởng nhóm (hoặc sao chép `.env.example` và điền chuỗi MongoDB Atlas + `JWT_SECRET`). **Không commit `.env`.**
+1. Lấy tệp `backend/.env` (hoặc sao chép `.env.example` và điền chuỗi MongoDB Atlas + `JWT_SECRET`). **Không commit `.env`.**
 2. Windows: chạy `bat/1b-cai-dat-thanh-vien-khac.bat` (người quản lý CSDL dùng `1-cai-dat-lan-dau.bat`), sau đó `bat/2-chay-web.bat` → http://localhost:3000.
 3. Thủ công:
    ```bash
@@ -56,7 +56,7 @@ Scentory2/
 
 Tài khoản minh họa: quản trị `admin@scentory.vn / Admin@12345` (cổng `/admin/dang-nhap`); khách `nga@scentory.vn`, `long@scentory.vn`, `phuong@scentory.vn` / `Scentory123`.
 
-## Lệnh hữu ích (backend)
+## Lưu ý
 
 | Lệnh | Tác dụng |
 | :--- | :--- |
